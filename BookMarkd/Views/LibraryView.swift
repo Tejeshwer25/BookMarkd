@@ -76,44 +76,49 @@ struct LibraryView: View {
     }
     
     var finishedBooksView: some View {
-        VStack {
-            AsyncImage(url: URL(string: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400")) { image in
-                image
-                    .resizable()
-                    .frame(width: 150, height: 200)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
-            } placeholder: {
-                Text("Loading Image...")
-            }
-
-            VStack(alignment: .leading, spacing: 7) {
-                Text("The Midnight Library")
-                    .font(.headline)
-                Text("Matt Haig")
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-                
-                HStack {
-                    ForEach(1...5, id: \.self) { index in
-                        if index > 3 {
-                            Image(systemName: "star")
-                                .resizable()
-                                .frame(width: 12, height: 12)
-                        } else {
-                            Image(systemName: "star.fill")
-                                .resizable()
-                                .frame(width: 12, height: 12)
-                        }
-                    }
+        Button {
+            self.router.pushScreen(.bookDetails(id: .init()))
+        } label: {
+            VStack {
+                AsyncImage(url: URL(string: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400")) { image in
+                    image
+                        .resizable()
+                        .frame(width: 150, height: 200)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                } placeholder: {
+                    Text("Loading Image...")
                 }
                 
-                Text("Dec 20, 2025")
-                    .font(.caption2)
-                    .fontWeight(.light)
-                    .foregroundStyle(Color.secondary)
+                VStack(alignment: .leading, spacing: 7) {
+                    Text("The Midnight Library")
+                        .font(.headline)
+                    Text("Matt Haig")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                    
+                    HStack {
+                        ForEach(1...5, id: \.self) { index in
+                            if index > 3 {
+                                Image(systemName: "star")
+                                    .resizable()
+                                    .frame(width: 12, height: 12)
+                            } else {
+                                Image(systemName: "star.fill")
+                                    .resizable()
+                                    .frame(width: 12, height: 12)
+                            }
+                        }
+                    }
+                    
+                    Text("Dec 20, 2025")
+                        .font(.caption2)
+                        .fontWeight(.light)
+                        .foregroundStyle(Color.secondary)
+                }
+                .padding(.horizontal)
             }
-            .padding(.horizontal)
         }
+        .buttonStyle(.plain)
         .frame(maxWidth: .infinity)
     }
     
