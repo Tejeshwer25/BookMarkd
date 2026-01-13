@@ -14,16 +14,7 @@ struct SearchView: View {
         VStack(alignment: .leading) {
             ForEach(results, id: \.self) { result in
                 HStack {
-                    AsyncImage(url: URL(string: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400")) { image in
-                        image
-                            .resizable()
-                            .frame(width: 75, height: 100)
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
-                    } placeholder: {
-                        Color.gray
-                            .clipShape(.circle)
-                            .frame(width: 50, height: 100)
-                    }
+                    BookImage(bookImageURL: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400", imageFrame: (width: 75, height: 100))
                     
                     VStack(alignment: .leading) {
                         Text(result)

@@ -8,53 +8,53 @@
 import SwiftUI
 
 struct AddBookView: View {
-    @Binding var bookTitle: String
+    @Environment(\.dismiss) var dismiss
+    
+    @State private var bookTitle: String = ""
+    @State private var books: [String] = ["Test", "Another"]
     
     var body: some View {
-        ScrollView {
+        VStack(alignment: .leading) {
+            Text("Add Book")
+                .font(.title)
+                .fontWeight(.bold)
+            
+            Divider()
+            
             VStack(alignment: .leading) {
-                Text("Add Book")
-                    .font(.title)
-                
-                Divider()
-                
-                VStack(alignment: .leading) {
-                    Text("Title")
-                        .font(.headline)
+                TextField("Search to add", text: self.$bookTitle)
+                    .padding()
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(lineWidth: 1)
+                    }
+                    .padding(.top, 5)
+            }
+            .padding(.top)
+            
+            List(self.books, id: \.self) { book in
+                HStack {
+                    HorizontalBookPreview(bookName: book, descriptionLineLimit: 4)
                     
-                    TextField("Book Title", text: self.$bookTitle)
-                        .padding()
-                        .overlay {
-                            RoundedRectangle(cornerRadius: 8)
-                                .stroke(lineWidth: 1)
-                        }
-                        .padding(.top, 5)
-                }
-                .padding(.vertical)
-                
-                VStack(alignment: .leading) {
-                    Text("Title")
-                        .font(.headline)
+                    Spacer(minLength: 25)
                     
-                    TextField("Book Title", text: self.$bookTitle)
-                        .padding()
-                        .overlay {
-                            RoundedRectangle(cornerRadius: 8)
-                                .stroke(lineWidth: 1)
-                        }
-                        .padding(.top, 5)
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "plus.circle")
+                            .resizable()
+                            .frame(width: 25, height: 25)
+                    }
+                    .buttonStyle(.plain)
                 }
-                .padding(.vertical)
-                
+                .listRowSeparator(.hidden)
+                .listRowBackground(Color.clear)
             }
         }
-        
         .padding()
     }
 }
 
-#Preview {
-    @Previewable @State var bookTitle: String = ""
-    
-    AddBookView(bookTitle: $bookTitle)
+#Preview {    
+    AddBookView()
 }

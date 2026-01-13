@@ -36,14 +36,7 @@ struct BookDetailView: View {
     
     var bookInfoView: some View {
         HStack(alignment: .top, spacing: 25) {
-            AsyncImage(url: URL(string: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400")) { image in
-                image
-                    .resizable()
-                    .frame(width: 150, height: 200)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
-            } placeholder: {
-                Text("Loading Image...")
-            }
+            BookImage(bookImageURL: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400", imageFrame: (width: 150, height: 200))
             
             VStack(alignment: .leading, spacing: 10) {
                 Text("The Midnight Library")

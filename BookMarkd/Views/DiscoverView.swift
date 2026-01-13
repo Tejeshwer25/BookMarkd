@@ -17,28 +17,7 @@ struct DiscoverView: View {
             Button {
                 self.router.pushScreen(.bookDetails(id: .init()))
             } label: {
-                HStack(spacing: 10) {
-                    AsyncImage(url: URL(string: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400")) { image in
-                        image
-                            .resizable()
-                            .frame(width: 100, height: 150)
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
-                    } placeholder: {
-                        Text("Loading Image...")
-                    }
-                    
-                    VStack(alignment: .leading) {
-                        Text(book)
-                            .font(.headline)
-                        
-                        Text("Author Name")
-                            .font(.subheadline)
-                        
-                        Text("A large book description that will compell the user to buy that book, but its not some marketing gimmick.")
-                            .padding(.top)
-                            .font(.footnote)
-                    }
-                }
+                HorizontalBookPreview(bookName: book, descriptionLineLimit: 3)
             }
             .listRowSeparator(.hidden)
             .listRowBackground(Color.clear)
