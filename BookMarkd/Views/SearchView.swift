@@ -8,18 +8,18 @@
 import SwiftUI
 
 struct SearchView: View {
-    @Binding var results: [String]
+    @Binding var results: [BookModel]
     
     var body: some View {
         VStack(alignment: .leading) {
-            ForEach(results, id: \.self) { result in
+            ForEach(results, id: \.self.id) { result in
                 HStack {
                     BookImage(bookImageURL: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400", imageFrame: (width: 75, height: 100))
                     
                     VStack(alignment: .leading) {
-                        Text(result)
+                        Text(result.title)
                             .font(.headline)
-                        Text("Author Name")
+                        Text(result.authorName.joined())
                             .font(.callout)
                     }
                     .padding(.vertical)
@@ -43,5 +43,5 @@ struct SearchView: View {
 }
 
 #Preview {
-    SearchView(results: .constant(["Book Name", "Another One"]))
+    SearchView(results: .constant([]))
 }

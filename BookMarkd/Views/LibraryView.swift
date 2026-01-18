@@ -14,8 +14,8 @@ struct LibraryView: View {
     @State private var isSearching: Bool = false
     @State private var showAddBookScreen: Bool = false
     @State private var bookTitle: String = ""
-    @State private var currentlyReadingBooks: [String] = [""]
-    @State private var finishedBooks: [String] = [""]
+    @State private var currentlyReadingBooks: [BookModel] = []
+    @State private var finishedBooks: [BookModel] = []
     
     var body: some View {
         if self.currentlyReadingBooks.isEmpty && self.finishedBooks.isEmpty {
@@ -60,11 +60,18 @@ struct LibraryView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
+                        self.router.pushScreen(.bookWishlistScreen)
+                    } label: {
+                        Image(systemName: "bookmark")
+                    }
+                }
+                
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
                         self.showAddBookScreen = true
                     } label: {
                         Image(systemName: "plus")
                     }
-                    
                 }
             }
             .sheet(isPresented: $showAddBookScreen) {
@@ -79,7 +86,7 @@ struct LibraryView: View {
             Button {
                 self.router.pushScreen(.bookDetails(id: .init()))
             } label: {
-                HorizontalBookPreview(bookName: "The Midnight Library",
+                HorizontalBookPreview(book: .init(id: "", title: "Test Book", authorName: []),
                                       descriptionLineLimit: 2)
             }
             .buttonStyle(.plain)
@@ -141,6 +148,7 @@ struct LibraryView: View {
             
             Text("When you finish a book it will settle here quietly")
                 .font(.body)
+                .multilineTextAlignment(.center)
         }
         .padding()
         .frame(maxWidth: .infinity)
@@ -179,11 +187,23 @@ struct LibraryView: View {
             .padding()
             .buttonStyle(.plain)
             
+            Button {
+                self.router.pushScreen(.bookWishlistScreen)
+            } label: {
+                HStack {
+                    Image(systemName: "bookmark")
+                    Text("View Wishlist")
+                }
+            }
+            .padding()
+            
         }
         .frame(maxWidth: .infinity)
     }
 }
 
 #Preview {
-    LibraryView()
+    NavigationStack {
+        LibraryView()
+    }
 }

@@ -19,14 +19,20 @@ struct BookImage: View {
     var imageFrame: (width: CGFloat, height: CGFloat) = (100, 150)
     
     var body: some View {
-        AsyncImage(url: URL(string: bookImageURL)) { image in
-            image
-                .resizable()
-                .frame(width: self.imageFrame.width, height: self.imageFrame.height)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-        } placeholder: {
+        if bookImageURL.isEmpty == false {
+            AsyncImage(url: URL(string: bookImageURL)) { image in
+                image
+                    .resizable()
+                    .frame(width: self.imageFrame.width, height: self.imageFrame.height)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+            } placeholder: {
+                BookImageSkeleton()
+                    .frame(width: self.imageFrame.width, height: self.imageFrame.height)
+            }
+        } else {
             BookImageSkeleton()
                 .frame(width: self.imageFrame.width, height: self.imageFrame.height)
+                .foregroundStyle(.red)
         }
     }
 }

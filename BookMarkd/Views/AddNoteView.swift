@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AddNoteView: View {
     @Environment(\.dismiss) var dismiss
-    @State private var note: String = "Enter a meaningful quote..."
+    @State private var note: String = ""
     @State private var pageNumber: String = ""
     
     var body: some View {
@@ -73,6 +73,18 @@ struct AddNoteView: View {
             
             TextEditor(text: $note)
                 .padding()
+                .overlay {
+                    if note.isEmpty {
+                        VStack {
+                            HStack {
+                                Text("Enter a meaningful quote")
+                                Spacer()
+                            }
+                            Spacer()
+                        }
+                        .padding(25)
+                    }
+                }
             
             Spacer()
             

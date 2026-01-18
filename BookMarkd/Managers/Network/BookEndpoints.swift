@@ -1,0 +1,39 @@
+//
+//  BookEndpoints.swift
+//  BookMarkd
+//
+//  Created by Tejeshwer Singh on 18/01/26.
+//
+
+import Foundation
+
+enum BookEndpoint {
+    case search(query: String)
+    
+    func makeRequest(baseURL: URL) throws -> URLRequest {
+        switch self {
+        case .search(let query):
+            var components = URLComponents(url: baseURL, resolvingAgainstBaseURL: false)
+            // Ensure baseURL points to https://openlibrary.org
+            // Append path /search.json and query parameter q
+            components?.path = "/search.json"
+            var items: [URLQueryItem] = []
+            if query.isEmpty == false {
+                items.append(URLQueryItem(name: "q", value: query))
+            }
+            components?.queryItems = items
+            guard let url = components?.url else { throw URLError(.badURL) }
+            var request = URLRequest(url: url)
+            request.httpMethod = "GET"
+            request.setValue("application/json", forHTTPHeaderField: "Accept")
+            return request
+        }
+    }
+}
+
+private extension Optional where Wrapped == URL {
+    func unwrap() throws -> URL {
+        if let url = self { return url }
+        throw URLError(.badURL)
+    }
+}

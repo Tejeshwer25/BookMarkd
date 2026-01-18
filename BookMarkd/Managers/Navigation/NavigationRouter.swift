@@ -14,6 +14,7 @@ enum NavigationRoutes: Hashable {
     case searchResults(query: String)
     case bookFinishScreen(id: UUID)
     case addBookScreen
+    case bookWishlistScreen
 }
 
 

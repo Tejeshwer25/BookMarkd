@@ -10,7 +10,7 @@ import SwiftUI
 struct BookDetailView: View {
     @EnvironmentObject private var router: Router
     
-    @State private var quotes: [String] = []
+    @State private var quotes: [QuotesModel] = []
     @State private var showAddNoteSheet: Bool = false
     
     var body: some View {
@@ -85,9 +85,9 @@ struct BookDetailView: View {
 
             }
             
-            ForEach(quotes, id: \.self) { quote in
+            ForEach(quotes, id: \.self.id) { quote in
                 VStack {
-                    Text("Quote")
+                    Text(quote.noteType.rawValue.capitalized)
                         .padding(.horizontal, 20)
                         .padding(.vertical, 7)
                         .background {
@@ -95,7 +95,7 @@ struct BookDetailView: View {
                                 .foregroundStyle(Color.red.opacity(0.3))
                         }
                     
-                    Text(quote)
+                    Text(quote.text)
                         .padding(.top, 7)
                         .padding(.leading, -20)
                 }
@@ -124,9 +124,15 @@ struct BookDetailView: View {
                 }
             }
             
-            Text("No notes added for this book yet.")
-                .padding(.top, 25)
-                .multilineTextAlignment(.center)
+            VStack {
+                Image(systemName: "note.text")
+                    .resizable()
+                    .frame(width: 75, height: 75)
+                Text("No notes/quotes added for this book yet.")
+                    .padding(.top, 25)
+                    .multilineTextAlignment(.center)
+            }
+            .padding(.top, 100)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding()

@@ -23,11 +23,13 @@ struct NavigationStackContainer<Content: View>: View {
                     case .bookDetails(id: _):
                         BookDetailView()
                     case .searchResults(query: _):
-                        SearchView(results: .constant(["Test"]))
+                        SearchView(results: .constant([]))
                     case .bookFinishScreen(id: _):
                         FinishBookView()
                     case .addBookScreen:
                         AddBookView()
+                    case .bookWishlistScreen:
+                        BookWishlistView()
                     }
                 }
         }
