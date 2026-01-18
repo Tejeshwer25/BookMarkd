@@ -14,7 +14,7 @@ struct LibraryView: View {
     @State private var isSearching: Bool = false
     @State private var showAddBookScreen: Bool = false
     @State private var bookTitle: String = ""
-    @State private var currentlyReadingBooks: [String] = []
+    @State private var currentlyReadingBooks: [String] = [""]
     @State private var finishedBooks: [String] = [""]
     
     var body: some View {
@@ -25,116 +25,65 @@ struct LibraryView: View {
                         .presentationDetents([.large])
                 }
         } else {
-            self.libraryViewWithBooks
-                .searchable(text: $searchText, prompt: "Search for a book")
-                .onChange(of: searchText) { _, newValue in
-                    withAnimation {
-                        self.isSearching = !newValue.isEmpty
-                    }
-                }
-                .toolbar {
-                    ToolbarItem(placement: .topBarTrailing) {
-                        Button {
-                            self.showAddBookScreen = true
-                        } label: {
-                            Image(systemName: "plus")
-                        }
-                        
-                    }
-                }
-                .sheet(isPresented: $showAddBookScreen) {
-                    AddBookView()
-                        .presentationDetents([.large])
-                }
-        }
-    }
-    
-    var libraryViewWithBooks: some View {
-        ScrollView {
-            if !isSearching {
-                VStack(alignment: .leading, spacing: 50) {
-                    VStack(alignment: .leading) {
-                        Text("Currently Reading")
-                            .font(.title3)
-                            .fontWeight(.bold)
-                            .padding(.horizontal)
-                        
-                        if self.currentlyReadingBooks.isEmpty {
-                            self.emptyCurrentlyReadingView
-                        } else {
-                            ScrollView(.horizontal) {
-                                HStack(spacing: 50) {
-                                    self.currentlyReadingBookView
-                                }
+            List {
+                Section("Currently Reading") {
+                    if self.currentlyReadingBooks.isEmpty {
+                        self.emptyCurrentlyReadingView
+                    } else {
+                        ScrollView(.horizontal) {
+                            HStack(spacing: 10) {
+                                self.currentlyReadingBookView
+                                self.currentlyReadingBookView
                             }
-                            .scrollIndicators(.hidden)
                         }
+                        .scrollIndicators(.hidden)
+                    }
+                }
+                .listRowBackground(Color.clear)
+                
+                Section("Books Read") {
+                    if self.finishedBooks.isEmpty == false {
+                        self.finishedBooksView
+                    } else {
+                        self.emptyFinishedBooksView
+                    }
+                }
+                .listRowBackground(Color.clear)
+            }
+            .navigationTitle("Library")
+            .searchable(text: $searchText, prompt: "Search for a book")
+            .onChange(of: searchText) { _, newValue in
+                withAnimation {
+                    self.isSearching = !newValue.isEmpty
+                }
+            }
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        self.showAddBookScreen = true
+                    } label: {
+                        Image(systemName: "plus")
                     }
                     
-                    VStack(alignment: .leading) {
-                        Text("Finished Books")
-                            .font(.title3)
-                            .fontWeight(.bold)
-                            .padding(.horizontal)
-                        
-                        if self.finishedBooks.isEmpty {
-                            self.emptyFinishedBooksView
-                        } else {
-                            VStack(spacing: 30) {
-                                HStack(spacing: 25) {
-                                    self.finishedBooksView
-                                    self.finishedBooksView
-                                }
-                            }
-                        }
-                    }
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .navigationTitle("Library")
-            } else {
-                SearchView(results: .constant([searchText]))
+            }
+            .sheet(isPresented: $showAddBookScreen) {
+                AddBookView()
+                    .presentationDetents([.large])
             }
         }
     }
     
     var finishedBooksView: some View {
-        Button {
-            self.router.pushScreen(.bookDetails(id: .init()))
-        } label: {
-            VStack {
-                BookImage(bookImageURL: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400", imageFrame: (width: 150, height: 200))
-                
-                VStack(alignment: .leading, spacing: 7) {
-                    Text("The Midnight Library")
-                        .font(.headline)
-                    Text("Matt Haig")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                    
-                    HStack {
-                        ForEach(1...5, id: \.self) { index in
-                            if index > 3 {
-                                Image(systemName: "star")
-                                    .resizable()
-                                    .frame(width: 12, height: 12)
-                            } else {
-                                Image(systemName: "star.fill")
-                                    .resizable()
-                                    .frame(width: 12, height: 12)
-                            }
-                        }
-                    }
-                    
-                    Text("Dec 20, 2025")
-                        .font(.caption2)
-                        .fontWeight(.light)
-                        .foregroundStyle(Color.secondary)
-                }
-                .padding(.horizontal)
+        ForEach(1...5, id: \.self) { element in
+            Button {
+                self.router.pushScreen(.bookDetails(id: .init()))
+            } label: {
+                HorizontalBookPreview(bookName: "The Midnight Library",
+                                      descriptionLineLimit: 2)
             }
+            .buttonStyle(.plain)
         }
-        .buttonStyle(.plain)
-        .frame(maxWidth: .infinity)
     }
     
     var currentlyReadingBookView: some View {
@@ -142,64 +91,40 @@ struct LibraryView: View {
             self.router.pushScreen(.bookDetails(id: .init()))
         } label: {
             HStack(alignment: .top) {
-                BookImage(bookImageURL: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400", imageFrame: (width: 125, height: 175))
+                BookImage(bookImageURL: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400",
+                          imageFrame: (width: 125, height: 175))
                 
                 VStack(alignment: .leading) {
                     Text("The Midnight Library")
                         .font(.headline)
+                    
                     Text("Matt Haig")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
+                        .padding(.top, 1)
                 }
                 .padding(.vertical)
+                
+                Spacer()
             }
-            .frame(maxWidth: 275)
+            .frame(width: 300)
         }
+        .padding(.trailing, 20)
         .buttonStyle(.plain)
     }
     
     var emptyCurrentlyReadingView: some View {
-        HStack {
-            Spacer()
+        VStack(alignment: .center) {
+            Text("Nothing on your desk right now")
+                .font(.title3)
+                .fontWeight(.semibold)
             
-            VStack(alignment: .center) {
-                Text("Nothing on your desk right now")
-                    .font(.title3)
-                    .fontWeight(.semibold)
-                
-                Text("When you begin a book it will wait for you here")
-                    .padding(.top, 1)
-                    .font(.body)
-                    .multilineTextAlignment(.center)
-                    .padding(.bottom)
-                
-                Button {
-                    self.showAddBookScreen = true
-                } label: {
-                    HStack {
-                        Image(systemName: "plus")
-                        Text("Add a Book")
-                    }
-                    .padding()
-                    .background {
-                        Capsule()
-                            .foregroundStyle(.gray)
-                    }
-                }
-                .buttonStyle(.plain)
-                .foregroundStyle(.black)
-            }
-            .padding(.horizontal, 25)
-            .padding(.vertical)
-            .background {
-                RoundedRectangle(cornerRadius: 8)
-                    .foregroundStyle(.gray.opacity(0.2))
-            }
-            .padding()
-            
-            
-            Spacer()
+            Text("When you begin a book it will wait for you here")
+                .padding(.top, 1)
+                .font(.body)
+                .multilineTextAlignment(.center)
         }
+        .padding(25)
     }
     
     var emptyFinishedBooksView: some View {
