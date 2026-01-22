@@ -11,12 +11,14 @@ struct BookModel: Codable, Identifiable {
     var id: String
     var title: String
     var authorName: [String]
-    var readState: BookReadingState?
+    var readState: BookReadingState
     var coverImageURL: String?
     var quotes: [QuotesModel]?
+    var rating: Int?
 }
 
 enum BookReadingState: String, Equatable, Codable {
+    case wishlist
     case read
     case unread
     case reading

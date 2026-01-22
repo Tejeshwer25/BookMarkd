@@ -8,12 +8,11 @@
 import SwiftUI
 
 struct AddBookView: View {
-    @Environment(\.dismiss) var dismiss
-    
     @State private var bookTitle: String = ""
     @State private var books: [BookModel] = []
-    @State private var bookAdded: String = ""
+    @State private var bookAdded: [String] = []
     @State private var debouncedTask: Task<Void, Never>? = nil
+    @State private var loading: Bool = false
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -43,7 +42,7 @@ struct AddBookView: View {
                     Button {
                         self.addBookToWishlist(book.id)
                     } label: {
-                        Image(systemName: self.bookAdded == book.id ? "bookmark.fill" : "bookmark")
+                        Image(systemName: self.bookAdded.contains(book.id) ? "bookmark.fill" : "bookmark")
                             .resizable()
                             .frame(width: 20, height: 25)
                             .contentTransition(.symbolEffect(.automatic))
@@ -55,25 +54,58 @@ struct AddBookView: View {
             }
         }
         .padding()
+        .overlay {
+            if self.loading {
+                ProgressView()
+            } else if self.books.isEmpty {
+                self.emptyListView
+            }
+        }
         .onChange(of: bookTitle) { oldValue, newValue in
             self.debouncedTask?.cancel()
             
             self.debouncedTask = Task {
                 try? await Task.sleep(nanoseconds: 500_000_000)
+                self.loading = true
+                self.books = []
                 let searchResult = await searchBook(newValue)
                 
                 if !searchResult.isEmpty {
                     self.books = searchResult
+                    self.loading = false
                 }
             }
         }
     }
     
+    var emptyListView: some View {
+        VStack(alignment: .center) {
+            Image(systemName: self.bookTitle.isEmpty ? "book.circle" :  "magnifyingglass.circle.fill")
+                .resizable()
+                .frame(width: 75, height: 75)
+                .padding()
+            
+            Text(self.bookTitle.isEmpty ? "Searched books will appear here" : "No books found!")
+                .font(.headline)
+                .multilineTextAlignment(.center)
+            
+            Text(self.bookTitle.isEmpty ? "" : "Narrow down you search or try with a different keyword")
+                .font(.subheadline)
+                .multilineTextAlignment(.center)
+        }
+        .opacity(self.bookTitle.isEmpty ? 0.5 : 1)
+        .padding()
+    }
+    
     func addBookToWishlist(_ bookID: String) {
-        withAnimation(completionCriteria: .logicallyComplete) {
-            self.bookAdded = bookID
-        } completion: {
-            dismiss()
+        if self.bookAdded.contains(bookID) {
+            withAnimation {
+                self.bookAdded.removeAll(where: { $0 == bookID })
+            }
+        } else {
+            withAnimation {
+                self.bookAdded.append(bookID)
+            }
         }
     }
     

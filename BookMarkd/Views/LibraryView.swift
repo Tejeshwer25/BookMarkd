@@ -86,7 +86,10 @@ struct LibraryView: View {
             Button {
                 self.router.pushScreen(.bookDetails(id: .init()))
             } label: {
-                HorizontalBookPreview(book: .init(id: "", title: "Test Book", authorName: []),
+                HorizontalBookPreview(book: BookModel(id: "",
+                                                  title: "Test Book",
+                                                  authorName: [],
+                                                  readState: .read),
                                       descriptionLineLimit: 2)
             }
             .buttonStyle(.plain)
