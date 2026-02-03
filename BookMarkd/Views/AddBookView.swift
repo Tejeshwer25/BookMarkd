@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct AddBookView: View {
+    @EnvironmentObject private var store: AppStore
     @State private var bookTitle: String = ""
     @State private var books: [BookModel] = []
-    @State private var bookAdded: [String] = []
     @State private var debouncedTask: Task<Void, Never>? = nil
     @State private var loading: Bool = false
     
@@ -40,9 +40,9 @@ struct AddBookView: View {
                     Spacer(minLength: 25)
                     
                     Button {
-                        self.addBookToWishlist(book.id)
+                        self.addBookToWishlist(book)
                     } label: {
-                        Image(systemName: self.bookAdded.contains(book.id) ? "bookmark.fill" : "bookmark")
+                        Image(systemName: self.store.getBookList().contains(where: { $0.id == book.id }) ? "bookmark.fill" : "bookmark")
                             .resizable()
                             .frame(width: 20, height: 25)
                             .contentTransition(.symbolEffect(.automatic))
@@ -97,15 +97,9 @@ struct AddBookView: View {
         .padding()
     }
     
-    func addBookToWishlist(_ bookID: String) {
-        if self.bookAdded.contains(bookID) {
-            withAnimation {
-                self.bookAdded.removeAll(where: { $0 == bookID })
-            }
-        } else {
-            withAnimation {
-                self.bookAdded.append(bookID)
-            }
+    func addBookToWishlist(_ book: BookModel) {
+        withAnimation {
+            self.store.addOrRemoveFromWishlist(book: book)
         }
     }
     

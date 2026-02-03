@@ -9,6 +9,7 @@ import Foundation
 
 protocol BookService {
     func searchBooks(_ query: String) async throws -> [BookModel]
+    func getBookDetails(_ bookID: String) async throws -> BookDetailDataModel
 }
 
 struct BookServiceUtility: BookService {
@@ -33,6 +34,20 @@ struct BookServiceUtility: BookService {
                              quotes: [])
         }
         return books
+    }
+    
+    func getBookDetails(_ bookID: String) async throws -> BookDetailDataModel {
+        let request = try BookEndpoint.bookDetails(bookKey: bookID).makeRequest(baseURL: api.baseURL)
+        let response: OpenLibraryBookDetailsModel = try await api.send(request)
+        
+        let book: BookDetailDataModel = BookDetailDataModel(id: response.key,
+                                                            title: response.title,
+                                                            description: response.description,
+                                                            places: response.subjectPlaces,
+                                                            characters: response.subjectPeople,
+                                                            genre: response.subjects)
+        
+        return book
     }
 
     private func buildCoverURL(from coverID: Int?) -> String? {

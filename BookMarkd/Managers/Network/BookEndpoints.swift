@@ -9,6 +9,7 @@ import Foundation
 
 enum BookEndpoint {
     case search(query: String)
+    case bookDetails(bookKey: String)
     
     func makeRequest(baseURL: URL) throws -> URLRequest {
         switch self {
@@ -22,12 +23,23 @@ enum BookEndpoint {
                 items.append(URLQueryItem(name: "q", value: query))
             }
             components?.queryItems = items
+            
             guard let url = components?.url else { throw URLError(.badURL) }
-            var request = URLRequest(url: url)
-            request.httpMethod = "GET"
-            request.setValue("application/json", forHTTPHeaderField: "Accept")
-            return request
+            return self.getURLRequest(for: url)
+        case .bookDetails(let bookKey):
+            var components = URLComponents(url: baseURL, resolvingAgainstBaseURL: false)
+            components?.path = "\(bookKey).json"
+            
+            guard let url = components?.url else { throw URLError(.badURL) }
+            return self.getURLRequest(for: url)
         }
+    }
+    
+    func getURLRequest(for url: URL) -> URLRequest {
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        return request
     }
 }
 

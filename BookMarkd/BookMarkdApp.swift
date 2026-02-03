@@ -10,6 +10,7 @@ import SwiftData
 
 @main
 struct BookMarkdApp: App {
+    @StateObject var appStore = AppStore()
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,
@@ -28,5 +29,6 @@ struct BookMarkdApp: App {
             ContentView()
         }
         .modelContainer(sharedModelContainer)
+        .environmentObject(appStore)
     }
 }

@@ -18,10 +18,10 @@ struct NavigationStackContainer<Content: View>: View {
                 .toolbarVisibility(self.shouldHideTabbar(), for: .tabBar)
                 .navigationDestination(for: NavigationRoutes.self) { route in
                     switch route {
-                    case .authorDetails(id: _):
-                        BookDetailView()
-                    case .bookDetails(id: _):
-                        BookDetailView()
+                    case .authorDetails(let id):
+                        BookDetailView(bookId: id)
+                    case .bookDetails(let id):
+                        BookDetailView(bookId: id)
                     case .searchResults(query: _):
                         SearchView(results: .constant([]))
                     case .bookFinishScreen(id: _):

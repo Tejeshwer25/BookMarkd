@@ -9,14 +9,13 @@ import Foundation
 import Combine
 
 enum NavigationRoutes: Hashable {
-    case bookDetails(id: UUID)
-    case authorDetails(id: UUID)
+    case bookDetails(id: String)
+    case authorDetails(id: String)
     case searchResults(query: String)
-    case bookFinishScreen(id: UUID)
+    case bookFinishScreen(id: String)
     case addBookScreen
     case bookWishlistScreen
 }
-
 
 final class Router: ObservableObject {
     @Published var currentScreen: [NavigationRoutes] = []

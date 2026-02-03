@@ -9,11 +9,11 @@ import SwiftUI
 
 struct BookWishlistView: View {
     @EnvironmentObject private var router: Router
-    
-    @State private var wishlistedBooks: [BookModel] = []
+    @EnvironmentObject private var store: AppStore
+    @StateObject private var viewModel = WishlishtViewModel()
     
     var body: some View {
-        if self.wishlistedBooks.isEmpty {
+        if self.viewModel.getWishListedBooks(store).isEmpty {
             self.noWishlistedBooksView
                 .navigationTitle("Wishlist")
         } else {
@@ -41,9 +41,9 @@ struct BookWishlistView: View {
     }
     
     var wishlistedBooksView: some View {
-        List(self.wishlistedBooks, id: \.self.id) { book in
+        List(self.viewModel.getWishListedBooks(store), id: \.self.id) { book in
             Button {
-                self.router.pushScreen(.bookDetails(id: .init()))
+                self.router.pushScreen(.bookDetails(id: book.id))
             } label: {
                 HorizontalBookPreview(book: book, descriptionLineLimit: 3)
             }

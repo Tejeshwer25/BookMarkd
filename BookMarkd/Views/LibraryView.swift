@@ -9,25 +9,20 @@ import SwiftUI
 
 struct LibraryView: View {
     @EnvironmentObject private var router: Router
-    
-    @State private var searchText: String = ""
-    @State private var isSearching: Bool = false
-    @State private var showAddBookScreen: Bool = false
-    @State private var bookTitle: String = ""
-    @State private var currentlyReadingBooks: [BookModel] = []
-    @State private var finishedBooks: [BookModel] = []
+    @EnvironmentObject private var store: AppStore
+    @StateObject private var viewModel: LibraryViewModel = LibraryViewModel()
     
     var body: some View {
-        if self.currentlyReadingBooks.isEmpty && self.finishedBooks.isEmpty {
+        if self.viewModel.checkForViewToBeShown(store) == .noBooksPresent {
             self.noBookView
-                .sheet(isPresented: $showAddBookScreen) {
+                .sheet(isPresented: $viewModel.showAddBookScreen) {
                     AddBookView()
                         .presentationDetents([.large])
                 }
         } else {
             List {
                 Section("Currently Reading") {
-                    if self.currentlyReadingBooks.isEmpty {
+                    if self.viewModel.checkForViewToBeShown(store) == .noCurrentlyReadingBook {
                         self.emptyCurrentlyReadingView
                     } else {
                         ScrollView(.horizontal) {
@@ -42,7 +37,7 @@ struct LibraryView: View {
                 .listRowBackground(Color.clear)
                 
                 Section("Books Read") {
-                    if self.finishedBooks.isEmpty == false {
+                    if self.viewModel.checkForViewToBeShown(store) == .noFinishedBook {
                         self.finishedBooksView
                     } else {
                         self.emptyFinishedBooksView
@@ -51,10 +46,10 @@ struct LibraryView: View {
                 .listRowBackground(Color.clear)
             }
             .navigationTitle("Library")
-            .searchable(text: $searchText, prompt: "Search for a book")
-            .onChange(of: searchText) { _, newValue in
+            .searchable(text: $viewModel.searchText, prompt: "Search for a book")
+            .onChange(of: self.viewModel.searchText) { _, newValue in
                 withAnimation {
-                    self.isSearching = !newValue.isEmpty
+                    self.viewModel.isSearching = !newValue.isEmpty
                 }
             }
             .toolbar {
@@ -68,13 +63,13 @@ struct LibraryView: View {
                 
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
-                        self.showAddBookScreen = true
+                        self.viewModel.showAddBookScreen = true
                     } label: {
                         Image(systemName: "plus")
                     }
                 }
             }
-            .sheet(isPresented: $showAddBookScreen) {
+            .sheet(isPresented: $viewModel.showAddBookScreen) {
                 AddBookView()
                     .presentationDetents([.large])
             }
@@ -174,7 +169,7 @@ struct LibraryView: View {
                 .font(.body)
             
             Button {
-                self.showAddBookScreen = true
+                self.viewModel.showAddBookScreen = true
             } label: {
                 HStack {
                     Image(systemName: "plus")
