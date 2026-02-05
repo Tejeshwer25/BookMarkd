@@ -12,7 +12,6 @@ struct BookDetailView: View {
     @EnvironmentObject private var router: Router
     @EnvironmentObject private var store: AppStore
     
-    @State private var quotes: [QuotesModel] = []
     @State private var showAddNoteSheet: Bool = false
     @State private var book: BookModel?
     @State private var bookDetails: BookDetailDataModel? = nil
@@ -30,7 +29,7 @@ struct BookDetailView: View {
                 bookInfoView
                 
                 if self.book?.readState == .reading {
-                    if quotes.isEmpty {
+                    if self.book?.quotes?.isEmpty == true {
                         noNotesView
                     } else {
                         notesAndQuotesView
@@ -53,7 +52,7 @@ struct BookDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $showAddNoteSheet) {
             NavigationStack {
-                AddNoteView()
+                AddNoteView(book: self.book)
             }
         }
         .onAppear {
@@ -101,7 +100,8 @@ struct BookDetailView: View {
                     }
                 } else if self.book?.readState == .wishlist {
                     Button("Start Reading") {
-                        self.router.popToRoot()
+                        self.store.updateBookReadState(to: .reading, for: self.bookId)
+                        self.router.popScreen()
                     }
                     .foregroundStyle(.black)
                     .frame(maxWidth: .infinity)
@@ -137,7 +137,7 @@ struct BookDetailView: View {
 
             }
             
-            ForEach(quotes, id: \.self.id) { quote in
+            ForEach(self.book?.quotes ?? [], id: \.self.id) { quote in
                 VStack {
                     Text(quote.noteType.rawValue.capitalized)
                         .padding(.horizontal, 20)
@@ -294,7 +294,6 @@ struct BookDetailView: View {
                     
                     self.alertTitle = "Error"
                     self.alertMesssage = error.localizedDescription
-                    print(error.localizedDescription)
                 }
             }
         }

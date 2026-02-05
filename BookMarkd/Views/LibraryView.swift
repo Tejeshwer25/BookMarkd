@@ -13,7 +13,11 @@ struct LibraryView: View {
     @StateObject private var viewModel: LibraryViewModel = LibraryViewModel()
     
     var body: some View {
-        if self.viewModel.checkForViewToBeShown(store) == .noBooksPresent {
+        let viewToBeShown = self.viewModel.checkForViewToBeShown(store)
+        let currentlyReadingBookList = self.viewModel.getBookListFor(readingState: .reading, from: self.store)
+        let finishedBooksList = self.viewModel.getBookListFor(readingState: .read, from: self.store)
+        
+        if viewToBeShown == .noBooksPresent {
             self.noBookView
                 .sheet(isPresented: $viewModel.showAddBookScreen) {
                     AddBookView()
@@ -21,32 +25,16 @@ struct LibraryView: View {
                 }
         } else {
             List {
-                Section("Currently Reading") {
-                    if self.viewModel.checkForViewToBeShown(store) == .noCurrentlyReadingBook {
-                        self.emptyCurrentlyReadingView
-                    } else {
-                        ScrollView(.horizontal) {
-                            HStack(spacing: 10) {
-                                self.currentlyReadingBookView
-                                self.currentlyReadingBookView
-                            }
-                        }
-                        .scrollIndicators(.hidden)
-                    }
-                }
-                .listRowBackground(Color.clear)
+                CurrentlyReadingSection(currentlyReadingBookList: currentlyReadingBookList,
+                                        store: self.store,
+                                        viewModel: viewModel) { self.router.pushScreen(.bookDetails(id: $0)) }
                 
-                Section("Books Read") {
-                    if self.viewModel.checkForViewToBeShown(store) == .noFinishedBook {
-                        self.finishedBooksView
-                    } else {
-                        self.emptyFinishedBooksView
-                    }
-                }
-                .listRowBackground(Color.clear)
+                FinishedBooksSection(viewModel: self.viewModel,
+                                     store: self.store,
+                                     finishedBookList: finishedBooksList) { self.router.pushScreen(.bookDetails(id: $0)) }
             }
             .navigationTitle("Library")
-            .searchable(text: $viewModel.searchText, prompt: "Search for a book")
+//            .searchable(text: $viewModel.searchText, prompt: "Search for a book")
             .onChange(of: self.viewModel.searchText) { _, newValue in
                 withAnimation {
                     self.viewModel.isSearching = !newValue.isEmpty
@@ -74,83 +62,6 @@ struct LibraryView: View {
                     .presentationDetents([.large])
             }
         }
-    }
-    
-    var finishedBooksView: some View {
-        ForEach(1...5, id: \.self) { element in
-            Button {
-                self.router.pushScreen(.bookDetails(id: .init()))
-            } label: {
-                HorizontalBookPreview(book: BookModel(id: "",
-                                                  title: "Test Book",
-                                                  authorName: [],
-                                                  readState: .read),
-                                      descriptionLineLimit: 2)
-            }
-            .buttonStyle(.plain)
-        }
-    }
-    
-    var currentlyReadingBookView: some View {
-        Button {
-            self.router.pushScreen(.bookDetails(id: .init()))
-        } label: {
-            HStack(alignment: .top) {
-                BookImage(bookImageURL: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400",
-                          imageFrame: (width: 125, height: 175))
-                
-                VStack(alignment: .leading) {
-                    Text("The Midnight Library")
-                        .font(.headline)
-                    
-                    Text("Matt Haig")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                        .padding(.top, 1)
-                }
-                .padding(.vertical)
-                
-                Spacer()
-            }
-            .frame(width: 300)
-        }
-        .padding(.trailing, 20)
-        .buttonStyle(.plain)
-    }
-    
-    var emptyCurrentlyReadingView: some View {
-        VStack(alignment: .center) {
-            Text("Nothing on your desk right now")
-                .font(.title3)
-                .fontWeight(.semibold)
-            
-            Text("When you begin a book it will wait for you here")
-                .padding(.top, 1)
-                .font(.body)
-                .multilineTextAlignment(.center)
-        }
-        .padding(25)
-    }
-    
-    var emptyFinishedBooksView: some View {
-        VStack(alignment: .center) {
-            Image(systemName: "books.vertical.circle.fill")
-                .resizable()
-                .frame(width: 100, height: 100)
-                .opacity(0.3)
-            
-            Text("No stories closed yet")
-                .font(.title3)
-                .fontWeight(.semibold)
-                .padding(.top)
-            
-            Text("When you finish a book it will settle here quietly")
-                .font(.body)
-                .multilineTextAlignment(.center)
-        }
-        .padding()
-        .frame(maxWidth: .infinity)
-        
     }
     
     var noBookView: some View {

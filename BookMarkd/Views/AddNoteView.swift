@@ -8,19 +8,23 @@
 import SwiftUI
 
 struct AddNoteView: View {
+    @EnvironmentObject private var store: AppStore
     @Environment(\.dismiss) var dismiss
+    
     @State private var note: String = ""
     @State private var pageNumber: String = ""
+    
+    let book: BookModel?
     
     var body: some View {
         VStack(alignment: .leading) {
             VStack(alignment: .leading) {
                 VStack(alignment: .leading, spacing: 10) {
-                    Text("The Midnight Library")
+                    Text(book?.title ?? "")
                         .font(.title3)
                         .fontWeight(.bold)
                     
-                    Text("Matt Haig")
+                    Text(book?.authorName.joined(separator: ", ") ?? "")
                 }
                 .padding()
             }
@@ -119,7 +123,15 @@ struct AddNoteView: View {
             
             ToolbarItem(placement: .confirmationAction) {
                 Button {
-                    dismiss()
+                    withAnimation {
+                        self.store.addQuoteToBook(id: self.book?.id ?? "", quote: .init(id: .init(),
+                                                                                        noteType: .quote,
+                                                                                        text: self.note,
+                                                                                        pageNumber: Int(self.pageNumber),
+                                                                                        date: .init()))
+                    } completion: {
+                        dismiss()
+                    }
                 } label: {
                     Text("Save")
                 }
@@ -129,5 +141,5 @@ struct AddNoteView: View {
 }
 
 #Preview {
-    AddNoteView()
+    AddNoteView(book: .init(id: "", title: "", authorName: [], readState: .read))
 }

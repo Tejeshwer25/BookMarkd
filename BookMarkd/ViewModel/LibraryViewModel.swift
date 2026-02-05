@@ -40,16 +40,21 @@ class LibraryViewModel: ObservableObject {
     }
     
     func checkForViewToBeShown(_ store: AppStore) -> LibraryViewType {
+        print(store.getBookList())
         let currentlyReadingBooks = self.getCurrentlyReadingBooks(store)
         let finishedBooks = self.getFinishedBooks(store)
         
         if currentlyReadingBooks.isEmpty && finishedBooks.isEmpty {
+            print("hii")
             return .noBooksPresent
         } else if currentlyReadingBooks.isEmpty {
+            print("hiii")
             return .noCurrentlyReadingBook
         } else if finishedBooks.isEmpty {
+            print("Here")
             return .noFinishedBook
         } else {
+            print("hi")
             return .allBooksPresent
         }
     }

@@ -16,12 +16,10 @@ class AppStore: ObservableObject {
     }
     
     func addBook(_ book: BookModel) {
-        print("Added book: \(book.title)")
         if self.bookList.contains(where: { $0.id == book.id }) {
             return
         }
         self.bookList.append(book)
-        print("List after adding: \(self.bookList)")
     }
     
     func addOrRemoveFromWishlist(book: BookModel) {
@@ -36,5 +34,33 @@ class AppStore: ObservableObject {
     
     func getBookWith(id: String) -> BookModel? {
         return self.bookList.first { $0.id == id }
+    }
+    
+    func updateBookReadState(to: BookReadingState, for bookID: String) {
+        self.bookList = self.bookList.map { book in
+            if book.id == bookID {
+                var updatedBook = book
+                updatedBook.readState = to
+                return updatedBook
+            }
+            return book
+        }
+        
+        print(self.bookList)
+    }
+    
+    func addQuoteToBook(id: String, quote: QuotesModel) {
+        self.bookList = self.bookList.map { book in
+            if book.id == id {
+                var updatedBook = book
+                updatedBook.quotes?.append(.init(id: quote.id,
+                                                 noteType: quote.noteType,
+                                                 text: quote.text,
+                                                 pageNumber: quote.pageNumber,
+                                                 date: quote.date))
+                return updatedBook
+            }
+            return book
+        }
     }
 }
