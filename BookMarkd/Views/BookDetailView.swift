@@ -29,10 +29,8 @@ struct BookDetailView: View {
                 bookInfoView
                 
                 if self.book?.readState == .reading {
-                    if self.book?.quotes?.isEmpty == true {
-                        noNotesView
-                    } else {
-                        notesAndQuotesView
+                    NotesAndQuotesView(notesList: self.store.getBookWith(id: self.bookId)?.quotes ?? []) {
+                        self.showAddNoteSheet.toggle()
                     }
                 } else if self.book?.readState == .wishlist {
                     VStack(alignment: .leading, spacing: 25) {
@@ -72,7 +70,6 @@ struct BookDetailView: View {
         .alert(self.alertTitle, isPresented: $shouldShowAlert) {} message: {
             Text(self.alertMesssage)
         }
-
     }
     
     var bookInfoView: some View {
@@ -114,79 +111,6 @@ struct BookDetailView: View {
                 }
             }
         }
-        .padding()
-    }
-    
-    var notesAndQuotesView: some View {
-        VStack(alignment: .leading) {
-            HStack {
-                Text("Notes & Quotes")
-                    .font(.title2)
-                    .fontWeight(.bold)
-                
-                Spacer()
-                
-                Button {
-                    self.showAddNoteSheet.toggle()
-                } label: {
-                    Image(systemName: "plus.circle.fill")
-                        .resizable()
-                        .frame(width: 30, height: 30)
-                        .foregroundStyle(.white)
-                }
-
-            }
-            
-            ForEach(self.book?.quotes ?? [], id: \.self.id) { quote in
-                VStack {
-                    Text(quote.noteType.rawValue.capitalized)
-                        .padding(.horizontal, 20)
-                        .padding(.vertical, 7)
-                        .background {
-                            Capsule()
-                                .foregroundStyle(Color.red.opacity(0.3))
-                        }
-                    
-                    Text(quote.text)
-                        .padding(.top, 7)
-                        .padding(.leading, -20)
-                }
-                .padding()
-            }
-        }
-        .padding()
-    }
-    
-    var noNotesView: some View {
-        VStack {
-            HStack {
-                Text("Notes & Quotes")
-                    .font(.title2)
-                    .fontWeight(.bold)
-                
-                Spacer()
-                
-                Button {
-                    self.showAddNoteSheet.toggle()
-                } label: {
-                    Image(systemName: "plus.circle.fill")
-                        .resizable()
-                        .frame(width: 30, height: 30)
-                        .foregroundStyle(.white)
-                }
-            }
-            
-            VStack {
-                Image(systemName: "note.text")
-                    .resizable()
-                    .frame(width: 75, height: 75)
-                Text("No notes/quotes added for this book yet.")
-                    .padding(.top, 25)
-                    .multilineTextAlignment(.center)
-            }
-            .padding(.top, 100)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding()
     }
     

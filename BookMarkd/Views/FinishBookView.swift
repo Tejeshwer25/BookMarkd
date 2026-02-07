@@ -10,76 +10,137 @@ import SwiftUI
 struct FinishBookView: View {
     @EnvironmentObject private var router: Router
     
+    let bookID: String
+    
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading) {
-                VStack {
-                    BookImage(bookImageURL: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400", imageFrame: (width: 175, height: 225))
+            VStack(spacing: 20) {
+                Text("You've completed a new chapter")
+                
+                BookImage(bookImageURL: "", imageFrame: (150, 190))
+                
+                HStack(spacing: 30) {
+                    VStack(spacing: 10) {
+                        Image(systemName: "calendar")
+                            .resizable()
+                            .frame(width: 30, height: 30)
+                            .padding(.bottom)
+                        
+                        Text("Time to finish")
+                        Text("12 Days")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .padding()
+                    .background {
+                        RoundedRectangle(cornerRadius: 10)
+                            .foregroundStyle(.gray.opacity(0.15))
+                    }
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(.gray.opacity(0.75))
+                    }
                     
-                    Text("You finished reading")
-                        .padding()
-                        .font(.title)
-                        .multilineTextAlignment(.center)
-                    
-                    Text("The Midnight Library")
-                        .font(.title2)
-                    
-                    Text("Matt Haig")
-                        .padding(.top, 3)
-                    
-                    
-                    Text("How would you rate it?")
-                        .padding(.top, 50)
-                        .padding(.bottom)
-                    
-                    HStack {
-                        ForEach(1...5, id: \.self) { rating in
-                            Button {
-                            } label: {
-                                Image(systemName: rating < 3 ? "star.fill" : "star")
-                                    .font(.system(size: 30))
-                                    .foregroundColor(rating < 3 ? .yellow: .gray)
-                            }
-                        }
+                    VStack(spacing: 10) {
+                        Image(systemName: "text.quote")
+                            .resizable()
+                            .frame(width: 30, height: 30)
+                            .padding(.bottom)
+                        
+                        Text("Quotes Captured")
+                        Text("12 Days")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .padding()
+                    .background {
+                        RoundedRectangle(cornerRadius: 10)
+                            .foregroundStyle(.gray.opacity(0.15))
+                    }
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(.gray.opacity(0.75))
                     }
                 }
-                .frame(maxWidth: .infinity)
+                .padding(.top, 25)
                 
-                Text("Final Thoughts")
-                    .padding(.top, 50)
-                    .padding(.bottom)
-                
-                TextEditor(text: .constant("Placeholder"))
-                    .padding(6)
-                    .frame(height: 150)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 14)
-                            .stroke(Color.gray.opacity(0.3), lineWidth: 1)
-                    )
+                VStack {
+                    Text("How was the journey?")
+                        .font(.headline)
                     
+                    Image(systemName: "star")
+                }
+                .padding(.vertical)
+                
                 Button {
-                    self.router.popToRoot()
+                    
                 } label: {
-                    Text("Mark As Finished")
-                        .padding(.horizontal, 50)
-                        .padding(.vertical)
-                        .foregroundStyle(.black)
+                    Text("Write a Review")
+                        .frame(maxWidth: .infinity)
+                        .padding()
                         .background {
-                            Capsule()
-                                .foregroundStyle(.white)
+                            RoundedRectangle(cornerRadius: 10)
+                                .foregroundStyle(.blue)
                         }
                 }
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 30)
+                .buttonStyle(.plain)
+                
+                HStack {
+                    Button {
+                        
+                    } label: {
+                        Text("Share")
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background {
+                                RoundedRectangle(cornerRadius: 10)
+                                    .foregroundStyle(.gray.opacity(0.2))
+                            }
+                            .overlay {
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(.gray.opacity(0.5))
+                            }
+                    }
+                    .buttonStyle(.plain)
+                    
+                    Button {
+                        
+                    } label: {
+                        Text("Done")
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background {
+                                RoundedRectangle(cornerRadius: 10)
+                                    .foregroundStyle(.gray.opacity(0.2))
+                            }
+                            .overlay {
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(.gray.opacity(0.5))
+                            }
+                    }
+                    .buttonStyle(.plain)
+                }
             }
             .padding()
-            .frame(maxWidth: .infinity)
         }
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button {
+                    
+                } label: {
+                    Image(systemName: "xmark")
+                }
+            }
+        }
+        .navigationTitle("Reading Milestone")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
 #Preview {
     NavigationStack {
-        FinishBookView()
+        FinishBookView(bookID: "")
     }
 }

@@ -24,8 +24,8 @@ struct NavigationStackContainer<Content: View>: View {
                         BookDetailView(bookId: id)
                     case .searchResults(query: _):
                         SearchView(results: .constant([]))
-                    case .bookFinishScreen(id: _):
-                        FinishBookView()
+                    case .bookFinishScreen(let id):
+                        FinishBookView(bookID: id)
                     case .addBookScreen:
                         AddBookView()
                     case .bookWishlistScreen:
