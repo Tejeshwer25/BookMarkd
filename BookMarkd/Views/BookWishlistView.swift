@@ -9,7 +9,7 @@ import SwiftUI
 
 struct BookWishlistView: View {
     @EnvironmentObject private var router: Router
-    @EnvironmentObject private var store: AppStore
+    @EnvironmentObject private var store: StorageManageer
     @StateObject private var viewModel = WishlishtViewModel()
     
     var body: some View {

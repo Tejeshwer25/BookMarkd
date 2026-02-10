@@ -10,6 +10,8 @@ import SwiftData
 
 struct ContentView: View {
     @State private var router = Router()
+    @Environment(\.modelContext) private var modelContext
+    @EnvironmentObject private var storeManager: StorageManageer
     
     var body: some View {
         TabView {
@@ -30,6 +32,9 @@ struct ContentView: View {
                     SettingsView()
                 }
             }
+        }
+        .onAppear {
+            self.storeManager.setContext(self.modelContext)
         }
     }
 }

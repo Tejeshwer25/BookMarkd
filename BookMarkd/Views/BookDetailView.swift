@@ -10,7 +10,7 @@ import UIKit
 
 struct BookDetailView: View {
     @EnvironmentObject private var router: Router
-    @EnvironmentObject private var store: AppStore
+    @EnvironmentObject private var store: StorageManageer
     
     @State private var showAddNoteSheet: Bool = false
     @State private var book: BookModel?
@@ -29,7 +29,7 @@ struct BookDetailView: View {
                 bookInfoView
                 
                 if self.book?.readState == .reading {
-                    NotesAndQuotesView(notesList: self.store.getBookWith(id: self.bookId)?.quotes ?? []) {
+                    NotesAndQuotesView(notesList: self.store.getBookWith(id: self.bookId)?.quotes ?? [], showAddNoteButton: true) {
                         self.showAddNoteSheet.toggle()
                     }
                 } else if self.book?.readState == .wishlist {
@@ -43,6 +43,8 @@ struct BookDetailView: View {
                         tagsView
                     }
                     .padding()
+                } else if self.book?.readState == .read {
+                    NotesAndQuotesView(notesList: self.store.getBookWith(id: self.bookId)?.quotes ?? [], showAddNoteButton: false)
                 }
             }
         }
@@ -86,7 +88,7 @@ struct BookDetailView: View {
                 
                 if self.book?.readState == .reading {
                     Button("Mark as Finished") {
-                        self.router.pushScreen(.bookFinishScreen(id: .init()))
+                        self.router.pushScreen(.bookFinishScreen(id: self.bookId))
                     }
                     .foregroundStyle(.black)
                     .frame(maxWidth: .infinity)
@@ -108,6 +110,21 @@ struct BookDetailView: View {
                             .foregroundStyle(.primary)
                     }
                     .padding(.top)
+                } else if self.book?.readState == .read {
+                    HStack {
+                        ForEach(1..<6) { index in
+                            if (self.book?.rating ?? 0) >= index {
+                                Image(systemName: "star.fill")
+                                    .resizable()
+                                    .frame(width: 25, height: 25)
+                                    .foregroundStyle(.yellow)
+                            } else {
+                                Image(systemName: "star")
+                                    .resizable()
+                                    .frame(width: 25, height: 25)
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -225,7 +242,7 @@ struct BookDetailView: View {
 }
 
 #Preview {
-    var appstore = AppStore()
+    var appstore = StorageManageer()
     
     NavigationStack {
         BookDetailView(bookId: "works/OL82563W")

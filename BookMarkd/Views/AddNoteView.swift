@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AddNoteView: View {
-    @EnvironmentObject private var store: AppStore
+    @EnvironmentObject private var store: StorageManageer
     @Environment(\.dismiss) var dismiss
     
     @State private var note: String = ""

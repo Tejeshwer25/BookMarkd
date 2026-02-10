@@ -9,7 +9,8 @@ import SwiftUI
 
 struct NotesAndQuotesView: View {
     let notesList: [QuotesModel]
-    let addNoteButtonTap: () -> Void
+    let showAddNoteButton: Bool
+    var addNoteButtonTap: (() -> Void)? = nil
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -20,15 +21,16 @@ struct NotesAndQuotesView: View {
                 
                 Spacer()
                 
-                Button {
-                    self.addNoteButtonTap()
-                } label: {
-                    Image(systemName: "plus.circle.fill")
-                        .resizable()
-                        .frame(width: 30, height: 30)
-                        .foregroundStyle(.white)
+                if showAddNoteButton {
+                    Button {
+                        self.addNoteButtonTap?()
+                    } label: {
+                        Image(systemName: "plus.circle.fill")
+                            .resizable()
+                            .frame(width: 30, height: 30)
+                            .foregroundStyle(.white)
+                    }
                 }
-                
             }
             .padding(.bottom)
             
@@ -73,5 +75,5 @@ struct NotesAndQuotesView: View {
 #Preview {
     NotesAndQuotesView(notesList: [
         .init(id: .init(), noteType: .note, text: "hfuiwhf hfuwe uih uuew u", date: .init())
-    ], addNoteButtonTap: {})
+    ], showAddNoteButton: false)
 }

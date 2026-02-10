@@ -14,11 +14,11 @@ class LibraryViewModel: ObservableObject {
     @Published var showAddBookScreen: Bool = false
     @Published var bookTitle: String = ""
     
-    func addBookToStore(store: AppStore, book: BookModel) {
+    func addBookToStore(store: StorageManageer, book: BookModel) {
         store.addBook(book)
     }
     
-    func getBookListFor(readingState state: BookReadingState, from store: AppStore) -> [BookModel] {
+    func getBookListFor(readingState state: BookReadingState, from store: StorageManageer) -> [BookModel] {
         switch state {
         case .read:     return self.getFinishedBooks(store)
         case .reading:  return self.getCurrentlyReadingBooks(store)
@@ -27,34 +27,29 @@ class LibraryViewModel: ObservableObject {
         }
     }
     
-    private func getWishlishtedBooks(_ store: AppStore) -> [BookModel] {
+    private func getWishlishtedBooks(_ store: StorageManageer) -> [BookModel] {
         return store.getBookList().filter { $0.readState == .wishlist }
     }
     
-    private func getFinishedBooks(_ store: AppStore) -> [BookModel] {
+    private func getFinishedBooks(_ store: StorageManageer) -> [BookModel] {
         return store.getBookList().filter { $0.readState == .read }
     }
     
-    private func getCurrentlyReadingBooks(_ store: AppStore) -> [BookModel] {
+    private func getCurrentlyReadingBooks(_ store: StorageManageer) -> [BookModel] {
         return store.getBookList().filter { $0.readState == .reading }
     }
     
-    func checkForViewToBeShown(_ store: AppStore) -> LibraryViewType {
-        print(store.getBookList())
+    func checkForViewToBeShown(_ store: StorageManageer) -> LibraryViewType {
         let currentlyReadingBooks = self.getCurrentlyReadingBooks(store)
         let finishedBooks = self.getFinishedBooks(store)
         
         if currentlyReadingBooks.isEmpty && finishedBooks.isEmpty {
-            print("hii")
             return .noBooksPresent
         } else if currentlyReadingBooks.isEmpty {
-            print("hiii")
             return .noCurrentlyReadingBook
         } else if finishedBooks.isEmpty {
-            print("Here")
             return .noFinishedBook
         } else {
-            print("hi")
             return .allBooksPresent
         }
     }

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AddBookView: View {
-    @EnvironmentObject private var store: AppStore
+    @EnvironmentObject private var store: StorageManageer
     @State private var bookTitle: String = ""
     @State private var books: [BookModel] = []
     @State private var debouncedTask: Task<Void, Never>? = nil

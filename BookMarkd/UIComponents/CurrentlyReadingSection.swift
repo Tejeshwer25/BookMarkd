@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CurrentlyReadingSection: View {
     let currentlyReadingBookList: [BookModel]
-    let store: AppStore
+    let store: StorageManageer
     let viewModel: LibraryViewModel
     let onBookCardTap: (String) -> Void
     

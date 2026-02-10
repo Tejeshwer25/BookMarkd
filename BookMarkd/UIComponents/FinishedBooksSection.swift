@@ -9,7 +9,7 @@ import SwiftUI
 
 struct FinishedBooksSection: View {
     let viewModel: LibraryViewModel
-    let store: AppStore
+    let store: StorageManageer
     let finishedBookList: [BookModel]
     let onBookComponentTap: (String) -> Void
     
@@ -22,10 +22,7 @@ struct FinishedBooksSection: View {
                     Button {
                         self.onBookComponentTap(book.id)
                     } label: {
-                        HorizontalBookPreview(book: BookModel(id: book.id,
-                                                              title: book.title,
-                                                              authorName: book.authorName,
-                                                          readState: .read),
+                        HorizontalBookPreview(book: book,
                                               descriptionLineLimit: 2)
                     }
                     .buttonStyle(.plain)

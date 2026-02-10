@@ -10,10 +10,11 @@ import SwiftData
 
 @main
 struct BookMarkdApp: App {
-    @StateObject var appStore = AppStore()
+    @StateObject var appStore = StorageManageer()
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
+            BookSwiftDataModel.self,
+            QuoteSwiftDataModel.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
