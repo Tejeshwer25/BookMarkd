@@ -30,8 +30,7 @@ struct BookServiceUtility: BookService {
                              title: title ?? "",
                              authorName: author ?? [],
                              readState: .unread,
-                             coverImageURL: buildCoverURL(from: coverID),
-                             quotes: [])
+                             coverImageURL: buildCoverURL(from: coverID))
         }
         return books
     }

@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import SwiftData
+import SwiftUI
 
 class StorageManageer: ObservableObject {
     @Published private var bookList: [BookModel] = []
@@ -38,40 +39,20 @@ class StorageManageer: ObservableObject {
     /// Method to save book to swift data persistent storage and update cache accordingly
     /// - Parameter book: book model to save
     func addBook(_ book: BookModel) {
-        if self.bookList.isEmpty {
-            self.bookList = self.getBookList()
-        }
-        if self.bookList.contains(where: { $0.id == book.id }) {
-            return
-        }
-        
         do {
-            try self.addBookToSwiftData(self.convertBookToSwiftDataStorageType(book))
-            self.bookList.append(book)
+            try self.addBookToSwiftData(book)
         } catch {
             print(error.localizedDescription)
         }
     }
     
-    /// Method to add or remove book from wishlist
-    /// - Parameter book: book to be added or removed
-    func addOrRemoveFromWishlist(book: BookModel) {
-        if self.bookList.contains(where: { $0.id == book.id }) {
-            do {
-                try self.removeBookFromSwiftDataWishlist(book)
-                self.bookList.removeAll(where: { $0.id == book.id })
-            } catch {
-                print(error.localizedDescription)
-            }
-        } else {
-            var newBook = book
-            newBook.readState = .wishlist
-            do {
-                try self.addBookToSwiftData(self.convertBookToSwiftDataStorageType(newBook))
-                self.bookList.append(newBook)
-            } catch {
-                print(error.localizedDescription)
-            }
+    /// Method to remove book from swift data persistent storage
+    /// - Parameter book: books to remove from swift data storage
+    func removeBook(_ book: BookModel) {
+        do {
+            try self.removeBookFromSwiftDataWishlist(bookID: book.id)
+        } catch {
+            print(error.localizedDescription)
         }
     }
     
@@ -90,7 +71,7 @@ class StorageManageer: ObservableObject {
         self.bookList = self.bookList.map { book in
             if book.id == bookID {
                 do {
-                    try self.updateBookModelInSwiftData(self.convertBookToSwiftDataStorageType(book), readState: to)
+                    try self.updateBookModelInSwiftData(book, readState: to)
                     var updatedBook = book
                     updatedBook.readState = to
                     return updatedBook
@@ -112,10 +93,10 @@ class StorageManageer: ObservableObject {
         self.bookList = self.bookList.map { book in
             if book.id == id {
                 do {
-                    try self.addQuoteToBook(self.convertBookToSwiftDataStorageType(book),
-                                            quote: self.convertQuoteAppModelToSwiftDataModel(quote))
+                    try self.addQuoteToBook(book,
+                                            quote: quote)
                     var updatedBook = book
-                    updatedBook.quotes?.append(quote)
+                    updatedBook.quotes.append(quote)
                     return updatedBook
                 } catch {
                     print(error.localizedDescription)
@@ -133,7 +114,7 @@ class StorageManageer: ObservableObject {
         self.bookList = self.bookList.map { book in
             if book.id == bookId {
                 do {
-                    try self.updateBookModelInSwiftData(self.convertBookToSwiftDataStorageType(book), rating: rating)
+                    try self.updateBookModelInSwiftData(book, rating: rating)
                     var updatedBook = book
                     updatedBook.rating = rating
                     return updatedBook
@@ -151,11 +132,11 @@ class StorageManageer: ObservableObject {
 extension StorageManageer {
     /// Method to remove book from swift data wishlist storage
     /// - Parameter book: Book to be deleted
-    private func removeBookFromSwiftDataWishlist(_ book: BookModel) throws {
-        let descriptor = FetchDescriptor<BookSwiftDataModel>(
-                predicate: #Predicate { $0.id == book.id }
+    private func removeBookFromSwiftDataWishlist(bookID: String) throws {
+        let descriptor = FetchDescriptor<BookModel>(
+            predicate: #Predicate<BookModel> { $0.id == bookID }
         )
-        
+
         if let stored = try context.fetch(descriptor).first {
             context.delete(stored)
             try context.save()
@@ -164,7 +145,7 @@ extension StorageManageer {
     
     /// Method to add book to swift data store
     /// - Parameter book: book to be added
-    private func addBookToSwiftData(_ book: BookSwiftDataModel) throws {
+    private func addBookToSwiftData(_ book: BookModel) throws {
         self.context.insert(book)
         try context.save()
     }
@@ -172,10 +153,9 @@ extension StorageManageer {
     /// Method to get book list from swift data
     /// - Returns: book list present in persistent storage
     private func getBookListFromSwiftData() throws -> [BookModel] {
-        let descriptor = FetchDescriptor<BookSwiftDataModel>()
+        let descriptor = FetchDescriptor<BookModel>()
         let booksFetched = try context.fetch(descriptor)
-        let bookList = booksFetched.map { self.convertSwiftDataBookModelToAppModel($0) }
-        return bookList
+        return booksFetched
     }
     
     /// Method to update book data in swift persistent storage
@@ -183,11 +163,12 @@ extension StorageManageer {
     ///   - book: book to be updated
     ///   - readState: reading state of book
     ///   - rating: ratings for the book
-    private func updateBookModelInSwiftData(_ book: BookSwiftDataModel,
+    private func updateBookModelInSwiftData(_ book: BookModel,
                                             readState: BookReadingState? = nil,
                                             rating: Int? = nil) throws {
-        let descriptor = FetchDescriptor<BookSwiftDataModel>(
-            predicate: #Predicate { $0.id == book.id }
+        let id = book.id
+        let descriptor = FetchDescriptor<BookModel>(
+            predicate: #Predicate<BookModel> { $0.id == id }
         )
         
         if let book = try context.fetch(descriptor).first {
@@ -205,9 +186,10 @@ extension StorageManageer {
     /// - Parameters:
     ///   - book: book to which quote will be added
     ///   - quote: quote to be added
-    private func addQuoteToBook(_ book: BookSwiftDataModel, quote: QuoteSwiftDataModel) throws {
-        let descriptor = FetchDescriptor<BookSwiftDataModel>(
-            predicate: #Predicate { $0.id == book.id }
+    private func addQuoteToBook(_ book: BookModel, quote: QuotesModel) throws {
+        let id = book.id
+        let descriptor = FetchDescriptor<BookModel>(
+            predicate: #Predicate { $0.id == id }
         )
         
         if let storedBook = try context.fetch(descriptor).first {
@@ -216,56 +198,5 @@ extension StorageManageer {
             context.insert(quote)
             try context.save()
         }
-    }
-    
-    /// Method to convert app model to swift data model
-    /// - Parameter book: app model
-    /// - Returns: swift data model
-    private func convertBookToSwiftDataStorageType(_ book: BookModel) -> BookSwiftDataModel {
-        return BookSwiftDataModel(id: book.id,
-                                  title: book.title,
-                                  authors: book.authorName,
-                                  readState: book.readState,
-                                  coverImageURL: book.coverImageURL,
-                                  rating: book.rating,
-                                  bookDescription: book.description,
-                                  themes: book.themes ?? [])
-    }
-    
-    /// Method to convert swift data model to app model
-    /// - Parameter book: swift data model
-    /// - Returns: app model
-    private func convertSwiftDataBookModelToAppModel(_ book: BookSwiftDataModel) -> BookModel {
-        return BookModel(id: book.id,
-                         title: book.title,
-                         authorName: book.authorName,
-                         readState: book.readState,
-                         coverImageURL: book.coverImageURL,
-                         quotes: book.quotes.map { self.convertQuoteSwiftDataModelToAppModel($0) },
-                         rating: book.rating,
-                         description: book.bookDescription,
-                         themes: book.themes)
-    }
-    
-    /// Method to convert Quote app model to swift data model
-    /// - Parameter quote: app model
-    /// - Returns: swift data model
-    private func convertQuoteAppModelToSwiftDataModel(_ quote: QuotesModel) -> QuoteSwiftDataModel {
-        return QuoteSwiftDataModel(id: quote.id,
-                                   noteType: quote.noteType,
-                                   text: quote.text,
-                                   pageNumber: quote.pageNumber,
-                                   date: quote.date)
-    }
-    
-    /// Method to convert quote swift data model to app model
-    /// - Parameter quote: swift data model
-    /// - Returns: app model
-    private func convertQuoteSwiftDataModelToAppModel(_ quote: QuoteSwiftDataModel) -> QuotesModel {
-        return QuotesModel(id: quote.id,
-                           noteType: quote.noteType,
-                           text: quote.text,
-                           pageNumber: quote.pageNumber,
-                           date: quote.date)
     }
 }

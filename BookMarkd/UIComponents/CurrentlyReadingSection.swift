@@ -9,13 +9,12 @@ import SwiftUI
 
 struct CurrentlyReadingSection: View {
     let currentlyReadingBookList: [BookModel]
-    let store: StorageManageer
     let viewModel: LibraryViewModel
     let onBookCardTap: (String) -> Void
     
     var body: some View {
         Section("Currently Reading") {
-            if self.viewModel.checkForViewToBeShown(store) == .noCurrentlyReadingBook {
+            if self.currentlyReadingBookList.isEmpty {
                 self.emptyCurrentlyReadingView
             } else {
                 ScrollView(.horizontal) {
@@ -66,13 +65,5 @@ struct CurrentlyReadingSection: View {
                 .multilineTextAlignment(.center)
         }
         .padding(25)
-    }
-}
-
-#Preview {
-    CurrentlyReadingSection(currentlyReadingBookList: [],
-                            store: .init(),
-                            viewModel: LibraryViewModel()) { id in
-        print(id)
     }
 }

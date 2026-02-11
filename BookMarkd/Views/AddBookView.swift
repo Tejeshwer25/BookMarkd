@@ -6,13 +6,16 @@
 //
 
 import SwiftUI
+import _SwiftData_SwiftUI
 
 struct AddBookView: View {
+    @Query private var booksInLibrary: [BookModel]
     @EnvironmentObject private var store: StorageManageer
     @State private var bookTitle: String = ""
     @State private var books: [BookModel] = []
     @State private var debouncedTask: Task<Void, Never>? = nil
     @State private var loading: Bool = false
+    @State private var booksWishlisted: [String] = []
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -42,7 +45,7 @@ struct AddBookView: View {
                     Button {
                         self.addBookToWishlist(book)
                     } label: {
-                        Image(systemName: self.store.getBookList().contains(where: { $0.id == book.id }) ? "bookmark.fill" : "bookmark")
+                        Image(systemName: self.booksWishlisted.contains(where: { $0 == book.id }) ? "bookmark.fill" : "bookmark")
                             .resizable()
                             .frame(width: 20, height: 25)
                             .contentTransition(.symbolEffect(.automatic))
@@ -71,7 +74,11 @@ struct AddBookView: View {
                 let searchResult = await searchBook(newValue)
                 
                 if !searchResult.isEmpty {
-                    self.books = searchResult
+                    print(booksInLibrary)
+                    self.books = searchResult.filter({ book in
+                        let isPresent = self.booksInLibrary.contains(where: { $0.id == book.id })
+                        return !isPresent
+                    })
                     self.loading = false
                 }
             }
@@ -98,8 +105,16 @@ struct AddBookView: View {
     }
     
     func addBookToWishlist(_ book: BookModel) {
-        withAnimation {
-            self.store.addOrRemoveFromWishlist(book: book)
+        if self.booksWishlisted.contains(where: { $0 == book.id}) {
+            self.store.removeBook(book)
+            withAnimation {
+                self.booksWishlisted.removeAll(where: { $0 == book.id })
+            }
+        } else {
+            self.store.addBook(book)
+            withAnimation {
+                self.booksWishlisted.append(book.id)
+            }
         }
     }
     

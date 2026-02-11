@@ -6,16 +6,18 @@
 //
 
 import SwiftUI
+import _SwiftData_SwiftUI
 
 struct LibraryView: View {
+    @Query private var books: [BookModel]
     @EnvironmentObject private var router: Router
     @EnvironmentObject private var store: StorageManageer
     @StateObject private var viewModel: LibraryViewModel = LibraryViewModel()
     
     var body: some View {
-        let viewToBeShown = self.viewModel.checkForViewToBeShown(store)
-        let currentlyReadingBookList = self.viewModel.getBookListFor(readingState: .reading, from: self.store)
-        let finishedBooksList = self.viewModel.getBookListFor(readingState: .read, from: self.store)
+        let viewToBeShown = self.viewModel.checkForViewToBeShown(books)
+        let currentlyReadingBookList = self.viewModel.getBookListFor(readingState: .reading, from: books)
+        let finishedBooksList = self.viewModel.getBookListFor(readingState: .read, from: self.books)
         
         if viewToBeShown == .noBooksPresent {
             self.noBookView
@@ -26,11 +28,9 @@ struct LibraryView: View {
         } else {
             List {
                 CurrentlyReadingSection(currentlyReadingBookList: currentlyReadingBookList,
-                                        store: self.store,
                                         viewModel: viewModel) { self.router.pushScreen(.bookDetails(id: $0)) }
                 
                 FinishedBooksSection(viewModel: self.viewModel,
-                                     store: self.store,
                                      finishedBookList: finishedBooksList) { self.router.pushScreen(.bookDetails(id: $0)) }
             }
             .navigationTitle("Library")

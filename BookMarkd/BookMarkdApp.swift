@@ -13,8 +13,8 @@ struct BookMarkdApp: App {
     @StateObject var appStore = StorageManageer()
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            BookSwiftDataModel.self,
-            QuoteSwiftDataModel.self
+            BookModel.self,
+            QuotesModel.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 

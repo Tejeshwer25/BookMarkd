@@ -6,20 +6,47 @@
 //
 
 import Foundation
+import SwiftData
 
-struct BookModel: Codable, Identifiable {
-    let id: String
+@Model
+final class BookModel {
+    @Attribute(.unique) var id: String
     var title: String
     var authorName: [String]
     var readState: BookReadingState
     var coverImageURL: String?
-    var quotes: [QuotesModel]?
     var rating: Int?
-    var description: String?
+    var bookDescription: String?
     var themes: [String]?
+    
+    var createdAt: Date
+    var startedAt: Date?
+    var finishedAt: Date?
+    
+    @Relationship(deleteRule: .cascade) var quotes: [QuotesModel]
+    
+    init(id: String,
+         title: String,
+         authorName: [String],
+         readState: BookReadingState,
+         coverImageURL: String? = nil,
+         rating: Int? = nil,
+         bookDescription: String? = nil,
+         themes: [String]? = nil) {
+        self.id = id
+        self.title = title
+        self.authorName = authorName
+        self.readState = readState
+        self.coverImageURL = coverImageURL
+        self.rating = rating
+        self.bookDescription = bookDescription
+        self.themes = themes
+        self.createdAt = Date()
+        self.quotes = []
+    }
 }
 
-enum BookReadingState: String, Equatable, Codable {
+enum BookReadingState: String, Codable {
     case wishlist
     case read
     case unread

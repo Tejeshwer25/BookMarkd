@@ -52,7 +52,7 @@ struct FinishBookView: View {
                             .padding(.bottom)
                         
                         Text("Quotes Captured")
-                        Text("\(self.viewModel.book?.quotes?.count ?? 0)")
+                        Text("\(self.viewModel.book?.quotes.count ?? 0)")
                             .font(.title2)
                             .fontWeight(.bold)
                     }

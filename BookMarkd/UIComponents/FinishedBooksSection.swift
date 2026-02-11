@@ -9,13 +9,12 @@ import SwiftUI
 
 struct FinishedBooksSection: View {
     let viewModel: LibraryViewModel
-    let store: StorageManageer
     let finishedBookList: [BookModel]
     let onBookComponentTap: (String) -> Void
     
     var body: some View {
-        Section(self.viewModel.checkForViewToBeShown(store) == .noFinishedBook ? "" : "Books Read") {
-            if self.viewModel.checkForViewToBeShown(store) == .noFinishedBook {
+        Section(self.finishedBookList.isEmpty ? "" : "Books Read") {
+            if self.finishedBookList.isEmpty {
                 self.emptyFinishedBooksView
             } else {
                 ForEach(self.finishedBookList) { book in
@@ -39,7 +38,6 @@ struct FinishedBooksSection: View {
 
 #Preview {
     FinishedBooksSection(viewModel: .init(),
-                         store: .init(),
                          finishedBookList: [],
                          onBookComponentTap: {print($0)})
 }

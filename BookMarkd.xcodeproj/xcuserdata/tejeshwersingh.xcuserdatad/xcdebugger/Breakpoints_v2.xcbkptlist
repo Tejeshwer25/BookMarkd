@@ -14,25 +14,9 @@
             filePath = "BookMarkd/Managers/Network/BookService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "50"
-            endingLineNumber = "50"
+            startingLineNumber = "49"
+            endingLineNumber = "49"
             landmarkName = "getBookDetails(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "0495E0EA-0703-468F-86AA-E5A1EA6E2281"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "BookMarkd/Managers/Network/APIClient.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "25"
-            endingLineNumber = "25"
-            landmarkName = "send(_:as:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -66,6 +50,52 @@
             endingLineNumber = "24"
             landmarkName = "body"
             landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "8FA431BC-471E-4225-8315-4C5C395E8F26"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BookMarkd/Views/AddBookView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "108"
+            endingLineNumber = "108"
+            landmarkName = "addBookToWishlist(_:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "8FA431BC-471E-4225-8315-4C5C395E8F26 - a359fd30aef49f04"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "BookMarkd.AddBookView.addBookToWishlist(BookMarkd.BookModel) -&gt; ()"
+                  moduleName = "BookMarkd.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tejeshwersingh/Documents/workspace/iOS_workspace/BookMarkd/BookMarkd/Views/AddBookView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "108"
+                  endingLineNumber = "108">
+               </Location>
+               <Location
+                  uuid = "8FA431BC-471E-4225-8315-4C5C395E8F26 - 9e26beda14f4284c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.String) -&gt; Swift.Bool in BookMarkd.AddBookView.addBookToWishlist(BookMarkd.BookModel) -&gt; ()"
+                  moduleName = "BookMarkd.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tejeshwersingh/Documents/workspace/iOS_workspace/BookMarkd/BookMarkd/Views/AddBookView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "108"
+                  endingLineNumber = "108">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

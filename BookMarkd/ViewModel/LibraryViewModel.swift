@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import _SwiftData_SwiftUI
 
 class LibraryViewModel: ObservableObject {
     @Published var searchText: String = ""
@@ -18,30 +19,30 @@ class LibraryViewModel: ObservableObject {
         store.addBook(book)
     }
     
-    func getBookListFor(readingState state: BookReadingState, from store: StorageManageer) -> [BookModel] {
+    func getBookListFor(readingState state: BookReadingState, from books: [BookModel]) -> [BookModel] {
         switch state {
-        case .read:     return self.getFinishedBooks(store)
-        case .reading:  return self.getCurrentlyReadingBooks(store)
-        case .wishlist: return self.getWishlishtedBooks(store)
+        case .read:     return self.getFinishedBooks(books)
+        case .reading:  return self.getCurrentlyReadingBooks(books)
+        case .wishlist: return self.getWishlishtedBooks(books)
         case .unread:   return []
         }
     }
     
-    private func getWishlishtedBooks(_ store: StorageManageer) -> [BookModel] {
-        return store.getBookList().filter { $0.readState == .wishlist }
+    private func getWishlishtedBooks(_ books: [BookModel]) -> [BookModel] {
+        return books.filter { $0.readState == .wishlist }
     }
     
-    private func getFinishedBooks(_ store: StorageManageer) -> [BookModel] {
-        return store.getBookList().filter { $0.readState == .read }
+    private func getFinishedBooks(_ books: [BookModel]) -> [BookModel] {
+        return books.filter { $0.readState == .read }
     }
     
-    private func getCurrentlyReadingBooks(_ store: StorageManageer) -> [BookModel] {
-        return store.getBookList().filter { $0.readState == .reading }
+    private func getCurrentlyReadingBooks(_ books: [BookModel]) -> [BookModel] {
+        return books.filter { $0.readState == .reading }
     }
     
-    func checkForViewToBeShown(_ store: StorageManageer) -> LibraryViewType {
-        let currentlyReadingBooks = self.getCurrentlyReadingBooks(store)
-        let finishedBooks = self.getFinishedBooks(store)
+    func checkForViewToBeShown(_ books: [BookModel]) -> LibraryViewType {
+        let currentlyReadingBooks = self.getCurrentlyReadingBooks(books)
+        let finishedBooks = self.getFinishedBooks(books)
         
         if currentlyReadingBooks.isEmpty && finishedBooks.isEmpty {
             return .noBooksPresent

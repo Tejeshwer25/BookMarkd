@@ -6,13 +6,29 @@
 //
 
 import Foundation
+import SwiftData
 
-struct QuotesModel: Codable {
+@Model
+final class QuotesModel {
     var id: UUID
     var noteType: NoteType
     var text: String
     var pageNumber: Int?
     var date: Date
+    
+    @Relationship var book: BookModel?
+    
+    init(id: UUID,
+         noteType: NoteType,
+         text: String,
+         pageNumber: Int? = nil,
+         date: Date) {
+        self.id = id
+        self.noteType = noteType
+        self.text = text
+        self.pageNumber = pageNumber
+        self.date = date
+    }
 }
 
 enum NoteType: String, Equatable, Codable {
