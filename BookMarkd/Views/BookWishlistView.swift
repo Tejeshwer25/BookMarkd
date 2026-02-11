@@ -6,19 +6,31 @@
 //
 
 import SwiftUI
+import _SwiftData_SwiftUI
 
 struct BookWishlistView: View {
+    @Query(filter: #Predicate<BookModel> { $0.readStateRaw == "wishlist" })
+    private var wishlistBooks: [BookModel]
+    @Query private var allBooks: [BookModel]
+    
     @EnvironmentObject private var router: Router
     @EnvironmentObject private var store: StorageManageer
     @StateObject private var viewModel = WishlishtViewModel()
     
     var body: some View {
-        if self.viewModel.getWishListedBooks(store).isEmpty {
+        if self.wishlistBooks.isEmpty {
             self.noWishlistedBooksView
                 .navigationTitle("Wishlist")
+                .onAppear {
+                    print(wishlistBooks)
+                    print(allBooks.map { $0.readStateRaw })
+                }
         } else {
             self.wishlistedBooksView
                 .navigationTitle("Wishlist")
+                .onAppear {
+                    print(wishlistBooks)
+                }
         }
     }
     
@@ -41,7 +53,7 @@ struct BookWishlistView: View {
     }
     
     var wishlistedBooksView: some View {
-        List(self.viewModel.getWishListedBooks(store), id: \.self.id) { book in
+        List(self.wishlistBooks, id: \.self.id) { book in
             Button {
                 self.router.pushScreen(.bookDetails(id: book.id))
             } label: {

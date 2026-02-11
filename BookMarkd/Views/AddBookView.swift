@@ -111,6 +111,7 @@ struct AddBookView: View {
                 self.booksWishlisted.removeAll(where: { $0 == book.id })
             }
         } else {
+            book.readState = .wishlist
             self.store.addBook(book)
             withAnimation {
                 self.booksWishlisted.append(book.id)

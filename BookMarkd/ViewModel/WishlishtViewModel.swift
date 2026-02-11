@@ -7,8 +7,4 @@
 
 import Combine
 
-class WishlishtViewModel: ObservableObject {
-    func getWishListedBooks(_ store: StorageManageer) -> [BookModel] {
-        return store.getBookList().filter { $0.readState == .wishlist }
-    }
-}
+class WishlishtViewModel: ObservableObject {}

@@ -13,7 +13,13 @@ final class BookModel {
     @Attribute(.unique) var id: String
     var title: String
     var authorName: [String]
-    var readState: BookReadingState
+    
+    var readStateRaw: String
+    var readState: BookReadingState {
+        get { BookReadingState(rawValue: readStateRaw) ?? .wishlist }
+        set { readStateRaw = newValue.rawValue }
+    }
+    
     var coverImageURL: String?
     var rating: Int?
     var bookDescription: String?
@@ -36,7 +42,7 @@ final class BookModel {
         self.id = id
         self.title = title
         self.authorName = authorName
-        self.readState = readState
+        self.readStateRaw = readState.rawValue
         self.coverImageURL = coverImageURL
         self.rating = rating
         self.bookDescription = bookDescription
@@ -46,7 +52,7 @@ final class BookModel {
     }
 }
 
-enum BookReadingState: String, Codable {
+enum BookReadingState: String, Codable, Equatable {
     case wishlist
     case read
     case unread
