@@ -10,7 +10,7 @@ import SwiftUI
 struct NotesAndQuotesView: View {
     let notesList: [QuotesModel]
     let showAddNoteButton: Bool
-    var addNoteButtonTap: (() -> Void)? = nil
+    var addNoteButtonTap: ((QuotesModel?) -> Void)? = nil
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -23,7 +23,7 @@ struct NotesAndQuotesView: View {
                 
                 if showAddNoteButton {
                     Button {
-                        self.addNoteButtonTap?()
+                        self.addNoteButtonTap?(nil)
                     } label: {
                         Image(systemName: "plus.circle.fill")
                             .resizable()
@@ -53,6 +53,19 @@ struct NotesAndQuotesView: View {
                     .background {
                         RoundedRectangle(cornerRadius: 10)
                             .foregroundStyle(.gray.opacity(0.2))
+                    }
+                    .contextMenu {
+                        Button(action: {
+                            self.addNoteButtonTap?(quote)
+                        }) {
+                            Label("Edit", systemImage: "pencil")
+                        }
+                        
+                        Button(role: .destructive, action: {
+                            
+                        }) {
+                            Label("Delete", systemImage: "trash")
+                        }
                     }
                 }
             } else {

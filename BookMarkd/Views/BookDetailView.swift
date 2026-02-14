@@ -12,14 +12,7 @@ struct BookDetailView: View {
     @EnvironmentObject private var router: Router
     @EnvironmentObject private var store: StorageManageer
     
-    @State private var showAddNoteSheet: Bool = false
-    @State private var book: BookModel?
-    @State private var bookDetails: BookDetailDataModel? = nil
-    @State private var isPageLoading: Bool = false
-    @State private var showAllTags: Bool = false
-    @State private var alertTitle: String = ""
-    @State private var alertMesssage: String = ""
-    @State private var shouldShowAlert: Bool = false
+    @StateObject private var viewModel = BookDetailViewModel()
     
     var bookId: String
     
@@ -28,65 +21,80 @@ struct BookDetailView: View {
             VStack(alignment: .leading) {
                 bookInfoView
                 
-                if self.book?.readState == .reading {
-                    NotesAndQuotesView(notesList: self.store.getBookWith(id: self.bookId)?.quotes ?? [], showAddNoteButton: true) {
-                        self.showAddNoteSheet.toggle()
+                if self.viewModel.book?.readState == .reading {
+                    NotesAndQuotesView(notesList: self.store.getBookWith(id: self.bookId)?.quotes ?? [],
+                                       showAddNoteButton: true) { quoteToEdit in
+                        if let quoteToEdit {
+                            self.viewModel.noteToEdit = quoteToEdit
+                        } else {
+                            self.viewModel.showAddNoteSheet.toggle()
+                        }
                     }
-                } else if self.book?.readState == .wishlist {
+                } else if self.viewModel.book?.readState == .wishlist {
                     VStack(alignment: .leading, spacing: 25) {
                         bookDescriptionView
                         
-                        if self.bookDetails?.characters?.isEmpty == false {
+                        if self.viewModel.bookDetails?.characters?.isEmpty == false {
                             bookCharactersView
                         }
                         
                         tagsView
                     }
                     .padding()
-                } else if self.book?.readState == .read {
-                    NotesAndQuotesView(notesList: self.store.getBookWith(id: self.bookId)?.quotes ?? [], showAddNoteButton: false)
+                } else if self.viewModel.book?.readState == .read {
+                    NotesAndQuotesView(notesList: self.store.getBookWith(id: self.bookId)?.quotes ?? [],
+                                       showAddNoteButton: false)
                 }
             }
         }
         .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
-        .sheet(isPresented: $showAddNoteSheet) {
+        .sheet(isPresented: $viewModel.showAddNoteSheet) {
             NavigationStack {
-                AddNoteView(book: self.book)
+                AddNoteView(quotesModel: .init(id: .init(),
+                                               noteType: .quote,
+                                               text: "",
+                                               date: Date()),
+                            book: self.viewModel.book)
+            }
+        }
+        .sheet(item: $viewModel.noteToEdit) { quote in
+            NavigationStack {
+                AddNoteView(quotesModel: quote, book: self.viewModel.book)
             }
         }
         .onAppear {
-            self.book = store.getBookWith(id: self.bookId)
-            if self.book?.readState == .unread || self.book?.readState == .wishlist {
+            self.viewModel.book = store.getBookWith(id: self.bookId)
+            if self.viewModel.book?.readState == .unread || self.viewModel.book?.readState == .wishlist {
                 withAnimation {
-                    self.isPageLoading = true
-                    self.getBookDetails(self.bookId)
+                    self.viewModel.isPageLoading = true
+                    self.viewModel.getBookDetails(self.bookId)
                 }
             }
         }
         .overlay {
-            if self.isPageLoading {
+            if self.viewModel.isPageLoading {
                 ProgressView()
             }
         }
-        .alert(self.alertTitle, isPresented: $shouldShowAlert) {} message: {
-            Text(self.alertMesssage)
+        .alert(self.viewModel.alertTitle, isPresented: $viewModel.shouldShowAlert) {} message: {
+            Text(self.viewModel.alertMesssage)
         }
     }
     
     var bookInfoView: some View {
         HStack(alignment: .top, spacing: 25) {
-            BookImage(bookImageURL: self.book?.coverImageURL ?? "",
+            BookImage(bookImageURL: self.viewModel.book?.coverImageURL ?? "",
                       imageFrame: (width: 150, height: 200))
             
             VStack(alignment: .leading, spacing: 10) {
-                Text(self.book?.title ?? "")
+                Text(self.viewModel.book?.title ?? "")
                     .font(.title)
                     .fontWeight(.heavy)
                 
-                Text(self.book?.authorName.first ?? "")
+                Text(self.viewModel.book?.authorName.first ?? "")
                 
-                if self.book?.readState == .reading {
+                if self.viewModel.book?.readState == .reading {
                     Button("Mark as Finished") {
                         self.router.pushScreen(.bookFinishScreen(id: self.bookId))
                     }
@@ -97,7 +105,7 @@ struct BookDetailView: View {
                         Capsule()
                             .foregroundStyle(.primary)
                     }
-                } else if self.book?.readState == .wishlist {
+                } else if self.viewModel.book?.readState == .wishlist {
                     Button("Start Reading") {
                         self.store.updateBookReadState(to: .reading, for: self.bookId)
                         self.router.popScreen()
@@ -110,10 +118,10 @@ struct BookDetailView: View {
                             .foregroundStyle(.primary)
                     }
                     .padding(.top)
-                } else if self.book?.readState == .read {
+                } else if self.viewModel.book?.readState == .read {
                     HStack {
                         ForEach(1..<6) { index in
-                            if (self.book?.rating ?? 0) >= index {
+                            if (self.viewModel.book?.rating ?? 0) >= index {
                                 Image(systemName: "star.fill")
                                     .resizable()
                                     .frame(width: 25, height: 25)
@@ -138,9 +146,9 @@ struct BookDetailView: View {
                 .fontWeight(.bold)
 
             // Demo tags (replace with your actual tags source when available)
-            let tags = self.bookDetails?.genre?.sorted { $0.count < $1.count } ?? []
+            let tags = self.viewModel.bookDetails?.genre?.sorted { $0.count < $1.count } ?? []
 
-            FlowLayout(items: tags, spacing: 10, rowSpacing: 8, maxRows: showAllTags ? nil : 2) { tag in
+            FlowLayout(items: tags, spacing: 10, rowSpacing: 8, maxRows: viewModel.showAllTags ? nil : 2) { tag in
                 Text(tag)
                     .padding(.horizontal, 20)
                     .padding(.vertical, 7)
@@ -164,11 +172,11 @@ struct BookDetailView: View {
 
             if tags.count > 0 {
                 Button {
-                    withAnimation(.snappy) { showAllTags.toggle() }
+                    withAnimation(.snappy) { viewModel.showAllTags.toggle() }
                 } label: {
                     HStack {
-                        showAllTags ? Image(systemName: "chevron.up") : Image(systemName: "chevron.down")
-                        showAllTags ? Text("Show Less") : Text("Show All")
+                        viewModel.showAllTags ? Image(systemName: "chevron.up") : Image(systemName: "chevron.down")
+                        viewModel.showAllTags ? Text("Show Less") : Text("Show All")
                     }
                 }
                 .font(.callout)
@@ -189,7 +197,7 @@ struct BookDetailView: View {
                 .font(.title3)
                 .fontWeight(.bold)
             
-            Text(self.bookDetails?.description ?? "")
+            Text(self.viewModel.bookDetails?.description ?? "")
                 .font(.callout)
         }
     }
@@ -202,7 +210,7 @@ struct BookDetailView: View {
             
             ScrollView(.horizontal) {
                 HStack(spacing: 25) {
-                    ForEach(self.bookDetails?.characters ?? [], id: \.self) { character in
+                    ForEach(self.viewModel.bookDetails?.characters ?? [], id: \.self) { character in
                         VStack(alignment: .center, spacing: 15) {
                             Image(systemName: "person.circle.fill")
                                 .resizable()
@@ -214,29 +222,6 @@ struct BookDetailView: View {
             }
             .padding(.vertical, 20)
             .scrollIndicators(.hidden)
-        }
-    }
-    
-    func getBookDetails(_ bookID: String) {
-        if let url = URL(string: "https://openlibrary.org/") {
-            let service = BookServiceUtility(api: .init(baseURL: url))
-            Task {
-                do {
-                    let book = try await service.getBookDetails(bookID)
-                    self.bookDetails = book
-                    withAnimation {
-                        self.isPageLoading = false
-                    }
-                } catch {
-                    withAnimation {
-                        self.isPageLoading = false
-                        self.shouldShowAlert = true
-                    }
-                    
-                    self.alertTitle = "Error"
-                    self.alertMesssage = error.localizedDescription
-                }
-            }
         }
     }
 }

@@ -11,9 +11,9 @@ struct AddNoteView: View {
     @EnvironmentObject private var store: StorageManageer
     @Environment(\.dismiss) var dismiss
     
-    @State private var note: String = ""
-    @State private var pageNumber: String = ""
+    @Bindable var quotesModel: QuotesModel
     
+    let inEditMode: Bool = false
     let book: BookModel?
     
     var body: some View {
@@ -75,10 +75,10 @@ struct AddNoteView: View {
             }
             .padding()
             
-            TextEditor(text: $note)
+            TextEditor(text: $quotesModel.text)
                 .padding()
                 .overlay {
-                    if note.isEmpty {
+                    if self.quotesModel.text.isEmpty {
                         VStack {
                             HStack {
                                 Text("Enter a meaningful quote")
@@ -98,14 +98,25 @@ struct AddNoteView: View {
                 Spacer()
                     .frame(maxWidth: .infinity)
                 
-                TextField("100", text: $pageNumber)
-                    .multilineTextAlignment(.center)
-                    .frame(width: 75)
-                    .padding(7)
-                    .overlay {
-                        RoundedRectangle(cornerRadius: 8)
-                            .stroke(.gray)
+                TextField("100", text: Binding(
+                    get: { String(self.quotesModel.pageNumber ?? 0) },
+                    set: { newValue in
+                        let filtered = newValue.filter { $0.isNumber }
+                        if let intVal = Int(filtered) {
+                            self.quotesModel.pageNumber = intVal
+                        } else {
+                            self.quotesModel.pageNumber = nil
+                        }
                     }
+                ))
+                .keyboardType(.numberPad)
+                .multilineTextAlignment(.center)
+                .frame(width: 75)
+                .padding(7)
+                .overlay {
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(.gray)
+                }
             }
             .padding()
         }
@@ -123,17 +134,15 @@ struct AddNoteView: View {
             
             ToolbarItem(placement: .confirmationAction) {
                 Button {
-                    withAnimation {
-                        self.store.addQuoteToBook(id: self.book?.id ?? "", quote: .init(id: .init(),
-                                                                                        noteType: .quote,
-                                                                                        text: self.note,
-                                                                                        pageNumber: Int(self.pageNumber),
-                                                                                        date: .init()))
-                    } completion: {
-                        dismiss()
+                    if !self.inEditMode {
+                        withAnimation {
+                            self.store.addQuoteToBook(id: self.book?.id ?? "",
+                                                      quote: self.quotesModel)
+                        }
                     }
+                    dismiss()
                 } label: {
-                    Text("Save")
+                    Text(self.inEditMode ? "Edit" : "Save")
                 }
             }
         }
@@ -141,5 +150,5 @@ struct AddNoteView: View {
 }
 
 #Preview {
-    AddNoteView(book: .init(id: "", title: "", authorName: [], readState: .read))
+    //AddNoteView(book: .init(id: "", title: "", authorName: [], readState: .read))
 }
