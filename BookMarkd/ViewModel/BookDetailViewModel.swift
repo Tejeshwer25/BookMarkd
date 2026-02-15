@@ -8,6 +8,10 @@
 import Combine
 import SwiftUI
 
+enum QuoteAction {
+    case edit, share, delete, add
+}
+
 class BookDetailViewModel: ObservableObject {
     @EnvironmentObject private var store: StorageManageer
     
@@ -20,6 +24,7 @@ class BookDetailViewModel: ObservableObject {
     @Published var alertMesssage: String = ""
     @Published var shouldShowAlert: Bool = false
     @Published var noteToEdit: QuotesModel? = nil
+    @Published var noteToShare: QuotesModel? = nil
     
     /// Method to get additional book details
     /// - Parameter bookID: book id
@@ -43,6 +48,19 @@ class BookDetailViewModel: ObservableObject {
                     self.alertMesssage = error.localizedDescription
                 }
             }
+        }
+    }
+    
+    func performQuoteAction(_ action: QuoteAction, on note: QuotesModel?) {
+        switch action {
+        case .edit:
+            self.noteToEdit = note
+        case .share:
+            self.noteToShare = note
+        case .add:
+            self.showAddNoteSheet.toggle()
+        case .delete:
+            ()
         }
     }
 }

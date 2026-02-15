@@ -15,6 +15,7 @@ struct BookDetailView: View {
     @StateObject private var viewModel = BookDetailViewModel()
     
     var bookId: String
+    @State var imageToShare: UIImage?
     
     var body: some View {
         ScrollView {
@@ -23,12 +24,9 @@ struct BookDetailView: View {
                 
                 if self.viewModel.book?.readState == .reading {
                     NotesAndQuotesView(notesList: self.store.getBookWith(id: self.bookId)?.quotes ?? [],
-                                       showAddNoteButton: true) { quoteToEdit in
-                        if let quoteToEdit {
-                            self.viewModel.noteToEdit = quoteToEdit
-                        } else {
-                            self.viewModel.showAddNoteSheet.toggle()
-                        }
+                                       showAddNoteButton: true,
+                                       bookReadingStatus: self.store.getBookWith(id: self.bookId)?.readState) { quoteAction, quote in
+                        self.viewModel.performQuoteAction(quoteAction, on: quote)
                     }
                 } else if self.viewModel.book?.readState == .wishlist {
                     VStack(alignment: .leading, spacing: 25) {
@@ -43,7 +41,10 @@ struct BookDetailView: View {
                     .padding()
                 } else if self.viewModel.book?.readState == .read {
                     NotesAndQuotesView(notesList: self.store.getBookWith(id: self.bookId)?.quotes ?? [],
-                                       showAddNoteButton: false)
+                                       showAddNoteButton: false,
+                                       bookReadingStatus: self.store.getBookWith(id: self.bookId)?.readState) { quoteAction, quote in
+                        self.viewModel.performQuoteAction(quoteAction, on: quote)
+                    }
                 }
             }
         }
@@ -61,6 +62,18 @@ struct BookDetailView: View {
         .sheet(item: $viewModel.noteToEdit) { quote in
             NavigationStack {
                 AddNoteView(quotesModel: quote, book: self.viewModel.book)
+            }
+        }
+        .sheet(item: $viewModel.noteToShare, onDismiss: {
+            print("checking image data: \(imageToShare)")
+            if let imageToShare {
+                self.shareImage(imageToShare)
+            }
+        }) { quote in
+            NavigationStack {
+                ShareQuoteView(book: viewModel.book, quote: quote, onDismiss: { image in
+                    self.imageToShare = image
+                })
             }
         }
         .onAppear {
@@ -224,14 +237,21 @@ struct BookDetailView: View {
             .scrollIndicators(.hidden)
         }
     }
-}
-
-#Preview {
-    var appstore = StorageManageer()
     
-    NavigationStack {
-        BookDetailView(bookId: "works/OL82563W")
-            .environmentObject(appstore)
+    func shareImage(_ image: UIImage) {
+        let controller = UIActivityViewController(
+            activityItems: [image],
+            applicationActivities: nil
+        )
+
+        UIApplication.shared
+            .connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .first?
+            .windows
+            .first?
+            .rootViewController?
+            .present(controller, animated: true)
     }
 }
 

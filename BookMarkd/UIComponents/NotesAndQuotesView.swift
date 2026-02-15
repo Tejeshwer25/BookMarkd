@@ -10,7 +10,8 @@ import SwiftUI
 struct NotesAndQuotesView: View {
     let notesList: [QuotesModel]
     let showAddNoteButton: Bool
-    var addNoteButtonTap: ((QuotesModel?) -> Void)? = nil
+    let bookReadingStatus: BookReadingState?
+    var quoteAction: ((QuoteAction, QuotesModel?) -> Void)? = nil
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -23,7 +24,7 @@ struct NotesAndQuotesView: View {
                 
                 if showAddNoteButton {
                     Button {
-                        self.addNoteButtonTap?(nil)
+                        self.quoteAction?(.add, nil)
                     } label: {
                         Image(systemName: "plus.circle.fill")
                             .resizable()
@@ -37,13 +38,26 @@ struct NotesAndQuotesView: View {
             if !self.notesList.isEmpty {
                 ForEach(self.notesList, id: \.self.id) { quote in
                     VStack(alignment: .leading) {
-                        Text(quote.noteType.rawValue.capitalized)
-                            .padding(.horizontal, 20)
-                            .padding(.vertical, 7)
-                            .background {
-                                Capsule()
-                                    .foregroundStyle(Color.red.opacity(0.3))
+                        HStack {
+                            Text(quote.noteType.rawValue.capitalized)
+                                .padding(.horizontal, 20)
+                                .padding(.vertical, 7)
+                                .background {
+                                    Capsule()
+                                        .foregroundStyle(Color.red.opacity(0.3))
+                                }
+                            
+                            Spacer()
+                            
+                            Button {
+                                self.quoteAction?(.share, quote)
+                            } label: {
+                                Image(systemName: "square.and.arrow.up")
+                                    .resizable()
+                                    .frame(width: 15, height: 20)
                             }
+                            .buttonStyle(.plain)
+                        }
                         
                         Text(quote.text)
                             .padding(.top, 7)
@@ -56,15 +70,23 @@ struct NotesAndQuotesView: View {
                     }
                     .contextMenu {
                         Button(action: {
-                            self.addNoteButtonTap?(quote)
+                            self.quoteAction?(.share, quote)
                         }) {
-                            Label("Edit", systemImage: "pencil")
+                            Label("Share", systemImage: "square.and.arrow.up")
                         }
                         
-                        Button(role: .destructive, action: {
+                        if bookReadingStatus == .reading {
+                            Button(action: {
+                                self.quoteAction?(.edit, quote)
+                            }) {
+                                Label("Edit", systemImage: "pencil")
+                            }
                             
-                        }) {
-                            Label("Delete", systemImage: "trash")
+                            Button(role: .destructive, action: {
+                                
+                            }) {
+                                Label("Delete", systemImage: "trash")
+                            }
                         }
                     }
                 }
@@ -88,5 +110,5 @@ struct NotesAndQuotesView: View {
 #Preview {
     NotesAndQuotesView(notesList: [
         .init(id: .init(), noteType: .note, text: "hfuiwhf hfuwe uih uuew u", date: .init())
-    ], showAddNoteButton: false)
+    ], showAddNoteButton: false, bookReadingStatus: .reading)
 }
