@@ -49,6 +49,7 @@ struct ShareQuoteView: View {
             
             Button(action: {
                 if let current = scrollPosition {
+                    HapticManager.shared.trigger(.success)
                     print("Performing action on: Item \(current)")
                     let card = ShareableCardView(views: views,
                                                  quote: quote,
@@ -78,7 +79,7 @@ struct ShareQuoteView: View {
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
                 Button {
-                    
+                    HapticManager.shared.trigger(.success)                    
                 } label: {
                     Image(systemName: "square.and.arrow.up")
                 }

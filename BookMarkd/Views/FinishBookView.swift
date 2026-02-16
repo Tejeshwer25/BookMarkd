@@ -76,6 +76,7 @@ struct FinishBookView: View {
                     HStack {
                         ForEach(1..<6) { index in
                             Button {
+                                HapticManager.shared.trigger(.impactLight)
                                 withAnimation {
                                     self.viewModel.updateBookRating(to: index,
                                                                     bookID: self.bookID,
@@ -114,11 +115,10 @@ struct FinishBookView: View {
                 
                 HStack {
                     Button {
-                        
+                        HapticManager.shared.trigger(.success)
                     } label: {
                         HStack(alignment: .center) {
                             Image(systemName: "square.and.arrow.up")
-                            
                             Text("Share")
                         }
                         .frame(maxWidth: .infinity)
@@ -135,6 +135,7 @@ struct FinishBookView: View {
                     .buttonStyle(.plain)
                     
                     Button {
+                        HapticManager.shared.trigger(.impactMedium)
                         self.viewModel.markBookAsRead(bookID: self.bookID, store)
                         self.router.popToRoot()
                     } label: {

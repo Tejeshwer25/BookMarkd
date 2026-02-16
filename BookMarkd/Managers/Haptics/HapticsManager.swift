@@ -5,24 +5,43 @@
 //  Created by Tejeshwer Singh on 18/01/26.
 //
 
-import Foundation
 import UIKit
 
-class HapticsManager {
-    private let impactGenerator = UIImpactFeedbackGenerator(style: .medium)
-    
-    private init() {
-        self.impactGenerator.prepare()
-    }
-    
-    func generateFeedback() {
-        impactGenerator.impactOccurred()
-        impactGenerator.prepare()
-    }
-    
-    func generateNotificationFeedback(style: UINotificationFeedbackGenerator.FeedbackType) {
-        let generator = UINotificationFeedbackGenerator()
-        generator.notificationOccurred(style)
+enum AppHaptic {
+    case selection
+    case impactLight
+    case impactMedium
+    case success
+    case error
+}
+
+final class HapticManager {
+    static let shared = HapticManager()
+
+    private let selection = UISelectionFeedbackGenerator()
+    private let light = UIImpactFeedbackGenerator(style: .light)
+    private let medium = UIImpactFeedbackGenerator(style: .medium)
+    private let notification = UINotificationFeedbackGenerator()
+
+    private init() {}
+
+    func trigger(_ type: AppHaptic) {
+        switch type {
+        case .selection:
+            selection.selectionChanged()
+
+        case .impactLight:
+            light.impactOccurred()
+
+        case .impactMedium:
+            medium.impactOccurred()
+
+        case .success:
+            notification.notificationOccurred(.success)
+
+        case .error:
+            notification.notificationOccurred(.error)
+        }
     }
 }
 

@@ -109,6 +109,7 @@ struct BookDetailView: View {
                 
                 if self.viewModel.book?.readState == .reading {
                     Button("Mark as Finished") {
+                        HapticManager.shared.trigger(.impactMedium)
                         self.router.pushScreen(.bookFinishScreen(id: self.bookId))
                     }
                     .foregroundStyle(.black)

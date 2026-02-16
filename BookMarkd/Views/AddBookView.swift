@@ -11,11 +11,14 @@ import _SwiftData_SwiftUI
 struct AddBookView: View {
     @Query private var booksInLibrary: [BookModel]
     @EnvironmentObject private var store: StorageManageer
+    
     @State private var bookTitle: String = ""
     @State private var books: [BookModel] = []
     @State private var debouncedTask: Task<Void, Never>? = nil
     @State private var loading: Bool = false
     @State private var booksWishlisted: [String] = []
+    
+    let hapticsManager = HapticManager.shared
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -43,6 +46,7 @@ struct AddBookView: View {
                     Spacer(minLength: 25)
                     
                     Button {
+                        hapticsManager.trigger(.impactMedium)
                         self.addBookToWishlist(book)
                     } label: {
                         Image(systemName: self.booksWishlisted.contains(where: { $0 == book.id }) ? "bookmark.fill" : "bookmark")

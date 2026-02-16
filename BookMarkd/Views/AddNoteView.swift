@@ -135,6 +135,7 @@ struct AddNoteView: View {
             ToolbarItem(placement: .confirmationAction) {
                 Button {
                     if !self.inEditMode {
+                        HapticManager.shared.trigger(.success)
                         withAnimation {
                             self.store.addQuoteToBook(id: self.book?.id ?? "",
                                                       quote: self.quotesModel)
