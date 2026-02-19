@@ -8,25 +8,25 @@
 import Foundation
 
 protocol BookService {
-    func searchBooks(_ query: String) async throws -> [BookModel]
+    func searchBooks(_ query: String) async throws -> [SearchedBooks]
     func getBookDetails(_ bookID: String) async throws -> BookDetailDataModel
 }
 
 struct BookServiceUtility: BookService {
     let api: APIClient
 
-    func searchBooks(_ query: String) async throws -> [BookModel] {
+    func searchBooks(_ query: String) async throws -> [SearchedBooks] {
         // Build request to Open Library search endpoint
         let request = try BookEndpoint.search(query: query).makeRequest(baseURL: api.baseURL)
         // Decode the Open Library response
         let response: OpenLibrarySearchResponse = try await api.send(request)
         // Map docs to your app's BookModel
-        let books: [BookModel] = response.docs.compactMap { doc in
+        let books: [SearchedBooks] = response.docs.compactMap { doc in
             let title = doc.title
             let author = doc.authorNames
             let coverID = doc.coverID
             
-            return BookModel(id: doc.workKey ?? UUID().uuidString,
+            return SearchedBooks(id: doc.workKey ?? UUID().uuidString,
                              title: title ?? "",
                              authorName: author ?? [],
                              readState: .unread,

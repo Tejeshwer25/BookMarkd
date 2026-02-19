@@ -14,6 +14,8 @@ struct DiscoverView: View {
     
     @State private var recommendedBooks: [RecommendedBooks] = []
     @State private var loadingBooks: Bool = false
+    @State private var showSearchModal: Bool = false
+    @State private var searchQuery: String = ""
     
     var body: some View {
         ScrollView {
@@ -25,7 +27,12 @@ struct DiscoverView: View {
                     RecommendedBookComponent(bookTitle: book.bookTitle,
                                              author: book.bookAuthor,
                                              description: book.bookDescription,
-                                             whyRecommend: book.whyRecommendation)
+                                             whyRecommend: book.whyRecommendation,
+                                             addBookToWishlist: { authorName, bookTitle in
+                        print("\(authorName) \(bookTitle)")
+                        self.searchQuery = "\(authorName) \(bookTitle)"
+                        self.showSearchModal.toggle()
+                    })
                     .padding(.vertical, 5)
                 }
                 
@@ -94,6 +101,9 @@ struct DiscoverView: View {
                     print(error.localizedDescription)
                 }
             }
+        }
+        .sheet(isPresented: $showSearchModal) {
+            AddBookView(query: $searchQuery)
         }
     }
 }

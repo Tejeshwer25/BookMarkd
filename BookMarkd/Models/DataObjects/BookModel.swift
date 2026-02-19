@@ -13,7 +13,6 @@ final class BookModel {
     @Attribute(.unique) var id: String
     var title: String
     var authorName: [String]
-    
     var readStateRaw: String
     var readState: BookReadingState {
         get { BookReadingState(rawValue: readStateRaw) ?? .wishlist }

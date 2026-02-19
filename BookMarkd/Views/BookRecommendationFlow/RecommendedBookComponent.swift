@@ -12,6 +12,7 @@ struct RecommendedBookComponent: View {
     let author: String
     let description: String
     let whyRecommend: String
+    let addBookToWishlist: (_ authorName: String, _ bookTitle: String) -> Void
     
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -30,12 +31,13 @@ struct RecommendedBookComponent: View {
                 Spacer()
                 
                 Button {
-                    
+                    addBookToWishlist(bookTitle, author)
                 } label: {
                     Image(systemName: "plus.circle.fill")
                         .resizable()
                         .frame(width: 30, height: 30)
                 }
+                .buttonStyle(.plain)
             }
             .padding(.bottom)
             
@@ -71,5 +73,10 @@ struct RecommendedBookComponent: View {
 }
 
 #Preview {
-    RecommendedBookComponent(bookTitle: "", author: "", description: "", whyRecommend: "")
+    RecommendedBookComponent(bookTitle: "",
+                             author: "",
+                             description: "",
+                             whyRecommend: "") { authorName, bookTitle in
+        
+    }
 }

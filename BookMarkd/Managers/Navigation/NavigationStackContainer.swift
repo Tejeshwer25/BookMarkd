@@ -27,7 +27,7 @@ struct NavigationStackContainer<Content: View>: View {
                     case .bookFinishScreen(let id):
                         FinishBookView(bookID: id)
                     case .addBookScreen:
-                        AddBookView()
+                        AddBookView(query: .constant(""))
                     case .bookWishlistScreen:
                         BookWishlistView()
                     }

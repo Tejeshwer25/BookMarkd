@@ -33,9 +33,9 @@ class StorageManageer: ObservableObject {
     
     /// Method to remove book from swift data persistent storage
     /// - Parameter book: books to remove from swift data storage
-    func removeBook(_ book: BookModel) {
+    func removeBook(_ bookID: String) {
         do {
-            try self.removeBookFromSwiftDataWishlist(bookID: book.id)
+            try self.removeBookFromSwiftDataWishlist(bookID: bookID)
         } catch {
             print(error.localizedDescription)
         }

@@ -22,7 +22,7 @@ struct LibraryView: View {
         if viewToBeShown == .noBooksPresent {
             self.noBookView
                 .sheet(isPresented: $viewModel.showAddBookScreen) {
-                    AddBookView()
+                    AddBookView(query: .constant(""))
                         .presentationDetents([.large])
                 }
         } else {
@@ -58,7 +58,7 @@ struct LibraryView: View {
                 }
             }
             .sheet(isPresented: $viewModel.showAddBookScreen) {
-                AddBookView()
+                AddBookView(query: .constant(""))
                     .presentationDetents([.large])
             }
         }
