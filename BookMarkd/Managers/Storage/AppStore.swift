@@ -111,6 +111,9 @@ class StorageManageer: ObservableObject {
             try? context.save()
         }
     }
+}
+
+extension StorageManageer {
 
     /// Method to remove book from swift data wishlist storage
     /// - Parameter book: Book to be deleted

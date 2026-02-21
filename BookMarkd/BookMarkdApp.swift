@@ -14,7 +14,8 @@ struct BookMarkdApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             BookModel.self,
-            QuotesModel.self
+            QuotesModel.self,
+            UserPreferenceModel.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
