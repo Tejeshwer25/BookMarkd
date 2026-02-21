@@ -87,7 +87,7 @@ struct AddBookView: View {
                 Spacer()
                 self.emptyListView
             } else if self.loading {
-                // loading screen
+                ProgressView()
             } else {
                 // errror screen
             }
@@ -97,11 +97,6 @@ struct AddBookView: View {
         }
         .padding(.top)
         .padding()
-        .overlay {
-            if self.loading {
-                ProgressView()
-            }
-        }
         .onChange(of: bookTitle) { oldValue, newValue in
             self.debouncedTask?.cancel()
             
@@ -151,6 +146,56 @@ struct AddBookView: View {
         }
         .opacity(1)
         .padding()
+    }
+    
+    var loadingView: some View {
+        VStack {
+            Text("Consulting The Archives...")
+                .fontDesign(.serif)
+                .font(.title3)
+            
+            ForEach(0..<3) { _ in
+                HStack(alignment: .top, spacing: 15) {
+                    RoundedRectangle(cornerRadius: 8)
+                        .frame(width: 100, height: 150)
+                        .foregroundStyle(LinearGradient(colors: [.indigo.opacity(0.15), .brown.opacity(0.15)],
+                                                        startPoint: .leading,
+                                                        endPoint: .trailing))
+                    
+                    VStack(alignment: .leading) {
+                        RoundedRectangle(cornerRadius: 8)
+                            .frame(width: 200, height: 25)
+                            .foregroundStyle(LinearGradient(colors: [.indigo.opacity(0.15), .brown.opacity(0.15)],
+                                                            startPoint: .leading,
+                                                            endPoint: .trailing))
+                        
+                        RoundedRectangle(cornerRadius: 8)
+                            .frame(maxWidth: 150, maxHeight: 25)
+                            .foregroundStyle(LinearGradient(colors: [.indigo.opacity(0.15), .brown.opacity(0.15)],
+                                                            startPoint: .leading,
+                                                            endPoint: .trailing))
+                        
+                        HStack(spacing: 10) {
+                            Capsule()
+                                .frame(maxWidth: 75, maxHeight: 25)
+                                .foregroundStyle(LinearGradient(colors: [.indigo.opacity(0.15), .brown.opacity(0.15)],
+                                                                startPoint: .leading,
+                                                                endPoint: .trailing))
+                            
+                            Capsule()
+                                .frame(maxWidth: 75, maxHeight: 25)
+                                .foregroundStyle(LinearGradient(colors: [.indigo.opacity(0.15), .brown.opacity(0.15)],
+                                                                startPoint: .leading,
+                                                                endPoint: .trailing))
+                        }
+                        .padding(.vertical)
+                        
+                    }
+                    .padding(.vertical)
+                }
+                .padding(.vertical, 5)
+            }
+        }
     }
     
     func addBookToWishlist(_ book: SearchedBooks) {

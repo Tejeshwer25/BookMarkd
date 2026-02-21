@@ -37,16 +37,27 @@ struct BookServiceUtility: BookService {
     
     func getBookDetails(_ bookID: String) async throws -> BookDetailDataModel {
         let request = try BookEndpoint.bookDetails(bookKey: bookID).makeRequest(baseURL: api.baseURL)
-        let response: OpenLibraryBookDetailsModel = try await api.send(request)
+        let response = try await api.send(request)
         
-        let book: BookDetailDataModel = BookDetailDataModel(id: response.key,
-                                                            title: response.title,
-                                                            description: response.description,
-                                                            places: response.subjectPlaces,
-                                                            characters: response.subjectPeople,
-                                                            genre: response.subjects)
-        
-        return book
+        if let responseModel = OpenLibraryBookDetailsModel.decodeDataModel(from: response) {
+            let book: BookDetailDataModel = BookDetailDataModel(id: responseModel.key,
+                                                                title: responseModel.title,
+                                                                description: responseModel.description,
+                                                                places: responseModel.subjectPlaces,
+                                                                characters: responseModel.subjectPeople,
+                                                                genre: responseModel.subjects)
+            return book
+        } else if let responseModel = FallbackOpenLibraryBookDetailsModel.decodeDataModel(from: response) {
+            let book = BookDetailDataModel(id: responseModel.key,
+                                           title: responseModel.title,
+                                           description: responseModel.description.value,
+                                           places: responseModel.subjectPlaces,
+                                           characters: responseModel.subjectPeople,
+                                           genre: responseModel.subjects)
+            return book
+        } else {
+            throw APIErrors.failedToDecode
+        }
     }
 
     private func buildCoverURL(from coverID: Int?) -> String? {

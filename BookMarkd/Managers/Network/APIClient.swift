@@ -24,6 +24,15 @@ struct APIClient {
         
         return try decoder.decode(T.self, from: data)
     }
+    
+    func send(_ request: URLRequest) async throws -> Data {
+        let (data, response) = try await session.data(for: request)
+        guard let http = response as? HTTPURLResponse, 200..<300 ~= http.statusCode else {
+            throw APIError.invalidStatusCode((response as? HTTPURLResponse)?.statusCode ?? -1)
+        }
+        
+        return data
+    }
 }
 
 enum APIError: Error {
