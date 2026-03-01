@@ -80,7 +80,7 @@ enum BookGenre: String, CaseIterable, Identifiable {
 }
 
 struct GenrePreferencesScreen: View {
-    @Environment(./modelContext) var modelContext
+    @EnvironmentObject private var storeManager: StorageManageer
     @State private var searchedGenre: String = ""
     @State private var selectedGenres: [BookGenre] = []
     
@@ -154,7 +154,8 @@ struct GenrePreferencesScreen: View {
             .scrollIndicators(.hidden)
             
             Button {
-                
+                self.storeManager.userPreferences?.preferedGenres = self.selectedGenres.map {$0.rawValue}
+                HapticManager.shared.trigger(.success)
             } label: {
                 Text("Save Changes")
                     .font(.headline)
@@ -166,6 +167,8 @@ struct GenrePreferencesScreen: View {
                             .fill(.yellow.opacity(0.9))
                     }
             }
+            .opacity(self.shouldEnableSaveButton() ? 1 : 0.3)
+            .disabled(!self.shouldEnableSaveButton())
             
             Spacer()
         }
@@ -173,6 +176,9 @@ struct GenrePreferencesScreen: View {
         .frame(maxWidth: .infinity)
         .navigationTitle("Genre Preferences")
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            self.selectedGenres = self.storeManager.userPreferences?.preferedGenres.map { BookGenre(rawValue: $0)! } ?? []
+        }
     }
     
     func isGenreSelected(genre: BookGenre) -> Bool {
@@ -189,6 +195,21 @@ struct GenrePreferencesScreen: View {
                 selectedGenres.append(genre)
             }
         }
+    }
+    
+    func shouldEnableSaveButton() -> Bool {
+        // If no genre is selected return false
+        if selectedGenres.isEmpty { return false }
+        
+        let currentlySavedGenres = self.storeManager.userPreferences?.preferedGenres.sorted()
+        let selectedGenresSorted = self.selectedGenres.map({ $0.rawValue }).sorted()
+        
+        // If saved genres matches the currently selected genres return false
+        if currentlySavedGenres == selectedGenresSorted {
+            return false
+        }
+        
+        return true
     }
 }
 

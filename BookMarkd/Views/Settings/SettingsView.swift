@@ -7,18 +7,47 @@
 
 import SwiftUI
 
+enum SettingsOptionList: String, CaseIterable {
+    case genrePreferences = "Genre preferences"
+    case appearance = "Appearance"
+    case about = "About"
+}
+
 struct SettingsView: View {
-    @State private var settingsOptionList = ["Genre preferences", "Appearance", "About"]
+    @EnvironmentObject private var router: Router
     
     var body: some View {
-        List(settingsOptionList, id: \.self, rowContent: { setting in
-            Text(setting)
+        List(SettingsOptionList.allCases, id: \.self, rowContent: { setting in
+            Button {
+                navigateToScreen(setting)
+            } label: {
+                HStack {
+                    Text(setting.rawValue)
+                    Spacer()
+                    Image(systemName: "chevron.right")
+                }
+            }
+            .buttonStyle(.plain)
         })
         .padding(.top)
         .navigationTitle("Settings")
     }
+    
+    func navigateToScreen(_ screenName: SettingsOptionList) {
+        switch screenName {
+        case .genrePreferences:
+            withAnimation {
+                self.router.pushScreen(.genrePreferenceScreen)
+            }
+        default: break
+        }
+    }
 }
 
 #Preview {
-    SettingsView()
+    var router = Router()
+    
+    NavigationStackContainer(router: router) {
+        SettingsView()
+    }
 }

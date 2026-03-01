@@ -11,6 +11,7 @@ import _SwiftData_SwiftUI
 struct DiscoverView: View {
     @EnvironmentObject private var router: Router
     @Query private var booksRead: [BookModel]
+    @Query private var preferences: [UserPreferenceModel]
     
     @State private var recommendedBooks: [RecommendedBooks] = []
     @State private var loadingBooks: Bool = false
@@ -95,7 +96,8 @@ struct DiscoverView: View {
                 !self.booksRead.isEmpty {
                 do {
                     self.loadingBooks = true
-                    self.recommendedBooks = try await RecommendationService().generateRecommendations(from: booksRead)
+                    self.recommendedBooks = try await RecommendationService().generateRecommendations(from: booksRead,
+                                                                                                      with: self.preferences.first?.preferedGenres ?? [])
                     self.loadingBooks = false
                 } catch {
                     print(error.localizedDescription)

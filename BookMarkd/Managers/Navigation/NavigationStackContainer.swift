@@ -30,6 +30,8 @@ struct NavigationStackContainer<Content: View>: View {
                         AddBookView(query: .constant(""))
                     case .bookWishlistScreen:
                         BookWishlistView()
+                    case .genrePreferenceScreen:
+                        GenrePreferencesScreen()
                     }
                 }
         }

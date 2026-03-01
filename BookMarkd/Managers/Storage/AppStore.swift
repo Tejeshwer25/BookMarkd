@@ -13,6 +13,7 @@ import SwiftUI
 class StorageManageer: ObservableObject {
     @Published private var bookList: [BookModel] = []
     var context: ModelContext!
+    var userPreferences: UserPreferenceModel?
     
     /// Method to set swift data model context
     /// - Parameter context: model context
