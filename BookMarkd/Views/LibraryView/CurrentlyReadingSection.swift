@@ -33,20 +33,28 @@ struct CurrentlyReadingSection: View {
                 emptyCurrentlyReadingView
             } else {
                 ScrollView(.horizontal) {
-                    ForEach(currentlyReadingBookList, id: \.id) { book in
-                        VStack(alignment: .leading) {
-                            BookImage(bookImageURL: book.coverImageURL ?? "", imageFrame: (256, 341))
-                                .padding(.bottom, 12)
-                            
-                            Text(book.title)
-                                .font(.title3)
-                            
-                            Text(book.authorName.joined(separator: ", "))
-                                .padding(.bottom, 5)
-                            
-                            Text("65% completed")
-                                .font(.headline)
-                                .foregroundStyle(.yellow)
+                    HStack(alignment: .top, spacing: 20) {
+                        ForEach(currentlyReadingBookList, id: \.id) { book in
+                            Button {
+                                self.onBookCardTap(book.id)
+                            } label: {
+                                VStack(alignment: .leading) {
+                                    BookImage(bookImageURL: book.coverImageURL ?? "", imageFrame: (256, 341))
+                                        .padding(.bottom, 12)
+                                    
+                                    Text(book.title)
+                                        .font(.title3)
+                                    
+                                    Text(book.authorName.joined(separator: ", "))
+                                        .padding(.bottom, 5)
+                                    
+                                    Text("65% completed")
+                                        .font(.headline)
+                                        .foregroundStyle(.yellow)
+                                }
+                            }
+                            .buttonStyle(.plain)
+                            .frame(width: 260)
                         }
                     }
                 }
