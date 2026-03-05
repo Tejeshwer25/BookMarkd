@@ -28,7 +28,7 @@ struct BookImage: View {
                 Image(uiImage: image)
                     .resizable()
                     .frame(width: self.imageFrame.width, height: self.imageFrame.height)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
             } else {
                 BookImageSkeleton()
                     .frame(width: self.imageFrame.width, height: self.imageFrame.height)

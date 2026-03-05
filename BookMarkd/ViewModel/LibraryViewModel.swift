@@ -43,8 +43,9 @@ class LibraryViewModel: ObservableObject {
     func checkForViewToBeShown(_ books: [BookModel]) -> LibraryViewType {
         let currentlyReadingBooks = self.getCurrentlyReadingBooks(books)
         let finishedBooks = self.getFinishedBooks(books)
+        let wishlistedbooks = self.getWishlishtedBooks(books)
         
-        if currentlyReadingBooks.isEmpty && finishedBooks.isEmpty {
+        if currentlyReadingBooks.isEmpty && finishedBooks.isEmpty && wishlistedbooks.isEmpty {
             return .noBooksPresent
         } else if currentlyReadingBooks.isEmpty {
             return .noCurrentlyReadingBook
@@ -53,6 +54,14 @@ class LibraryViewModel: ObservableObject {
         } else {
             return .allBooksPresent
         }
+    }
+    
+    func getFinishedBookDate(book: BookModel) -> String {
+        let finishedAt = book.finishedAt ?? Date()
+        let month = Calendar.current.component(.month, from: finishedAt)
+        let strmonth = DateFormatter().shortMonthSymbols[month - 1]
+        let day = Calendar.current.component(.day, from: finishedAt)
+        return "\(strmonth) \(day)"
     }
 }
 

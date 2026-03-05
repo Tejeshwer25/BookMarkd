@@ -1,0 +1,87 @@
+//
+//  CurrentlyReadingSection.swift
+//  BookMarkd
+//
+//  Created by Tejeshwer Singh on 05/02/26.
+//
+
+import SwiftUI
+
+struct CurrentlyReadingSection: View {
+    let currentlyReadingBookList: [BookModel]
+    let viewModel: LibraryViewModel
+    let onBookCardTap: (String) -> Void
+    
+    var body: some View {
+        VStack(alignment: .leading) {
+            HStack {
+                Text("Currently Reading")
+                Spacer()
+                
+                if currentlyReadingBookList.count >= 2 {
+                    Button {
+                        
+                    } label: {
+                        Text("See all")
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+            .padding(.bottom, 16)
+            
+            if currentlyReadingBookList.isEmpty {
+                emptyCurrentlyReadingView
+            } else {
+                ScrollView(.horizontal) {
+                    ForEach(currentlyReadingBookList, id: \.id) { book in
+                        VStack(alignment: .leading) {
+                            BookImage(bookImageURL: book.coverImageURL ?? "", imageFrame: (256, 341))
+                                .padding(.bottom, 12)
+                            
+                            Text(book.title)
+                                .font(.title3)
+                            
+                            Text(book.authorName.joined(separator: ", "))
+                                .padding(.bottom, 5)
+                            
+                            Text("65% completed")
+                                .font(.headline)
+                                .foregroundStyle(.yellow)
+                        }
+                    }
+                }
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .fontDesign(.serif)
+    }
+    
+    var emptyCurrentlyReadingView: some View {
+        VStack(alignment: .center, spacing: 5) {
+            Image(systemName: "book.pages.fill")
+                .resizable()
+                .frame(width: 33, height: 36)
+                .padding(.bottom, 10)
+                
+            Text("No books in progress")
+                .font(.title3)
+                .fontWeight(.semibold)
+            
+            Text("Start reading something from your wishlist")
+                .multilineTextAlignment(.center)
+        }
+        .frame(maxWidth: .infinity)
+        .padding()
+        .background {
+            RoundedRectangle(cornerRadius: 20)
+                .stroke(Color.white.opacity(0.2), lineWidth: 1)
+                .fill(Color.blue.opacity(0.1))
+        }
+    }
+}
+
+#Preview {
+    CurrentlyReadingSection(currentlyReadingBookList: [], viewModel: .init()) { _ in
+        ()
+    }
+}

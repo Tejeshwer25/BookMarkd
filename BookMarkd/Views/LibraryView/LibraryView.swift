@@ -18,6 +18,7 @@ struct LibraryView: View {
         let viewToBeShown = self.viewModel.checkForViewToBeShown(books)
         let currentlyReadingBookList = self.viewModel.getBookListFor(readingState: .reading, from: books)
         let finishedBooksList = self.viewModel.getBookListFor(readingState: .read, from: self.books)
+        let wishlistedBooks = self.viewModel.getBookListFor(readingState: .wishlist, from: self.books)
         
         if viewToBeShown == .noBooksPresent {
             self.noBookView
@@ -26,29 +27,57 @@ struct LibraryView: View {
                         .presentationDetents([.large])
                 }
         } else {
-            List {
-                CurrentlyReadingSection(currentlyReadingBookList: currentlyReadingBookList,
-                                        viewModel: viewModel) { self.router.pushScreen(.bookDetails(id: $0)) }
-                
-                FinishedBooksSection(viewModel: self.viewModel,
-                                     finishedBookList: finishedBooksList) { self.router.pushScreen(.bookDetails(id: $0)) }
+            ScrollView {
+                VStack(alignment: .leading) {
+                    HStack {
+                        Text("\(self.books.count) books | 5 finished this year")
+                        Spacer()
+                        Text("4 Day Streak")
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 6)
+                            .background {
+                                Capsule()
+                                    .stroke(Color.yellow, lineWidth: 1)
+                                    .fill(.yellow.opacity(0.2))
+                            }
+                    }
+                    .fontDesign(.serif)
+                    .padding(.horizontal)
+                    .padding(.bottom, 12)
+                    
+                    VStack {}
+                        .frame(height: 1)
+                        .frame(maxWidth: .infinity)
+                        .background(Color.white.opacity(0.2))
+                        .padding(.bottom)
+                    
+                    CurrentlyReadingSection(currentlyReadingBookList: currentlyReadingBookList,
+                                            viewModel: viewModel) {
+                        self.router.pushScreen(.bookDetails(id: $0))
+                    }
+                                            .padding()
+                    
+                    FinishedBooksSection(viewModel: self.viewModel,
+                                         finishedBookList: finishedBooksList) {
+                        self.router.pushScreen(.bookDetails(id: $0))
+                    }
+                                         .padding()
+                    
+                    WishlistSection(viewModel: self.viewModel,
+                                    wishlishtedBooks: wishlistedBooks) {
+                        self.router.pushScreen(.bookDetails(id: $0))
+                    }
+                                    .padding()
+                }
             }
+            .scrollIndicators(.hidden)
             .navigationTitle("Library")
-//            .searchable(text: $viewModel.searchText, prompt: "Search for a book")
             .onChange(of: self.viewModel.searchText) { _, newValue in
                 withAnimation {
                     self.viewModel.isSearching = !newValue.isEmpty
                 }
             }
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        self.router.pushScreen(.bookWishlistScreen)
-                    } label: {
-                        Image(systemName: "bookmark")
-                    }
-                }
-                
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         self.viewModel.showAddBookScreen = true
@@ -96,23 +125,7 @@ struct LibraryView: View {
             .padding()
             .buttonStyle(.plain)
             
-            Button {
-                self.router.pushScreen(.bookWishlistScreen)
-            } label: {
-                HStack {
-                    Image(systemName: "bookmark")
-                    Text("View Wishlist")
-                }
-            }
-            .padding()
-            
         }
         .frame(maxWidth: .infinity)
-    }
-}
-
-#Preview {
-    NavigationStack {
-        LibraryView()
     }
 }

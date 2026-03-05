@@ -121,7 +121,6 @@ struct InsightsView: View {
             .fontDesign(.serif)
             .onAppear {
                 self.viewModel.loadChartData(allBooks: self.books)
-                self.viewModel.loadGenreData(books: self.books)
             }
         }
     }
