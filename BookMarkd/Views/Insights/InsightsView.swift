@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Charts
+import _SwiftData_SwiftUI
 
 struct MonthlyHoursOfSunshine: Identifiable {
     var id = UUID()
@@ -22,6 +23,9 @@ struct MonthlyHoursOfSunshine: Identifiable {
 }
 
 struct InsightsView: View {
+    @Query private var books: [BookModel]
+    @StateObject private var viewModel = InsightsViewModel()
+    
     var data: [MonthlyHoursOfSunshine] = [
         MonthlyHoursOfSunshine(month: 1, hoursOfSunshine: 74),
         MonthlyHoursOfSunshine(month: 2, hoursOfSunshine: 99),
@@ -44,22 +48,22 @@ struct InsightsView: View {
                         RoundedBoxContainer(shouldShowTag: true,
                                             icon: "calendar",
                                             title: "Books Finished",
-                                            value: "4",
+                                            value: "\(self.viewModel.getBooksFinishedThisMonth(allBooks: books))",
                                             tagText: "Monthly")
                         Spacer()
                         RoundedBoxContainer(icon: "book.pages",
                                             title: "Total Finished",
-                                            value: "10")
+                                            value: "\(self.viewModel.getTotalFinishedBooks(allBooks: books).count)")
                     }
                     
                     HStack {
                         RoundedBoxContainer(icon: "star",
                                             title: "Avg Rating",
-                                            value: "3")
+                                            value: "\(self.viewModel.getAverageRatingGivenToBooksByUser(allBooks: books))")
                         Spacer()
                         RoundedBoxContainer(icon: "quote.opening",
                                             title: "Quotes Saved",
-                                            value: "40")
+                                            value: "\(self.viewModel.getQuotesSavedByUser(allBooks: books))")
                     }
                 }
                 .padding(.top, 24)
@@ -75,11 +79,11 @@ struct InsightsView: View {
                             .font(.caption)
                     }
                     
-                    Chart(data) {
+                    Chart(self.viewModel.readingActivity) {
                         LineMark(
-                                    x: .value("Month", $0.date),
-                                    y: .value("Hours of Sunshine", $0.hoursOfSunshine)
-                                )
+                            x: .value("Month", $0.date),
+                            y: .value("Books Read", $0.bookCount)
+                        )
                     }
                     .frame(height: 178)
                     .padding()
@@ -96,16 +100,12 @@ struct InsightsView: View {
                     Text("Top Genres")
                             .font(.headline)
                     
-                    VStack(spacing: 16) {
-                        BookProgressBar(genreName: "Mystery",
-                                        numberOfBooks: 10,
-                                        totalBooks: 12)
-                        BookProgressBar(genreName: "Mystery",
-                                        numberOfBooks: 10,
-                                        totalBooks: 12)
-                        BookProgressBar(genreName: "Mystery",
-                                        numberOfBooks: 10,
-                                        totalBooks: 12)
+                    VStack(spacing: 16) {                        
+                        ForEach(self.viewModel.genresRead.keys.sorted(by: { $0.rawValue < $1.rawValue }), id: \.self) { data in
+                            BookProgressBar(genreName: data.rawValue,
+                                            numberOfBooks: self.viewModel.genresRead[data] ?? 0,
+                                            totalBooks: self.books.count)
+                        }
                     }
                     .padding()
                     .background {
@@ -119,6 +119,10 @@ struct InsightsView: View {
             .padding()
             .frame(maxWidth: .infinity)
             .fontDesign(.serif)
+            .onAppear {
+                self.viewModel.loadChartData(allBooks: self.books)
+                self.viewModel.loadGenreData(books: self.books)
+            }
         }
     }
 }

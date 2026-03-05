@@ -6,6 +6,7 @@
 //
 
 import Combine
+import Foundation
 
 class FinishBookViewModel: ObservableObject {
     @Published var book: BookModel?
@@ -16,6 +17,7 @@ class FinishBookViewModel: ObservableObject {
     
     func markBookAsRead(bookID: String, _ store: StorageManageer) {
         self.book?.readState = .read
+        self.book?.finishedAt = .now
         store.updateBookReadState(to: .read, for: bookID)
     }
     
