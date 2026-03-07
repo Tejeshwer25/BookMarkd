@@ -11,8 +11,14 @@ import _SwiftData_SwiftUI
 struct LibraryView: View {
     @Query private var books: [BookModel]
     @EnvironmentObject private var router: Router
-    @EnvironmentObject private var store: StorageManageer
-    @StateObject private var viewModel: LibraryViewModel = LibraryViewModel()
+    @StateObject private var viewModel: LibraryViewModel
+    
+    let bookRepository: any BookRepository
+    
+    init(bookRepository: any BookRepository) {
+        self._viewModel = StateObject(wrappedValue: LibraryViewModel(bookRepository: bookRepository))
+        self.bookRepository = bookRepository
+    }
     
     var body: some View {
         let viewToBeShown = self.viewModel.checkForViewToBeShown(books)
@@ -23,8 +29,11 @@ struct LibraryView: View {
         if viewToBeShown == .noBooksPresent {
             self.noBookView
                 .sheet(isPresented: $viewModel.showAddBookScreen) {
-                    AddBookView(query: .constant(""))
-                        .presentationDetents([.large])
+                    AddBookView(
+                        query: .constant(""),
+                        bookRepository: bookRepository
+                    )
+                    .presentationDetents([.large])
                 }
         } else {
             ScrollView {
@@ -87,7 +96,7 @@ struct LibraryView: View {
                 }
             }
             .sheet(isPresented: $viewModel.showAddBookScreen) {
-                AddBookView(query: .constant(""))
+                AddBookView(query: .constant(""), bookRepository: bookRepository)
                     .presentationDetents([.large])
             }
         }

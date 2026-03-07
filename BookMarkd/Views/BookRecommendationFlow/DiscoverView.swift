@@ -18,6 +18,8 @@ struct DiscoverView: View {
     @State private var showSearchModal: Bool = false
     @State private var searchQuery: String = ""
     
+    let bookRepository: any BookRepository
+    
     var body: some View {
         ScrollView {
             if !self.recommendedBooks.isEmpty {
@@ -105,13 +107,10 @@ struct DiscoverView: View {
             }
         }
         .sheet(isPresented: $showSearchModal) {
-            AddBookView(query: $searchQuery)
+            AddBookView(
+                query: $searchQuery,
+                bookRepository: bookRepository
+            )
         }
-    }
-}
-
-#Preview {
-    NavigationStack {
-        DiscoverView()
     }
 }

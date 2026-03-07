@@ -106,9 +106,3 @@ struct WishlistSection: View {
         }
     }
 }
-
-#Preview {
-    WishlistSection(viewModel: .init(), wishlishtedBooks: []) { _ in
-        ()
-    }
-}

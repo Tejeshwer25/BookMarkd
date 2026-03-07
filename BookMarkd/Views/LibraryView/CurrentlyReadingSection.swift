@@ -87,9 +87,3 @@ struct CurrentlyReadingSection: View {
         }
     }
 }
-
-#Preview {
-    CurrentlyReadingSection(currentlyReadingBookList: [], viewModel: .init()) { _ in
-        ()
-    }
-}

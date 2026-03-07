@@ -125,11 +125,3 @@ struct InsightsView: View {
         }
     }
 }
-
-
-#Preview {
-    var router = Router()
-    NavigationStackContainer(router: router) {
-        InsightsView()
-    }
-}

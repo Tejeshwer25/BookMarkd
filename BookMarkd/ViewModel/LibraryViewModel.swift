@@ -15,8 +15,14 @@ class LibraryViewModel: ObservableObject {
     @Published var showAddBookScreen: Bool = false
     @Published var bookTitle: String = ""
     
-    func addBookToStore(store: StorageManageer, book: BookModel) {
-        store.addBook(book)
+    let bookRepository: any BookRepository
+    
+    init(bookRepository: any BookRepository) {
+        self.bookRepository = bookRepository
+    }
+    
+    func addBookToStore(book: BookModel) {
+        try? self.bookRepository.add(book)
     }
     
     func getBookListFor(readingState state: BookReadingState, from books: [BookModel]) -> [BookModel] {

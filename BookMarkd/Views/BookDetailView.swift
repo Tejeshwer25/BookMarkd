@@ -9,13 +9,16 @@ import SwiftUI
 import UIKit
 
 struct BookDetailView: View {
-    @EnvironmentObject private var router: Router
-    @EnvironmentObject private var store: StorageManageer
-    
-    @StateObject private var viewModel = BookDetailViewModel()
+    @EnvironmentObject private var router: Router    
+    @StateObject private var viewModel: BookDetailViewModel
     
     var bookId: String
     @State var imageToShare: UIImage?
+    
+    init(bookId: String, bookRepository: any BookRepository) {
+        self._viewModel = StateObject(wrappedValue: BookDetailViewModel(bookRepository: bookRepository))
+        self.bookId = bookId
+    }
     
     var body: some View {
         ScrollView {
@@ -23,9 +26,9 @@ struct BookDetailView: View {
                 bookInfoView
                 
                 if self.viewModel.book?.readState == .reading {
-                    NotesAndQuotesView(notesList: self.store.getBookWith(id: self.bookId)?.quotes ?? [],
+                    NotesAndQuotesView(notesList: viewModel.bookRepository.book(id: bookId)?.quotes ?? [],
                                        showAddNoteButton: true,
-                                       bookReadingStatus: self.store.getBookWith(id: self.bookId)?.readState) { quoteAction, quote in
+                                       bookReadingStatus: viewModel.bookRepository.book(id: bookId)?.readState) { quoteAction, quote in
                         self.viewModel.performQuoteAction(quoteAction, on: quote)
                     }
                 } else if self.viewModel.book?.readState == .wishlist {
@@ -40,9 +43,9 @@ struct BookDetailView: View {
                     }
                     .padding()
                 } else if self.viewModel.book?.readState == .read {
-                    NotesAndQuotesView(notesList: self.store.getBookWith(id: self.bookId)?.quotes ?? [],
+                    NotesAndQuotesView(notesList: viewModel.bookRepository.book(id: bookId)?.quotes ?? [],
                                        showAddNoteButton: false,
-                                       bookReadingStatus: self.store.getBookWith(id: self.bookId)?.readState) { quoteAction, quote in
+                                       bookReadingStatus: viewModel.bookRepository.book(id: bookId)?.readState) { quoteAction, quote in
                         self.viewModel.performQuoteAction(quoteAction, on: quote)
                     }
                 }
@@ -56,16 +59,18 @@ struct BookDetailView: View {
                                                noteType: .quote,
                                                text: "",
                                                date: Date()),
-                            book: self.viewModel.book)
+                            book: viewModel.book,
+                            bookRepository: viewModel.bookRepository)
             }
         }
         .sheet(item: $viewModel.noteToEdit) { quote in
             NavigationStack {
-                AddNoteView(quotesModel: quote, book: self.viewModel.book)
+                AddNoteView(quotesModel: quote,
+                            book: self.viewModel.book,
+                            bookRepository: viewModel.bookRepository)
             }
         }
         .sheet(item: $viewModel.noteToShare, onDismiss: {
-            print("checking image data: \(imageToShare)")
             if let imageToShare {
                 self.shareImage(imageToShare)
             }
@@ -77,7 +82,7 @@ struct BookDetailView: View {
             }
         }
         .onAppear {
-            self.viewModel.book = store.getBookWith(id: self.bookId)
+            self.viewModel.book = viewModel.bookRepository.book(id: bookId)
             if self.viewModel.book?.readState == .unread || self.viewModel.book?.readState == .wishlist {
                 withAnimation {
                     self.viewModel.isPageLoading = true
@@ -121,7 +126,7 @@ struct BookDetailView: View {
                     }
                 } else if self.viewModel.book?.readState == .wishlist {
                     Button("Start Reading") {
-                        self.store.updateBookReadState(to: .reading, for: self.bookId)
+                        try? self.viewModel.bookRepository.updateReadState(.reading, for: bookId)
                         self.router.popScreen()
                     }
                     .foregroundStyle(.black)

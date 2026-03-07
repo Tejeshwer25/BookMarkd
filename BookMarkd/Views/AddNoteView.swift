@@ -8,13 +8,13 @@
 import SwiftUI
 
 struct AddNoteView: View {
-    @EnvironmentObject private var store: StorageManageer
     @Environment(\.dismiss) var dismiss
-    
     @Bindable var quotesModel: QuotesModel
     
     let inEditMode: Bool = false
     let book: BookModel?
+    
+    let bookRepository: BookRepository
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -137,8 +137,8 @@ struct AddNoteView: View {
                     if !self.inEditMode {
                         HapticManager.shared.trigger(.success)
                         withAnimation {
-                            self.store.addQuoteToBook(id: self.book?.id ?? "",
-                                                      quote: self.quotesModel)
+                            try? self.bookRepository.addQuote(self.quotesModel,
+                                                         toBook: self.book?.id ?? "")
                         }
                     }
                     dismiss()

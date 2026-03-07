@@ -80,9 +80,10 @@ enum BookGenre: String, CaseIterable, Identifiable {
 }
 
 struct GenrePreferencesScreen: View {
-    @EnvironmentObject private var storeManager: StorageManageer
     @State private var searchedGenre: String = ""
     @State private var selectedGenres: [BookGenre] = []
+    
+    let preferenceRepository: any UserPreferenceRepository
     
     var allBookGenres: [BookGenre] {
         if searchedGenre.isEmpty {
@@ -154,7 +155,7 @@ struct GenrePreferencesScreen: View {
             .scrollIndicators(.hidden)
             
             Button {
-                self.storeManager.userPreferences?.preferedGenres = self.selectedGenres.map {$0.rawValue}
+                try? self.preferenceRepository.saveGenres(self.selectedGenres.map { $0.rawValue })
                 HapticManager.shared.trigger(.success)
             } label: {
                 Text("Save Changes")
@@ -177,7 +178,15 @@ struct GenrePreferencesScreen: View {
         .navigationTitle("Genre Preferences")
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
-            self.selectedGenres = self.storeManager.userPreferences?.preferedGenres.map { BookGenre(rawValue: $0)! } ?? []
+            let selectedGenres = self.preferenceRepository.loadOrCreate().preferedGenres.map { BookGenre(rawValue: $0) }
+            var genres: [BookGenre] = []
+            for genre in selectedGenres {
+                if let genre {
+                    genres.append(genre)
+                }
+            }
+            
+            self.selectedGenres = genres
         }
     }
     
@@ -201,7 +210,7 @@ struct GenrePreferencesScreen: View {
         // If no genre is selected return false
         if selectedGenres.isEmpty { return false }
         
-        let currentlySavedGenres = self.storeManager.userPreferences?.preferedGenres.sorted()
+        let currentlySavedGenres = self.preferenceRepository.loadOrCreate().preferedGenres.sorted()
         let selectedGenresSorted = self.selectedGenres.map({ $0.rawValue }).sorted()
         
         // If saved genres matches the currently selected genres return false
@@ -210,11 +219,5 @@ struct GenrePreferencesScreen: View {
         }
         
         return true
-    }
-}
-
-#Preview {
-    NavigationStack {
-        GenrePreferencesScreen()
     }
 }

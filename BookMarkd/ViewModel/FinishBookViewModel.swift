@@ -9,20 +9,26 @@ import Combine
 import Foundation
 
 class FinishBookViewModel: ObservableObject {
-    @Published var book: BookModel?
+    @Published private(set) var book: BookModel?
     
-    func getBook(with id: String, from store: StorageManageer) {
-        self.book = store.getBookWith(id: id)
+    private let bookRepository: any BookRepository
+    
+    init(bookRepository: any BookRepository) {
+        self.bookRepository = bookRepository
     }
     
-    func markBookAsRead(bookID: String, _ store: StorageManageer) {
+    func loadBook(_ id: String) {
+        self.book = self.bookRepository.book(id: id)
+    }
+    
+    func markBookAsRead(bookID: String) {
         self.book?.readState = .read
         self.book?.finishedAt = .now
-        store.updateBookReadState(to: .read, for: bookID)
+        try? bookRepository.updateReadState(.read, for: bookID)
     }
     
-    func updateBookRating(to rating: Int, bookID: String, _ store: StorageManageer) {
+    func updateBookRating(to rating: Int, bookID: String) {
         self.book?.rating = rating
-        store.updateBookRating(to: rating, for: bookID)
+        try? self.bookRepository.updateRating(rating, for: bookID)
     }
 }

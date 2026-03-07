@@ -10,7 +10,6 @@ import SwiftData
 
 @main
 struct BookMarkdApp: App {
-    @StateObject var appStore = StorageManageer()
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             BookModel.self,
@@ -25,12 +24,23 @@ struct BookMarkdApp: App {
             fatalError("Could not create ModelContainer: \(error)")
         }
     }()
-
+    
+    private var bookRepository: any BookRepository
+    private var preferenceRepository: any UserPreferenceRepository
+    
+    init() {
+        let context = sharedModelContainer.mainContext
+        bookRepository = SwiftDataBookRepository(context: context)
+        preferenceRepository = SwiftDataUserPreferenceRepository(context: context)
+    }
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(
+                bookRepository: bookRepository,
+                preferenceRepository: preferenceRepository
+            )
         }
         .modelContainer(sharedModelContainer)
-        .environmentObject(appStore)
     }
 }

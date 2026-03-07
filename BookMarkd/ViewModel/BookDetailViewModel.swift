@@ -12,9 +12,7 @@ enum QuoteAction {
     case edit, share, delete, add
 }
 
-class BookDetailViewModel: ObservableObject {
-    @EnvironmentObject private var store: StorageManageer
-    
+class BookDetailViewModel: ObservableObject {    
     @Published var showAddNoteSheet: Bool = false
     @Published var book: BookModel?
     @Published var bookDetails: BookDetailDataModel? = nil
@@ -25,6 +23,12 @@ class BookDetailViewModel: ObservableObject {
     @Published var shouldShowAlert: Bool = false
     @Published var noteToEdit: QuotesModel? = nil
     @Published var noteToShare: QuotesModel? = nil
+    
+    let bookRepository: any BookRepository
+    
+    init(bookRepository: any BookRepository) {
+        self.bookRepository = bookRepository
+    }
     
     /// Method to get additional book details
     /// - Parameter bookID: book id

@@ -14,7 +14,6 @@ struct BookWishlistView: View {
     @Query private var allBooks: [BookModel]
     
     @EnvironmentObject private var router: Router
-    @EnvironmentObject private var store: StorageManageer
     @StateObject private var viewModel = WishlishtViewModel()
     
     var body: some View {

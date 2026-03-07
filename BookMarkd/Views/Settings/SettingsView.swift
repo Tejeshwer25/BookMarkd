@@ -43,11 +43,3 @@ struct SettingsView: View {
         }
     }
 }
-
-#Preview {
-    var router = Router()
-    
-    NavigationStackContainer(router: router) {
-        SettingsView()
-    }
-}

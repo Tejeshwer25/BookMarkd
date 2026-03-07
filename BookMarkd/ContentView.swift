@@ -10,57 +10,69 @@ import SwiftData
 
 struct ContentView: View {
     @State private var router = Router()
-    @Environment(\.modelContext) private var modelContext
-    @EnvironmentObject private var storeManager: StorageManageer
-    @Query private var preferences: [UserPreferenceModel]
+    
+    let bookRepository: any BookRepository
+    let preferenceRepository: any UserPreferenceRepository
     
     var body: some View {
         TabView {
             Tab("Library", systemImage: "books.vertical") {
-                NavigationStackContainer(router: router) {
-                    LibraryView()
+                NavigationStackContainer(
+                    router: router,
+                    bookRepository: bookRepository,
+                    preferenceRepository: preferenceRepository) {
+                        LibraryView(bookRepository: bookRepository)
                 }
             }
             
             Tab("Discover", systemImage: "book") {
-                NavigationStackContainer(router: router) {
-                    DiscoverView()
+                NavigationStackContainer(
+                    router: router,
+                    bookRepository: bookRepository,
+                    preferenceRepository: preferenceRepository) {
+                        DiscoverView(bookRepository: bookRepository)
                 }
             }
             
             Tab("Insights", systemImage: "chart.xyaxis.line") {
-                NavigationStackContainer(router: router) {
-                    InsightsView()
+                NavigationStackContainer(
+                    router: router,
+                    bookRepository: bookRepository,
+                    preferenceRepository: preferenceRepository) {
+                        InsightsView()
                 }
             }
             
             Tab("Settings", systemImage: "gearshape") {
-                NavigationStackContainer(router: router) {
-                    SettingsView()
+                NavigationStackContainer(
+                    router: router,
+                    bookRepository: bookRepository,
+                    preferenceRepository: preferenceRepository) {
+                        SettingsView()
                 }
             }
-        }
-        .onAppear {
-            self.storeManager.setContext(self.modelContext)
-        }
-        .task {
-            self.setupUserPreferencesIfNeeded()
-        }
-    }
-    
-    /// Method to setup user preferences 
-    private func setupUserPreferencesIfNeeded() {
-        if let existing = preferences.first {
-            storeManager.userPreferences = existing
-        } else {
-            let newPreferences = UserPreferenceModel(preferedGenres: [],
-                                                     createdDate: .now)
-            modelContext.insert(newPreferences)
-            storeManager.userPreferences = newPreferences
         }
     }
 }
 
 #Preview {
-    ContentView()
+    var sharedModelContainer: ModelContainer = {
+        let schema = Schema([
+            BookModel.self,
+            QuotesModel.self,
+            UserPreferenceModel.self
+        ])
+        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+
+        do {
+            return try ModelContainer(for: schema, configurations: [modelConfiguration])
+        } catch {
+            fatalError("Could not create ModelContainer: \(error)")
+        }
+    }()
+    
+    ContentView(
+        bookRepository: SwiftDataBookRepository(context: sharedModelContainer.mainContext),
+        preferenceRepository: SwiftDataUserPreferenceRepository(context: sharedModelContainer.mainContext)
+    )
 }

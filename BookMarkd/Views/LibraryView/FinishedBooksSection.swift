@@ -107,9 +107,3 @@ struct FinishedBooksSection: View {
         }
     }
 }
-
-#Preview {
-    FinishedBooksSection(viewModel: .init(),
-                         finishedBookList: [],
-                         onBookComponentTap: {print($0)})
-}

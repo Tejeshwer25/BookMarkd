@@ -6,13 +6,20 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct FinishBookView: View {
     @EnvironmentObject private var router: Router
-    @EnvironmentObject private var store: StorageManageer
-    @StateObject private var viewModel = FinishBookViewModel()
+    @StateObject private var viewModel: FinishBookViewModel
     
     let bookID: String
+    
+    init(bookID: String, bookRepository: any BookRepository) {
+        self.bookID = bookID
+        self._viewModel = StateObject(
+            wrappedValue: FinishBookViewModel(bookRepository: bookRepository)
+        )
+    }
     
     var body: some View {
         ScrollView {
@@ -79,8 +86,7 @@ struct FinishBookView: View {
                                 HapticManager.shared.trigger(.impactLight)
                                 withAnimation {
                                     self.viewModel.updateBookRating(to: index,
-                                                                    bookID: self.bookID,
-                                                                    self.store)
+                                                                    bookID: self.bookID)
                                 }
                             } label: {
                                 if (self.viewModel.book?.rating ?? 0) >= index {
@@ -136,7 +142,7 @@ struct FinishBookView: View {
                     
                     Button {
                         HapticManager.shared.trigger(.impactMedium)
-                        self.viewModel.markBookAsRead(bookID: self.bookID, store)
+                        self.viewModel.markBookAsRead(bookID: self.bookID)
                         self.router.popToRoot()
                     } label: {
                         HStack(alignment: .center) {
@@ -163,13 +169,33 @@ struct FinishBookView: View {
         .navigationTitle("Reading Milestone")
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
-            self.viewModel.getBook(with: self.bookID, from: self.store)
+            self.viewModel.loadBook(self.bookID)
         }
     }
 }
 
 #Preview {
+    var sharedModelContainer: ModelContainer = {
+        let schema = Schema([
+            BookModel.self,
+            QuotesModel.self,
+            UserPreferenceModel.self
+        ])
+        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+
+        do {
+            return try ModelContainer(for: schema, configurations: [modelConfiguration])
+        } catch {
+            fatalError("Could not create ModelContainer: \(error)")
+        }
+    }()
+    
     NavigationStack {
-        FinishBookView(bookID: "")
+        FinishBookView(
+            bookID: "",
+            bookRepository: SwiftDataBookRepository(
+                context: sharedModelContainer.mainContext
+            )
+        )
     }
 }

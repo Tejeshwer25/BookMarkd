@@ -13,13 +13,14 @@ struct AddBookView: View {
     @Binding var query: String
     
     @Query private var booksInLibrary: [BookModel]
-    @EnvironmentObject private var store: StorageManageer
     
     @State private var bookTitle: String = ""
     @State private var books: [SearchedBooks] = []
     @State private var debouncedTask: Task<Void, Never>? = nil
     @State private var loading: Bool = false
     @State private var booksWishlisted: [String] = []
+    
+    let bookRepository: any BookRepository
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -205,13 +206,13 @@ struct AddBookView: View {
                                   readState: book.readState)
         
         if self.booksWishlisted.contains(where: { $0 == book.id}) {
-            self.store.removeBook(bookModel.id)
+            try? self.bookRepository.remove(id: bookModel.id)
             withAnimation {
                 self.booksWishlisted.removeAll(where: { $0 == book.id })
             }
         } else {
             bookModel.readState = .wishlist
-            self.store.addBook(bookModel)
+            try? self.bookRepository.add(bookModel)
             withAnimation {
                 self.booksWishlisted.append(book.id)
             }
@@ -231,8 +232,4 @@ struct AddBookView: View {
         
         return []
     }
-}
-
-#Preview {    
-    AddBookView(query: .constant(""))
 }
