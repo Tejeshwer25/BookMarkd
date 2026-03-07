@@ -11,12 +11,14 @@ enum BookEndpoint {
     case search(query: String)
     case bookDetails(bookKey: String)
     
-    func makeRequest(baseURL: URL) throws -> URLRequest {
+    var baseURL: URL {
+        URL(string: "https://openlibrary.org")!
+    }
+    
+    func makeRequest() throws -> URLRequest {
         switch self {
         case .search(let query):
             var components = URLComponents(url: baseURL, resolvingAgainstBaseURL: false)
-            // Ensure baseURL points to https://openlibrary.org
-            // Append path /search.json and query parameter q
             components?.path = "/search.json"
             var items: [URLQueryItem] = []
             if query.isEmpty == false {

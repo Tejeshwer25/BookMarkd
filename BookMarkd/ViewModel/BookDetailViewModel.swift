@@ -33,24 +33,22 @@ class BookDetailViewModel: ObservableObject {
     /// Method to get additional book details
     /// - Parameter bookID: book id
     func getBookDetails(_ bookID: String) {
-        if let url = URL(string: "https://openlibrary.org/") {
-            let service = BookServiceUtility(api: .init(baseURL: url))
-            Task {
-                do {
-                    let book = try await service.getBookDetails(bookID)
-                    self.bookDetails = book
-                    withAnimation {
-                        self.isPageLoading = false
-                    }
-                } catch {
-                    withAnimation {
-                        self.isPageLoading = false
-                        self.shouldShowAlert = true
-                    }
-                    
-                    self.alertTitle = "Error"
-                    self.alertMesssage = error.localizedDescription
+        let service = BookServiceUtility(api: APIClient())
+        Task {
+            do {
+                let book = try await service.getBookDetails(bookID)
+                self.bookDetails = book
+                withAnimation {
+                    self.isPageLoading = false
                 }
+            } catch {
+                withAnimation {
+                    self.isPageLoading = false
+                    self.shouldShowAlert = true
+                }
+                
+                self.alertTitle = "Error"
+                self.alertMesssage = error.localizedDescription
             }
         }
     }

@@ -17,7 +17,7 @@ struct BookServiceUtility: BookService {
 
     func searchBooks(_ query: String) async throws -> [SearchedBooks] {
         // Build request to Open Library search endpoint
-        let request = try BookEndpoint.search(query: query).makeRequest(baseURL: api.baseURL)
+        let request = try BookEndpoint.search(query: query).makeRequest()
         // Decode the Open Library response
         let response: OpenLibrarySearchResponse = try await api.send(request)
         // Map docs to your app's BookModel
@@ -36,7 +36,7 @@ struct BookServiceUtility: BookService {
     }
     
     func getBookDetails(_ bookID: String) async throws -> BookDetailDataModel {
-        let request = try BookEndpoint.bookDetails(bookKey: bookID).makeRequest(baseURL: api.baseURL)
+        let request = try BookEndpoint.bookDetails(bookKey: bookID).makeRequest()
         let response = try await api.send(request)
         
         if let responseModel = OpenLibraryBookDetailsModel.decodeDataModel(from: response) {

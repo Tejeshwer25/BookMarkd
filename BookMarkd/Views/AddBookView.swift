@@ -220,14 +220,12 @@ struct AddBookView: View {
     }
     
     func searchBook(_ bookName: String) async -> [SearchedBooks] {
-        if let url = URL(string: "https://openlibrary.org/search.json") {
-            let service = BookServiceUtility(api: .init(baseURL: url))
-            do {
-                let books = try await service.searchBooks(bookName)
-                return books
-            } catch {
-                print(error.localizedDescription)
-            }
+        let service = BookServiceUtility(api: APIClient())
+        do {
+            let books = try await service.searchBooks(bookName)
+            return books
+        } catch {
+            print(error.localizedDescription)
         }
         
         return []

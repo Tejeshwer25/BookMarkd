@@ -8,7 +8,6 @@
 import Foundation
 
 struct APIClient {
-    let baseURL: URL
     let session: URLSession = .shared
     let decoder: JSONDecoder = {
         let d = JSONDecoder()
