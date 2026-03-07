@@ -29,7 +29,6 @@ struct SettingsView: View {
             }
             .buttonStyle(.plain)
         })
-        .padding(.top)
         .navigationTitle("Settings")
     }
     

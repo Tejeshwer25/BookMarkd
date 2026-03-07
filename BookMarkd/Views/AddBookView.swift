@@ -203,7 +203,8 @@ struct AddBookView: View {
         let bookModel = BookModel(id: book.id,
                                   title: book.title,
                                   authorName: book.authorName,
-                                  readState: book.readState)
+                                  readState: book.readState,
+                                  coverImageURL: book.coverImageURL)
         
         if self.booksWishlisted.contains(where: { $0 == book.id}) {
             try? self.bookRepository.remove(id: bookModel.id)

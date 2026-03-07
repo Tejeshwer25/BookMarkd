@@ -9,7 +9,10 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
-    @State private var router = Router()
+    @State private var libraryRouter = Router()
+    @State private var discoverRouter = Router()
+    @State private var insightsRouter = Router()
+    @State private var settingsRouter = Router()
     
     let bookRepository: any BookRepository
     let preferenceRepository: any UserPreferenceRepository
@@ -18,7 +21,7 @@ struct ContentView: View {
         TabView {
             Tab("Library", systemImage: "books.vertical") {
                 NavigationStackContainer(
-                    router: router,
+                    router: libraryRouter,
                     bookRepository: bookRepository,
                     preferenceRepository: preferenceRepository) {
                         LibraryView(bookRepository: bookRepository)
@@ -27,7 +30,7 @@ struct ContentView: View {
             
             Tab("Discover", systemImage: "book") {
                 NavigationStackContainer(
-                    router: router,
+                    router: discoverRouter,
                     bookRepository: bookRepository,
                     preferenceRepository: preferenceRepository) {
                         DiscoverView(bookRepository: bookRepository)
@@ -36,7 +39,7 @@ struct ContentView: View {
             
             Tab("Insights", systemImage: "chart.xyaxis.line") {
                 NavigationStackContainer(
-                    router: router,
+                    router: insightsRouter,
                     bookRepository: bookRepository,
                     preferenceRepository: preferenceRepository) {
                         InsightsView()
@@ -45,7 +48,7 @@ struct ContentView: View {
             
             Tab("Settings", systemImage: "gearshape") {
                 NavigationStackContainer(
-                    router: router,
+                    router: settingsRouter,
                     bookRepository: bookRepository,
                     preferenceRepository: preferenceRepository) {
                         SettingsView()
