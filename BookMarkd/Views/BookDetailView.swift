@@ -173,19 +173,11 @@ struct BookDetailView: View {
                     .padding(.vertical, 7)
                     .background {
                         Capsule()
-                            .fill(Color(
-                                red: Double.random(in: 0...1),
-                                green: Double.random(in: 0...1),
-                                blue: Double.random(in: 0...1)
-                            ).opacity(0.15))
+                            .fill(tag.stableColor.opacity(0.15))
                     }
                     .overlay {
                         Capsule()
-                            .stroke(Color(
-                                red: Double.random(in: 0...1),
-                                green: Double.random(in: 0...1),
-                                blue: Double.random(in: 0...1)
-                            ).opacity(0.5), lineWidth: 1)
+                            .stroke(tag.stableColor.opacity(0.5), lineWidth: 1)
                     }
             }
 
