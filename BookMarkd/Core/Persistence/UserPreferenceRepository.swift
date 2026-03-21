@@ -8,6 +8,6 @@
 import Foundation
 
 protocol UserPreferenceRepository {
-    func loadOrCreate() -> UserPreferenceModel
+    func loadOrCreate() throws -> UserPreferenceModel
     func saveGenres(_ genres: [String]) throws
 }

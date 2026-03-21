@@ -155,8 +155,12 @@ struct GenrePreferencesScreen: View {
             .scrollIndicators(.hidden)
             
             Button {
-                try? self.preferenceRepository.saveGenres(self.selectedGenres.map { $0.rawValue })
-                HapticManager.shared.trigger(.success)
+                do {
+                    try self.preferenceRepository.saveGenres(self.selectedGenres.map { $0.rawValue })
+                    HapticManager.shared.trigger(.success)
+                } catch {
+                    
+                }
             } label: {
                 Text("Save Changes")
                     .font(.headline)
@@ -178,9 +182,9 @@ struct GenrePreferencesScreen: View {
         .navigationTitle("Genre Preferences")
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
-            let selectedGenres = self.preferenceRepository.loadOrCreate().preferedGenres.map { BookGenre(rawValue: $0) }
+            let selectedGenres = try? self.preferenceRepository.loadOrCreate().preferedGenres.map { BookGenre(rawValue: $0) }
             var genres: [BookGenre] = []
-            for genre in selectedGenres {
+            for genre in selectedGenres ?? [] {
                 if let genre {
                     genres.append(genre)
                 }
@@ -210,7 +214,7 @@ struct GenrePreferencesScreen: View {
         // If no genre is selected return false
         if selectedGenres.isEmpty { return false }
         
-        let currentlySavedGenres = self.preferenceRepository.loadOrCreate().preferedGenres.sorted()
+        let currentlySavedGenres = try? self.preferenceRepository.loadOrCreate().preferedGenres.sorted()
         let selectedGenresSorted = self.selectedGenres.map({ $0.rawValue }).sorted()
         
         // If saved genres matches the currently selected genres return false

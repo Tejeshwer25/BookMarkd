@@ -8,7 +8,7 @@
 
 import Foundation
 
-class SearchedBooks {
+struct SearchedBooks: Identifiable {
     var id: String
     var title: String
     var authorName: [String]

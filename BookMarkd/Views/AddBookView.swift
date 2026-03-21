@@ -19,6 +19,8 @@ struct AddBookView: View {
     @State private var debouncedTask: Task<Void, Never>? = nil
     @State private var loading: Bool = false
     @State private var booksWishlisted: [String] = []
+    @State private var errorOccurred: Bool = false
+    @State private var errorMessage: String?
     
     let bookRepository: any BookRepository
     
@@ -43,55 +45,55 @@ struct AddBookView: View {
             }
             .padding(.top)
             
-            if !self.books.isEmpty {
-                List{
-                    Section("Searched Results") {
-                        ForEach(self.books, id: \.id) { book in
-                            HStack(spacing: 10) {
-                                BookImage(bookImageURL: book.coverImageURL ?? "",
-                                          imageFrame: (100, 150))
-                                
-                                VStack(alignment: .leading, spacing: 5) {
-                                    Text(book.title)
-                                        .font(.title3)
-                                        .fontDesign(.serif)
-                                    
-                                    Text(book.authorName.joined(separator: ", "))
-                                        .fontDesign(.serif)
-                                        .font(.callout)
-                                }
-                                
-                                Spacer()
-                                
-                                Button {
-                                    hapticsManager.trigger(.impactMedium)
-                                    self.addBookToWishlist(book)
-                                } label: {
-                                    Image(systemName: self.booksWishlisted.contains(where: { $0 == book.id }) ? "bookmark.fill" : "bookmark")
-                                        .resizable()
-                                        .frame(width: 20, height: 25)
-                                        .contentTransition(.symbolEffect(.automatic))
-                                }
-                                .buttonStyle(.plain)
-                            }
-                            .padding(.leading, 5)
-                            .padding(.top, 10)
-                            .padding(.bottom, 15)
-                            .listRowBackground(Color.clear)
-                            .listRowSeparator(.hidden)
-                        }
-                    }
-                    .listRowInsets(EdgeInsets())
-                }
-                .padding(.vertical, 30)
-            } else if self.bookTitle.isEmpty && !self.loading {
-                Spacer()
-                self.emptyListView
-            } else if self.loading {
-                ProgressView()
-            } else {
-                // errror screen
-            }
+//            if !self.books.isEmpty {
+//                List{
+//                    Section("Searched Results") {
+//                        ForEach(self.books, id: \.id) { book in
+//                            HStack(spacing: 10) {
+//                                BookImage(bookImageURL: book.coverImageURL ?? "",
+//                                          imageFrame: (100, 150))
+//                                
+//                                VStack(alignment: .leading, spacing: 5) {
+//                                    Text(book.title)
+//                                        .font(.title3)
+//                                        .fontDesign(.serif)
+//                                    
+//                                    Text(book.authorName.joined(separator: ", "))
+//                                        .fontDesign(.serif)
+//                                        .font(.callout)
+//                                }
+//                                
+//                                Spacer()
+//                                
+//                                Button {
+//                                    hapticsManager.trigger(.impactMedium)
+//                                    self.addBookToWishlist(book)
+//                                } label: {
+//                                    Image(systemName: self.booksWishlisted.contains(where: { $0 == book.id }) ? "bookmark.fill" : "bookmark")
+//                                        .resizable()
+//                                        .frame(width: 20, height: 25)
+//                                        .contentTransition(.symbolEffect(.automatic))
+//                                }
+//                                .buttonStyle(.plain)
+//                            }
+//                            .padding(.leading, 5)
+//                            .padding(.top, 10)
+//                            .padding(.bottom, 15)
+//                            .listRowBackground(Color.clear)
+//                            .listRowSeparator(.hidden)
+//                        }
+//                    }
+//                    .listRowInsets(EdgeInsets())
+//                }
+//                .padding(.vertical, 30)
+//            } else if self.bookTitle.isEmpty && !self.loading {
+//                Spacer()
+//                self.emptyListView
+//            } else if self.loading {
+//                ProgressView()
+//            } else {
+//                // errror screen
+//            }
             
             
             Spacer()
@@ -112,8 +114,8 @@ struct AddBookView: View {
                             let isPresent = self.booksInLibrary.contains(where: { $0.id == book.id })
                             return !isPresent
                         })
-                        self.loading = false
                     }
+                    self.loading = false
                 }
             } else {
                 self.loading = false
@@ -124,6 +126,7 @@ struct AddBookView: View {
                 self.bookTitle = self.query
             }
         }
+        .alert("Error", isPresented: $errorOccurred) {} message: { Text(self.errorMessage ?? "") }
     }
     
     var emptyListView: some View {
@@ -207,13 +210,37 @@ struct AddBookView: View {
                                   coverImageURL: book.coverImageURL)
         
         if self.booksWishlisted.contains(where: { $0 == book.id}) {
-            try? self.bookRepository.remove(id: bookModel.id)
+            do {
+                try self.bookRepository.remove(id: bookModel.id)
+            } catch {
+                self.errorOccurred = true
+                
+                guard let err = error as? PersistenceError else {
+                    self.errorMessage = error.localizedDescription
+                    return
+                }
+                
+                self.errorMessage = err.errrorDescription
+            }
+            
             withAnimation {
                 self.booksWishlisted.removeAll(where: { $0 == book.id })
             }
         } else {
             bookModel.readState = .wishlist
-            try? self.bookRepository.add(bookModel)
+            do {
+                try self.bookRepository.add(bookModel)
+            } catch {
+                self.errorOccurred = true
+                
+                guard let err = error as? PersistenceError else {
+                    self.errorMessage = error.localizedDescription
+                    return
+                }
+                
+                self.errorMessage = err.errrorDescription
+            }
+            
             withAnimation {
                 self.booksWishlisted.append(book.id)
             }

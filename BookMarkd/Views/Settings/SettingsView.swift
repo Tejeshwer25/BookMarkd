@@ -17,18 +17,22 @@ struct SettingsView: View {
     @EnvironmentObject private var router: Router
     
     var body: some View {
-        List(SettingsOptionList.allCases, id: \.self, rowContent: { setting in
-            Button {
-                navigateToScreen(setting)
-            } label: {
-                HStack {
-                    Text(setting.rawValue)
-                    Spacer()
-                    Image(systemName: "chevron.right")
+        List {
+            ForEach(SettingsOptionList.allCases, id: \.self) { setting in
+                Button {
+                    navigateToScreen(setting)
+                } label: {
+                    HStack {
+                        Text(setting.rawValue)
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                    }
                 }
+                .buttonStyle(.plain)
+                .listRowBackground(Color.clear)
             }
-            .buttonStyle(.plain)
-        })
+        }
+        .listStyle(.plain)
         .navigationTitle("Settings")
     }
     

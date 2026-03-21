@@ -26,9 +26,11 @@ struct BookDetailView: View {
                 bookInfoView
                 
                 if self.viewModel.book?.readState == .reading {
-                    NotesAndQuotesView(notesList: viewModel.bookRepository.book(id: bookId)?.quotes ?? [],
+                    let notesList = try? viewModel.bookRepository.book(id: bookId)?.quotes
+                    let readState = try? viewModel.bookRepository.book(id: bookId)?.readState
+                    NotesAndQuotesView(notesList: notesList ?? [],
                                        showAddNoteButton: true,
-                                       bookReadingStatus: viewModel.bookRepository.book(id: bookId)?.readState) { quoteAction, quote in
+                                       bookReadingStatus: readState) { quoteAction, quote in
                         self.viewModel.performQuoteAction(quoteAction, on: quote)
                     }
                 } else if self.viewModel.book?.readState == .wishlist {
@@ -43,9 +45,9 @@ struct BookDetailView: View {
                     }
                     .padding()
                 } else if self.viewModel.book?.readState == .read {
-                    NotesAndQuotesView(notesList: viewModel.bookRepository.book(id: bookId)?.quotes ?? [],
+                    NotesAndQuotesView(notesList: try! viewModel.bookRepository.book(id: bookId)?.quotes ?? [],
                                        showAddNoteButton: false,
-                                       bookReadingStatus: viewModel.bookRepository.book(id: bookId)?.readState) { quoteAction, quote in
+                                       bookReadingStatus: try? viewModel.bookRepository.book(id: bookId)?.readState) { quoteAction, quote in
                         self.viewModel.performQuoteAction(quoteAction, on: quote)
                     }
                 }
@@ -82,7 +84,7 @@ struct BookDetailView: View {
             }
         }
         .onAppear {
-            self.viewModel.book = viewModel.bookRepository.book(id: bookId)
+            self.viewModel.book = try? viewModel.bookRepository.book(id: bookId)
             if self.viewModel.book?.readState == .unread || self.viewModel.book?.readState == .wishlist {
                 withAnimation {
                     self.viewModel.isPageLoading = true

@@ -48,7 +48,11 @@ class BookDetailViewModel: ObservableObject {
                 }
                 
                 self.alertTitle = "Error"
-                self.alertMesssage = error.localizedDescription
+                if let error = error as? BookMarkdError {
+                    self.alertMesssage = error.errorDescription ?? error.localizedDescription
+                } else {
+                    self.alertMesssage = error.localizedDescription
+                }
             }
         }
     }

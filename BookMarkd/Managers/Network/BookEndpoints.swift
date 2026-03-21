@@ -15,7 +15,7 @@ enum BookEndpoint {
         URL(string: "https://openlibrary.org")!
     }
     
-    func makeRequest() throws -> URLRequest {
+    func makeRequest() throws(APIError) -> URLRequest {
         switch self {
         case .search(let query):
             var components = URLComponents(url: baseURL, resolvingAgainstBaseURL: false)
@@ -26,13 +26,13 @@ enum BookEndpoint {
             }
             components?.queryItems = items
             
-            guard let url = components?.url else { throw URLError(.badURL) }
+            guard let url = components?.url else { throw .badURL }
             return self.getURLRequest(for: url)
         case .bookDetails(let bookKey):
             var components = URLComponents(url: baseURL, resolvingAgainstBaseURL: false)
             components?.path = "\(bookKey).json"
             
-            guard let url = components?.url else { throw URLError(.badURL) }
+            guard let url = components?.url else { throw .badURL }
             return self.getURLRequest(for: url)
         }
     }

@@ -18,6 +18,8 @@ struct NavigationStackContainer<Content: View>: View {
     var body: some View {
         NavigationStack(path: $router.currentScreen) {
             content()
+                .frame(maxHeight: .infinity)
+                .background(Color.neutral)
                 .toolbarVisibility(self.shouldHideTabbar(), for: .tabBar)
                 .navigationDestination(for: NavigationRoutes.self) { route in
                     switch route {

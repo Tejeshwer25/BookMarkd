@@ -14,6 +14,8 @@ class LibraryViewModel: ObservableObject {
     @Published var isSearching: Bool = false
     @Published var showAddBookScreen: Bool = false
     @Published var bookTitle: String = ""
+    @Published var errorOccurred: Bool = false
+    @Published var errorMessage: String?
     
     let bookRepository: any BookRepository
     
@@ -22,7 +24,18 @@ class LibraryViewModel: ObservableObject {
     }
     
     func addBookToStore(book: BookModel) {
-        try? self.bookRepository.add(book)
+        do {
+            try self.bookRepository.add(book)
+        } catch {
+            self.errorOccurred = true
+            
+            guard let err = error as? PersistenceError else {
+                self.errorMessage = error.localizedDescription
+                return
+            }
+            
+            self.errorMessage = err.errrorDescription
+        }
     }
     
     func getBookListFor(readingState state: BookReadingState, from books: [BookModel]) -> [BookModel] {

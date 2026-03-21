@@ -171,6 +171,10 @@ struct FinishBookView: View {
         .onAppear {
             self.viewModel.loadBook(self.bookID)
         }
+        .alert("Error", isPresented: $viewModel.errorOccurred) {} message: {
+            Text(self.viewModel.errorMessage ?? "Unknown error occured")
+        }
+
     }
 }
 

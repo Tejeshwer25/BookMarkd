@@ -8,7 +8,7 @@
 import Foundation
 
 protocol BookRepository {
-    func book(id: String) -> BookModel?
+    func book(id: String) throws -> BookModel?
     func add(_ book: BookModel) throws
     func remove(id: String) throws
     func updateReadState(_ state: BookReadingState, for id: String) throws

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Manrope-Bold.ttf</string>
+		<string>Manrope-ExtraBold.ttf</string>
+		<string>Manrope-ExtraLight.ttf</string>
+		<string>Manrope-Light.ttf</string>
+		<string>Manrope-Medium.ttf</string>
+		<string>Manrope-Regular.ttf</string>
+		<string>Manrope-SemiBold.ttf</string>
+		<string>Newsreader-Bold.ttf</string>
+		<string>Newsreader-BoldItalic.ttf</string>
+		<string>Newsreader-ExtraBold.ttf</string>
+		<string>Newsreader-ExtraBoldItalic.ttf</string>
+		<string>Newsreader-ExtraLight.ttf</string>
+		<string>Newsreader-ExtraLightItalic.ttf</string>
+		<string>Newsreader-Italic.ttf</string>
+		<string>Newsreader-Light.ttf</string>
+		<string>Newsreader-LightItalic.ttf</string>
+		<string>Newsreader-Medium.ttf</string>
+		<string>Newsreader-MediumItalic.ttf</string>
+		<string>Newsreader-Regular.ttf</string>
+		<string>Newsreader-SemiBold.ttf</string>
+		<string>Newsreader-SemiBoldItalic.ttf</string>
+	</array>
+</dict>
+</plist>

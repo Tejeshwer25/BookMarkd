@@ -11,6 +11,9 @@ struct AddNoteView: View {
     @Environment(\.dismiss) var dismiss
     @Bindable var quotesModel: QuotesModel
     
+    @State private var errorOccurred: Bool = false
+    @State private var errorMessage: String = ""
+    
     let inEditMode: Bool = false
     let book: BookModel?
     
@@ -29,7 +32,7 @@ struct AddNoteView: View {
                 .padding()
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(.tertiary)
+            .background(Color.tertiary)
             
             HStack {
                 Button {
@@ -120,6 +123,7 @@ struct AddNoteView: View {
             }
             .padding()
         }
+        .alert("Error", isPresented: $errorOccurred, actions: {}, message: { Text(errorMessage) })
         .frame(maxWidth: .infinity)
         .navigationTitle("Add Note or Quote")
         .navigationBarTitleDisplayMode(.inline)
@@ -137,8 +141,19 @@ struct AddNoteView: View {
                     if !self.inEditMode {
                         HapticManager.shared.trigger(.success)
                         withAnimation {
-                            try? self.bookRepository.addQuote(self.quotesModel,
-                                                         toBook: self.book?.id ?? "")
+                            do {
+                                try self.bookRepository.addQuote(self.quotesModel,
+                                                                 toBook: self.book?.id ?? "")
+                            } catch {
+                                self.errorOccurred = true
+                                
+                                guard let err = error as? PersistenceError else {
+                                    self.errorMessage = error.localizedDescription
+                                    return
+                                }
+                                
+                                self.errorMessage = err.errrorDescription ?? error.localizedDescription
+                            }
                         }
                     }
                     dismiss()
