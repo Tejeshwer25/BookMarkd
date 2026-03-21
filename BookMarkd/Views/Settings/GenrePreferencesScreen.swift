@@ -180,7 +180,7 @@ struct GenrePreferencesScreen: View {
         .padding()
         .frame(maxWidth: .infinity)
         .navigationTitle("Genre Preferences")
-        .navigationBarTitleDisplayMode(.inline)
+//        .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             let selectedGenres = try? self.preferenceRepository.loadOrCreate().preferedGenres.map { BookGenre(rawValue: $0) }
             var genres: [BookGenre] = []

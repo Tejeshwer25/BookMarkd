@@ -28,13 +28,6 @@ struct LibraryView: View {
         
         if viewToBeShown == .noBooksPresent {
             self.noBookView
-                .sheet(isPresented: $viewModel.showAddBookScreen) {
-                    AddBookView(
-                        query: .constant(""),
-                        bookRepository: bookRepository
-                    )
-                    .presentationDetents([.large])
-                }
         } else {
             ScrollView {
                 VStack(alignment: .leading) {
@@ -89,15 +82,11 @@ struct LibraryView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
-                        self.viewModel.showAddBookScreen = true
+                        self.router.pushScreen(.addBookScreen)
                     } label: {
                         Image(systemName: "plus")
                     }
                 }
-            }
-            .sheet(isPresented: $viewModel.showAddBookScreen) {
-                AddBookView(query: .constant(""), bookRepository: bookRepository)
-                    .presentationDetents([.large])
             }
         }
     }
@@ -118,7 +107,7 @@ struct LibraryView: View {
                 .font(.body)
             
             Button {
-                self.viewModel.showAddBookScreen = true
+                self.router.pushScreen(.addBookScreen)
             } label: {
                 HStack {
                     Image(systemName: "plus")

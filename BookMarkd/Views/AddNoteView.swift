@@ -126,7 +126,7 @@ struct AddNoteView: View {
         .alert("Error", isPresented: $errorOccurred, actions: {}, message: { Text(errorMessage) })
         .frame(maxWidth: .infinity)
         .navigationTitle("Add Note or Quote")
-        .navigationBarTitleDisplayMode(.inline)
+//        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button {

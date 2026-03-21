@@ -74,7 +74,7 @@ struct ShareQuoteView: View {
             .padding()
         }
         .navigationTitle("Choose your theme!")
-        .navigationBarTitleDisplayMode(.inline)
+//        .navigationBarTitleDisplayMode(.inline)
         .presentationDetents([.height(500), .large])
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {

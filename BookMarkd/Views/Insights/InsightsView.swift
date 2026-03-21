@@ -23,6 +23,7 @@ struct MonthlyHoursOfSunshine: Identifiable {
 }
 
 struct InsightsView: View {
+    @EnvironmentObject private var router: Router
     @Query private var books: [BookModel]
     @StateObject private var viewModel = InsightsViewModel()
     
@@ -121,6 +122,15 @@ struct InsightsView: View {
             .fontDesign(.serif)
             .onAppear {
                 self.viewModel.loadChartData(allBooks: self.books)
+            }
+        }
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    self.router.pushScreen(.settings)
+                } label: {
+                    Image(systemName: "gear")
+                }
             }
         }
     }

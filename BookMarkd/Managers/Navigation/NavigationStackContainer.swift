@@ -26,21 +26,34 @@ struct NavigationStackContainer<Content: View>: View {
                     case .authorDetails(let id):
                         BookDetailView(bookId: id,
                                        bookRepository: bookRepository)
+                        .background(Color.neutral)
                     case .bookDetails(let id):
                         BookDetailView(bookId: id,
                                        bookRepository: bookRepository)
+                        .background(Color.neutral)
                     case .searchResults(query: _):
                         SearchView(results: .constant([]))
+                            .background(Color.neutral)
                     case .bookFinishScreen(let id):
                         FinishBookView(bookID: id,
                                        bookRepository: bookRepository)
+                        .background(Color.neutral)
                     case .addBookScreen:
                         AddBookView(query: .constant(""),
                                     bookRepository: bookRepository)
+                        .background(Color.neutral)
                     case .bookWishlistScreen:
                         BookWishlistView()
+                            .background(Color.neutral)
                     case .genrePreferenceScreen:
                         GenrePreferencesScreen(preferenceRepository: preferenceRepository)
+                            .background(Color.neutral)
+                    case .addBook(let query):
+                        AddBookView(query: .constant(query), bookRepository: bookRepository)
+                            .background(Color.neutral)
+                    case .settings:
+                        SettingsView()
+                            .background(Color.neutral)
                     }
                 }
         }

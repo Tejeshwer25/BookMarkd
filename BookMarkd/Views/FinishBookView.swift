@@ -167,7 +167,7 @@ struct FinishBookView: View {
             .padding()
         }
         .navigationTitle("Reading Milestone")
-        .navigationBarTitleDisplayMode(.inline)
+//        .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             self.viewModel.loadBook(self.bookID)
         }

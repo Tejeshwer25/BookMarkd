@@ -16,6 +16,8 @@ enum NavigationRoutes: Hashable {
     case addBookScreen
     case bookWishlistScreen
     case genrePreferenceScreen
+    case addBook(query: String)
+    case settings
 }
 
 final class Router: ObservableObject {

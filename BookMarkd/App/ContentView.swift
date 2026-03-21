@@ -45,15 +45,6 @@ struct ContentView: View {
                         InsightsView()
                 }
             }
-            
-            Tab("Settings", systemImage: "gearshape") {
-                NavigationStackContainer(
-                    router: settingsRouter,
-                    bookRepository: bookRepository,
-                    preferenceRepository: preferenceRepository) {
-                        SettingsView()
-                }
-            }
         }
     }
 }

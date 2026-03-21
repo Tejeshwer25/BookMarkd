@@ -54,7 +54,7 @@ struct BookDetailView: View {
             }
         }
         .navigationTitle("")
-        .navigationBarTitleDisplayMode(.inline)
+//        .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $viewModel.showAddNoteSheet) {
             NavigationStack {
                 AddNoteView(quotesModel: .init(id: .init(),

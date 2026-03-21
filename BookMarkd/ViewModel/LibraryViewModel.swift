@@ -12,7 +12,6 @@ import _SwiftData_SwiftUI
 class LibraryViewModel: ObservableObject {
     @Published var searchText: String = ""
     @Published var isSearching: Bool = false
-    @Published var showAddBookScreen: Bool = false
     @Published var bookTitle: String = ""
     @Published var errorOccurred: Bool = false
     @Published var errorMessage: String?

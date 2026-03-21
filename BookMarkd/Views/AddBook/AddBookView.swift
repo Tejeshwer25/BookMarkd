@@ -26,12 +26,6 @@ struct AddBookView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            Text("Add to Wishlist")
-                .font(.title)
-                .fontDesign(.serif)
-            Text("Curate your next reading adventure.")
-                .fontDesign(.serif)
-            
             HStack {
                 Image(systemName: "magnifyingglass")
                 
@@ -43,62 +37,77 @@ struct AddBookView: View {
                 RoundedRectangle(cornerRadius: 7)
                     .stroke(.gray, lineWidth: 1)
             }
-            .padding(.top)
             
-//            if !self.books.isEmpty {
-//                List{
-//                    Section("Searched Results") {
-//                        ForEach(self.books, id: \.id) { book in
-//                            HStack(spacing: 10) {
-//                                BookImage(bookImageURL: book.coverImageURL ?? "",
-//                                          imageFrame: (100, 150))
-//                                
-//                                VStack(alignment: .leading, spacing: 5) {
-//                                    Text(book.title)
-//                                        .font(.title3)
-//                                        .fontDesign(.serif)
-//                                    
-//                                    Text(book.authorName.joined(separator: ", "))
-//                                        .fontDesign(.serif)
-//                                        .font(.callout)
-//                                }
-//                                
-//                                Spacer()
-//                                
-//                                Button {
-//                                    hapticsManager.trigger(.impactMedium)
-//                                    self.addBookToWishlist(book)
-//                                } label: {
-//                                    Image(systemName: self.booksWishlisted.contains(where: { $0 == book.id }) ? "bookmark.fill" : "bookmark")
-//                                        .resizable()
-//                                        .frame(width: 20, height: 25)
-//                                        .contentTransition(.symbolEffect(.automatic))
-//                                }
-//                                .buttonStyle(.plain)
-//                            }
-//                            .padding(.leading, 5)
-//                            .padding(.top, 10)
-//                            .padding(.bottom, 15)
-//                            .listRowBackground(Color.clear)
-//                            .listRowSeparator(.hidden)
-//                        }
-//                    }
-//                    .listRowInsets(EdgeInsets())
-//                }
-//                .padding(.vertical, 30)
-//            } else if self.bookTitle.isEmpty && !self.loading {
-//                Spacer()
-//                self.emptyListView
-//            } else if self.loading {
-//                ProgressView()
-//            } else {
-//                // errror screen
-//            }
+            HStack(alignment: .center, spacing: 10) {
+                Button {
+                    
+                } label: {
+                    HStack {
+                        Image(systemName: "camera.fill")
+                        Text("Scan Cover")
+                    }
+                }
+                
+                Button {
+                    
+                } label: {
+                    HStack {
+                        Image(systemName: "rectangle.and.pencil.and.ellipsis")
+                        Text("Edit Manually")
+                    }
+                }
+            }
+            
+            if !self.books.isEmpty {
+                List{
+                    ForEach(self.books, id: \.id) { book in
+                        HStack(spacing: 10) {
+                            BookImage(bookImageURL: book.coverImageURL ?? "",
+                                      imageFrame: (100, 150))
+                            
+                            VStack(alignment: .leading, spacing: 5) {
+                                Text(book.title)
+                                    .font(.title3)
+                                    .fontDesign(.serif)
+                                
+                                Text(book.authorName.joined(separator: ", "))
+                                    .fontDesign(.serif)
+                                    .font(.callout)
+                            }
+                            
+                            Spacer()
+                            
+                            Button {
+                                hapticsManager.trigger(.impactMedium)
+                                self.addBookToWishlist(book)
+                            } label: {
+                                Image(systemName: self.booksWishlisted.contains(where: { $0 == book.id }) ? "bookmark.fill" : "bookmark")
+                                    .resizable()
+                                    .frame(width: 20, height: 25)
+                                    .contentTransition(.symbolEffect(.automatic))
+                            }
+                            .buttonStyle(.plain)
+                        }
+                        .listRowBackground(Color.clear)
+                        .listRowSeparator(.hidden)
+                    }
+                }
+                .listStyle(.plain)
+            } else if self.bookTitle.isEmpty && !self.loading {
+                Spacer()
+                self.emptyListView
+            } else if self.loading {
+                ProgressView()
+            } else {
+                // errror screen
+            }
             
             
             Spacer()
         }
-        .padding(.top)
+        .navigationTitle("Add to wishlist")
+        .navigationSubtitle("Curate your next reading adventure")
+        .navigationBarTitleDisplayMode(.large)
         .padding()
         .onChange(of: bookTitle) { oldValue, newValue in
             self.debouncedTask?.cancel()
@@ -141,6 +150,7 @@ struct AddBookView: View {
                 .fontDesign(.serif)
                 .multilineTextAlignment(.center)
                 .padding(.bottom, 5)
+                .lineLimit(2)
             
             Text("Your personal collection of forgotten scrolls and future adventures awaits within the midnight shadows.")
                 .font(.subheadline)
@@ -149,6 +159,7 @@ struct AddBookView: View {
                 .italic()
         }
         .opacity(1)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding()
     }
     
@@ -253,7 +264,7 @@ struct AddBookView: View {
             let books = try await service.searchBooks(bookName)
             return books
         } catch {
-            print(error.localizedDescription)
+            print("jhi", error.localizedDescription)
         }
         
         return []
