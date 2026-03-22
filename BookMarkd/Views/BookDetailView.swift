@@ -104,7 +104,8 @@ struct BookDetailView: View {
     
     var bookInfoView: some View {
         HStack(alignment: .top, spacing: 25) {
-            BookImage(bookImageURL: self.viewModel.book?.coverImageURL ?? "",
+            BookImage(bookImageURL: self.viewModel.book?.coverImageURL,
+                      bookImageData: self.viewModel.book?.coverImageData,
                       imageFrame: (width: 150, height: 200))
             
             VStack(alignment: .leading, spacing: 10) {

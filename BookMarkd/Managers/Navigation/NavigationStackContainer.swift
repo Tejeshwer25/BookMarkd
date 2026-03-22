@@ -54,6 +54,9 @@ struct NavigationStackContainer<Content: View>: View {
                     case .settings:
                         SettingsView()
                             .background(Color.neutral)
+                    case .addBookForm:
+                        AddBookManuallyView(bookRepository: bookRepository)
+                            .background(Color.neutral)
                     }
                 }
         }

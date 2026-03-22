@@ -18,7 +18,8 @@ struct BookImageSkeleton: View {
 }
 
 struct BookImage: View {
-    let bookImageURL: String
+    var bookImageURL: String? = nil
+    var bookImageData: Data? = nil
     var imageFrame: (width: CGFloat, height: CGFloat) = (100, 150)
     @State private var image: UIImage?
     
@@ -36,7 +37,11 @@ struct BookImage: View {
         }
         .onChange(of: bookImageURL, initial: true) { oldValue, newValue in
             Task {
-                image = await CachedImageLoaderActor.shared.load(from: URL(string: bookImageURL))
+                if let bookImageURL, !bookImageURL.isEmpty {
+                    image = await CachedImageLoaderActor.shared.load(from: URL(string: bookImageURL))
+                } else if let bookImageData {
+                    image = UIImage(data: bookImageData)
+                }
             }
         }
     }

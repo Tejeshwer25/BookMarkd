@@ -39,7 +39,9 @@ struct CurrentlyReadingSection: View {
                                 self.onBookCardTap(book.id)
                             } label: {
                                 VStack(alignment: .leading) {
-                                    BookImage(bookImageURL: book.coverImageURL ?? "", imageFrame: (256, 341))
+                                    BookImage(bookImageURL: book.coverImageURL,
+                                              bookImageData: book.coverImageData,
+                                              imageFrame: (256, 341))
                                         .padding(.bottom, 12)
                                     
                                     Text(book.title)

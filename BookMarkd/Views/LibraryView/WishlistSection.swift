@@ -48,6 +48,7 @@ struct WishlistSection: View {
                         } label: {
                             VStack(alignment: .leading) {
                                 BookImage(bookImageURL: book.coverImageURL ?? "",
+                                          bookImageData: book.coverImageData,
                                           imageFrame: (103, 137))
                                 
                                 VStack(alignment: .leading) {

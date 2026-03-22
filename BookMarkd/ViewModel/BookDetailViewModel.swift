@@ -33,6 +33,17 @@ class BookDetailViewModel: ObservableObject {
     /// Method to get additional book details
     /// - Parameter bookID: book id
     func getBookDetails(_ bookID: String) {
+        if book?.isManuallyCreated == true, let book {
+            self.bookDetails = BookDetailDataModel(id: book.id,
+                                                   title: book.title,
+                                                   description: book.bookDescription,
+                                                   places: [],
+                                                   characters: [],
+                                                   genre: book.themes)
+            self.isPageLoading = false
+            return
+        }
+        
         let service = BookServiceUtility(api: APIClient())
         Task {
             do {

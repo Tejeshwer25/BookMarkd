@@ -20,7 +20,7 @@ extension Color {
     static let outline = Color.secondary
     
     // MARK: - Brand
-    static let primaryBrand = Color.primary
+//    static let primaryBrand = Color.primaryBrand
     static let primaryContainer = Color.primary
-    static let tertiaryBrand = Color.tertiary
+//    static let tertiaryBrand = Color.tertiary
 }

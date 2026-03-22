@@ -32,7 +32,7 @@ struct AddNoteView: View {
                 .padding()
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(Color.tertiary)
+            .background(.tertiary)
             
             HStack {
                 Button {

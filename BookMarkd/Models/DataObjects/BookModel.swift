@@ -19,11 +19,13 @@ final class BookModel {
         set { readStateRaw = newValue.rawValue }
     }
     
+    var coverImageData: Data?
     var coverImageURL: String?
     var rating: Int?
     var bookDescription: String?
     var themes: [String]?
     
+    var isManuallyCreated: Bool = false
     var createdAt: Date
     var startedAt: Date?
     var finishedAt: Date?
@@ -37,6 +39,8 @@ final class BookModel {
          coverImageURL: String? = nil,
          rating: Int? = nil,
          bookDescription: String? = nil,
+         coverImageData: Data? = nil,
+         isManuallyCreated: Bool = false,
          themes: [String]? = nil) {
         self.id = id
         self.title = title
@@ -48,10 +52,12 @@ final class BookModel {
         self.themes = themes
         self.createdAt = Date()
         self.quotes = []
+        self.coverImageData = coverImageData
+        self.isManuallyCreated = isManuallyCreated
     }
 }
 
-enum BookReadingState: String, Codable, Equatable {
+enum BookReadingState: String, Codable, Equatable, CaseIterable {
     case wishlist
     case read
     case unread

@@ -11,95 +11,42 @@ import _SwiftData_SwiftUI
 struct AddBookView: View {
     let hapticsManager = HapticManager.shared
     @Binding var query: String
-    
     @Query private var booksInLibrary: [BookModel]
-    
-    @State private var bookTitle: String = ""
-    @State private var books: [SearchedBooks] = []
-    @State private var debouncedTask: Task<Void, Never>? = nil
-    @State private var loading: Bool = false
-    @State private var booksWishlisted: [String] = []
-    @State private var errorOccurred: Bool = false
-    @State private var errorMessage: String?
+    @StateObject private var viewModel: AddBookViewModel
+    @EnvironmentObject private var router: Router
     
     let bookRepository: any BookRepository
     
+    init(query: Binding<String>, bookRepository: any BookRepository) {
+        self._query = query
+        self.bookRepository = bookRepository
+        
+        if !query.wrappedValue.isEmpty {
+            self._viewModel = StateObject(wrappedValue: AddBookViewModel(bookRepository: bookRepository, bookTitle: query.wrappedValue))
+        } else {
+            self._viewModel = StateObject(wrappedValue: AddBookViewModel(bookRepository: bookRepository))
+        }
+    }
+    
     var body: some View {
         VStack(alignment: .leading) {
-            HStack {
-                Image(systemName: "magnifyingglass")
-                
-                TextField("Search for your next adventure", text: $bookTitle)
-                    .padding(.horizontal, 10)
-            }
-            .padding()
-            .overlay {
-                RoundedRectangle(cornerRadius: 7)
-                    .stroke(.gray, lineWidth: 1)
+            AddBookHeaderSection(bookTitle: $viewModel.bookTitle) {
+                self.router.pushScreen(.addBookForm)
             }
             
-            HStack(alignment: .center, spacing: 10) {
-                Button {
-                    
-                } label: {
-                    HStack {
-                        Image(systemName: "camera.fill")
-                        Text("Scan Cover")
-                    }
-                }
-                
-                Button {
-                    
-                } label: {
-                    HStack {
-                        Image(systemName: "rectangle.and.pencil.and.ellipsis")
-                        Text("Edit Manually")
-                    }
-                }
-            }
-            
-            if !self.books.isEmpty {
-                List{
-                    ForEach(self.books, id: \.id) { book in
-                        HStack(spacing: 10) {
-                            BookImage(bookImageURL: book.coverImageURL ?? "",
-                                      imageFrame: (100, 150))
-                            
-                            VStack(alignment: .leading, spacing: 5) {
-                                Text(book.title)
-                                    .font(.title3)
-                                    .fontDesign(.serif)
-                                
-                                Text(book.authorName.joined(separator: ", "))
-                                    .fontDesign(.serif)
-                                    .font(.callout)
-                            }
-                            
-                            Spacer()
-                            
-                            Button {
-                                hapticsManager.trigger(.impactMedium)
-                                self.addBookToWishlist(book)
-                            } label: {
-                                Image(systemName: self.booksWishlisted.contains(where: { $0 == book.id }) ? "bookmark.fill" : "bookmark")
-                                    .resizable()
-                                    .frame(width: 20, height: 25)
-                                    .contentTransition(.symbolEffect(.automatic))
-                            }
-                            .buttonStyle(.plain)
-                        }
-                        .listRowBackground(Color.clear)
-                        .listRowSeparator(.hidden)
-                    }
-                }
-                .listStyle(.plain)
-            } else if self.bookTitle.isEmpty && !self.loading {
+            if self.viewModel.viewToShow == .searchResults {
+                AddBookSearchResults(viewModel: viewModel)
+            } else if self.viewModel.viewToShow == .beginSearch {
                 Spacer()
-                self.emptyListView
-            } else if self.loading {
-                ProgressView()
+                BeginSearchView(imageName: "book.circle",
+                                headlineText: "Begin your search to \nadd to your library",
+                                subheadlineText: "Your personal collection of forgotten scrolls and future adventures awaits within the midnight shadows.")
+            } else if self.viewModel.viewToShow == .loading {
+                ScrollView {
+                    self.loadingView
+                }
             } else {
-                // errror screen
+                Text("Error Occured")
             }
             
             
@@ -109,58 +56,12 @@ struct AddBookView: View {
         .navigationSubtitle("Curate your next reading adventure")
         .navigationBarTitleDisplayMode(.large)
         .padding()
-        .onChange(of: bookTitle) { oldValue, newValue in
-            self.debouncedTask?.cancel()
-            
-            if !newValue.isEmpty {
-                self.debouncedTask = Task {
-                    self.loading = true
-                    self.books = []
-                    let searchResult = await searchBook(newValue)
-                    
-                    if !searchResult.isEmpty {
-                        self.books = searchResult.filter({ book in
-                            let isPresent = self.booksInLibrary.contains(where: { $0.id == book.id })
-                            return !isPresent
-                        })
-                    }
-                    self.loading = false
-                }
-            } else {
-                self.loading = false
-            }
+        .onChange(of: self.viewModel.bookTitle) { _ , newValue in
+            self.viewModel.searchBook(bookName: newValue, booksInLibrary: self.booksInLibrary)
         }
-        .onAppear {
-            if !self.query.isEmpty {
-                self.bookTitle = self.query
-            }
+        .alert("Error", isPresented: $viewModel.errorOccurred) {} message: {
+            Text(self.viewModel.errorMessage ?? "")
         }
-        .alert("Error", isPresented: $errorOccurred) {} message: { Text(self.errorMessage ?? "") }
-    }
-    
-    var emptyListView: some View {
-        VStack(alignment: .center) {
-            Image(systemName: "book.circle")
-                .resizable()
-                .frame(width: 75, height: 75)
-                .padding()
-            
-            Text("Begin your search to \nadd to your library")
-                .font(.title2)
-                .fontDesign(.serif)
-                .multilineTextAlignment(.center)
-                .padding(.bottom, 5)
-                .lineLimit(2)
-            
-            Text("Your personal collection of forgotten scrolls and future adventures awaits within the midnight shadows.")
-                .font(.subheadline)
-                .fontDesign(.serif)
-                .multilineTextAlignment(.center)
-                .italic()
-        }
-        .opacity(1)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .padding()
     }
     
     var loadingView: some View {
@@ -211,62 +112,5 @@ struct AddBookView: View {
                 .padding(.vertical, 5)
             }
         }
-    }
-    
-    func addBookToWishlist(_ book: SearchedBooks) {
-        let bookModel = BookModel(id: book.id,
-                                  title: book.title,
-                                  authorName: book.authorName,
-                                  readState: book.readState,
-                                  coverImageURL: book.coverImageURL)
-        
-        if self.booksWishlisted.contains(where: { $0 == book.id}) {
-            do {
-                try self.bookRepository.remove(id: bookModel.id)
-            } catch {
-                self.errorOccurred = true
-                
-                guard let err = error as? PersistenceError else {
-                    self.errorMessage = error.localizedDescription
-                    return
-                }
-                
-                self.errorMessage = err.errrorDescription
-            }
-            
-            withAnimation {
-                self.booksWishlisted.removeAll(where: { $0 == book.id })
-            }
-        } else {
-            bookModel.readState = .wishlist
-            do {
-                try self.bookRepository.add(bookModel)
-            } catch {
-                self.errorOccurred = true
-                
-                guard let err = error as? PersistenceError else {
-                    self.errorMessage = error.localizedDescription
-                    return
-                }
-                
-                self.errorMessage = err.errrorDescription
-            }
-            
-            withAnimation {
-                self.booksWishlisted.append(book.id)
-            }
-        }
-    }
-    
-    func searchBook(_ bookName: String) async -> [SearchedBooks] {
-        let service = BookServiceUtility(api: APIClient())
-        do {
-            let books = try await service.searchBooks(bookName)
-            return books
-        } catch {
-            print("jhi", error.localizedDescription)
-        }
-        
-        return []
     }
 }
