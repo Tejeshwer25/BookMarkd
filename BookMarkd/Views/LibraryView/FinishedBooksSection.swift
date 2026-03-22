@@ -45,7 +45,8 @@ struct FinishedBooksSection: View {
                     self.onBookComponentTap(book.id)
                 } label: {
                     HStack {
-                        BookImage(bookImageURL: book.coverImageURL ?? "",
+                        BookImage(bookImageURL: book.coverImageURL,
+                                  bookImageData: book.coverImageData,
                                   imageFrame: (75, 100))
                         
                         VStack(alignment: .leading) {

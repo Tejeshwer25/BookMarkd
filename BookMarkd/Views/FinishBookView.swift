@@ -26,7 +26,8 @@ struct FinishBookView: View {
             VStack(spacing: 20) {
                 Text("You've completed a new chapter")
                 
-                BookImage(bookImageURL: self.viewModel.book?.coverImageURL ?? "",
+                BookImage(bookImageURL: self.viewModel.book?.coverImageURL,
+                          bookImageData: self.viewModel.book?.coverImageData,
                           imageFrame: (150, 190))
                 
                 HStack(spacing: 30) {
