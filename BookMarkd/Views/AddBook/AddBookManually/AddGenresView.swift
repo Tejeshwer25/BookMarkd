@@ -51,9 +51,3 @@ struct AddGenresView: View {
         }
     }
 }
-
-#Preview {
-    NavigationStack {
-        AddGenresView() { _ in }
-    }
-}

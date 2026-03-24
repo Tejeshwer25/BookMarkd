@@ -14,6 +14,12 @@ import FoundationModels
     @Guide(description: "A reason why this book might be recommended to the user") let whyRecommendation: String
 }
 
+@Generable struct BookDescription {
+    @Guide(description: "An explanatory book description, not giving any spoilers") let bookDescription: String
+    @Guide(description: "Genres in which this book might fit") let bookGenres: [String]
+    @Guide(description: "Error incase you have no knowledge about the book") let errorMessage: String?
+}
+
 struct RecommendationService {
     private let instruction = """
         Your task is to generate a list of 5 books which matches the user's taste. It should be a mix of the genres user is currently reading and a genre user might love to explore. Also the books should not be in users already read section.
@@ -26,5 +32,25 @@ struct RecommendationService {
         let response = try await session.respond(to: "Generate 5 book titles user might love to read based on the instructions provided. The current book titles read by user are: \(bookTitlesRead). The list of genres preferred by user are: \(preferences)", generating: [RecommendedBooks].self)
         let content = response.content
         return content
+    }
+    
+    func generateBookDescriptionAndGenres(for book: BookModel) async throws -> BookModel {
+        let instruction = """
+            Your task is to generate description for the book titled: \(book.title), written by \(book.authorName.first ?? "n/a"). Also map this book to any genres that you find fit from the following list: \(BookGenre.allCases.map({$0.rawValue})). If there is no knowledge about this book leave the fields blank, and populate the error message. If you fill in description and genres leave the error as empty string
+        """
+        
+        let session = LanguageModelSession(instructions: instruction)
+        let response = try await session.respond(to: "Generate description and genres for the book: \(book.title) written by: \(book.authorName). Leave Error field as empty string if you have filled in description and genres", generating: BookDescription.self)
+        let newBook = book
+        
+        print(response.content)
+        if let error = response.content.errorMessage, error.isEmpty == false {
+            return newBook
+        }
+        
+        newBook.bookDescription = response.content.bookDescription
+        newBook.themes = response.content.bookGenres
+        
+        return newBook
     }
 }

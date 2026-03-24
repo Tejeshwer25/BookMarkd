@@ -60,7 +60,7 @@ struct InsightsView: View {
                     HStack {
                         RoundedBoxContainer(icon: "star",
                                             title: "Avg Rating",
-                                            value: "\(self.viewModel.getAverageRatingGivenToBooksByUser(allBooks: books))")
+                                            value: String(format: "%.2f", self.viewModel.getAverageRatingGivenToBooksByUser(allBooks: books)))
                         Spacer()
                         RoundedBoxContainer(icon: "quote.opening",
                                             title: "Quotes Saved",

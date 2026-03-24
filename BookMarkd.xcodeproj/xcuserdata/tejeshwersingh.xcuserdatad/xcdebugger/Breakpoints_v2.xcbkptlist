@@ -7,17 +7,163 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "BDD1D1B0-3802-4B0F-B7D5-4BB9D2433434"
+            uuid = "75969AF6-DF45-4339-A586-F78388FD8897"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "BookMarkd/Views/BookDetailView.swift"
+            filePath = "BookMarkd/UIComponents/BookImageSkeleton.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "88"
-            endingLineNumber = "88"
+            startingLineNumber = "54"
+            endingLineNumber = "54"
             landmarkName = "body"
             landmarkType = "24">
+            <Locations>
+               <Location
+                  uuid = "75969AF6-DF45-4339-A586-F78388FD8897 - cf599285768c7ea5"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) suspend resume partial function for closure #1 () async -&gt; () in closure #2 (Swift.Optional&lt;Swift.String&gt;, Swift.Optional&lt;Swift.String&gt;) -&gt; () in BookMarkd.BookImage.body.getter : some"
+                  moduleName = "BookMarkd.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tejeshwersingh/Documents/workspace/iOS_workspace/BookMarkd/BookMarkd/UIComponents/BookImageSkeleton.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "54"
+                  endingLineNumber = "54">
+               </Location>
+               <Location
+                  uuid = "75969AF6-DF45-4339-A586-F78388FD8897 - 14b96722bbcd57d8"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(4) await resume partial function for closure #1 () async -&gt; () in closure #2 (Swift.Optional&lt;Swift.String&gt;, Swift.Optional&lt;Swift.String&gt;) -&gt; () in BookMarkd.BookImage.body.getter : some"
+                  moduleName = "BookMarkd.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tejeshwersingh/Documents/workspace/iOS_workspace/BookMarkd/BookMarkd/UIComponents/BookImageSkeleton.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "54"
+                  endingLineNumber = "54">
+               </Location>
+               <Location
+                  uuid = "75969AF6-DF45-4339-A586-F78388FD8897 - bb0c2c27a5f06a1"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(5) suspend resume partial function for closure #1 () async -&gt; () in closure #2 (Swift.Optional&lt;Swift.String&gt;, Swift.Optional&lt;Swift.String&gt;) -&gt; () in BookMarkd.BookImage.body.getter : some"
+                  moduleName = "BookMarkd.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tejeshwersingh/Documents/workspace/iOS_workspace/BookMarkd/BookMarkd/UIComponents/BookImageSkeleton.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "54"
+                  endingLineNumber = "54">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "43D3EB39-D592-40D1-9ABB-4FBAE997A730"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BookMarkd/UIComponents/BookImageSkeleton.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "69"
+            endingLineNumber = "69"
+            landmarkName = "body"
+            landmarkType = "24">
+            <Locations>
+               <Location
+                  uuid = "43D3EB39-D592-40D1-9ABB-4FBAE997A730 - f7aba46d30565f54"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) suspend resume partial function for closure #1 () async -&gt; () in closure #3 (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;Foundation.Data&gt;) -&gt; () in BookMarkd.BookImage.body.getter : some"
+                  moduleName = "BookMarkd.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tejeshwersingh/Documents/workspace/iOS_workspace/BookMarkd/BookMarkd/UIComponents/BookImageSkeleton.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "68"
+                  endingLineNumber = "68">
+               </Location>
+               <Location
+                  uuid = "43D3EB39-D592-40D1-9ABB-4FBAE997A730 - 2e3cb8ddf394ab5a"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for closure #1 () async -&gt; () in closure #3 (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;Foundation.Data&gt;) -&gt; () in BookMarkd.BookImage.body.getter : some"
+                  moduleName = "BookMarkd.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tejeshwersingh/Documents/workspace/iOS_workspace/BookMarkd/BookMarkd/UIComponents/BookImageSkeleton.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "68"
+                  endingLineNumber = "68">
+               </Location>
+               <Location
+                  uuid = "43D3EB39-D592-40D1-9ABB-4FBAE997A730 - 5881cd0cb6d30760"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(5) suspend resume partial function for closure #1 () async -&gt; () in closure #3 (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;Foundation.Data&gt;) -&gt; () in BookMarkd.BookImage.body.getter : some"
+                  moduleName = "BookMarkd.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tejeshwersingh/Documents/workspace/iOS_workspace/BookMarkd/BookMarkd/UIComponents/BookImageSkeleton.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "68"
+                  endingLineNumber = "68">
+               </Location>
+               <Location
+                  uuid = "43D3EB39-D592-40D1-9ABB-4FBAE997A730 - f7aba46d30565f75"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) suspend resume partial function for closure #1 () async -&gt; () in closure #3 (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;Foundation.Data&gt;) -&gt; () in BookMarkd.BookImage.body.getter : some"
+                  moduleName = "BookMarkd.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tejeshwersingh/Documents/workspace/iOS_workspace/BookMarkd/BookMarkd/UIComponents/BookImageSkeleton.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "69"
+                  endingLineNumber = "69">
+               </Location>
+               <Location
+                  uuid = "43D3EB39-D592-40D1-9ABB-4FBAE997A730 - 5982f0d89fc190af"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(4) await resume partial function for closure #1 () async -&gt; () in closure #3 (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;Foundation.Data&gt;) -&gt; () in BookMarkd.BookImage.body.getter : some"
+                  moduleName = "BookMarkd.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tejeshwersingh/Documents/workspace/iOS_workspace/BookMarkd/BookMarkd/UIComponents/BookImageSkeleton.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "69"
+                  endingLineNumber = "69">
+               </Location>
+               <Location
+                  uuid = "43D3EB39-D592-40D1-9ABB-4FBAE997A730 - 5881cd0cb6d30741"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(5) suspend resume partial function for closure #1 () async -&gt; () in closure #3 (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;Foundation.Data&gt;) -&gt; () in BookMarkd.BookImage.body.getter : some"
+                  moduleName = "BookMarkd.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tejeshwersingh/Documents/workspace/iOS_workspace/BookMarkd/BookMarkd/UIComponents/BookImageSkeleton.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "69"
+                  endingLineNumber = "69">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

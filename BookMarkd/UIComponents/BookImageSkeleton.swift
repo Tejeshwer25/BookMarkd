@@ -44,20 +44,32 @@ struct BookImage: View {
             }
         }
         .onChange(of: bookImageURL, initial: true) { oldValue, newValue in
+            let randomNumber = Int.random(in: 100...1000)
             Task {
                 if let bookImageURL, !bookImageURL.isEmpty {
                     image = await CachedImageLoaderActor.shared.load(from: URL(string: bookImageURL))
                 } else if let bookImageData {
                     image = UIImage(data: bookImageData)
+                } else if image == nil {
+                    let newImage = await CachedImageLoaderActor.shared.load(from: URL(string: "https://picsum.photos/\(randomNumber)"))
+                    if image != nil { return }
+                    
+                    self.image = newImage
                 }
             }
         }
         .onChange(of: bookImageData) { oldValue, newValue in
+            let randomNumber = Int.random(in: 100...1000)
             Task {
                 if let bookImageURL, !bookImageURL.isEmpty {
                     image = await CachedImageLoaderActor.shared.load(from: URL(string: bookImageURL))
                 } else if let bookImageData {
                     image = UIImage(data: bookImageData)
+                } else if image == nil {
+                    let newImage = await CachedImageLoaderActor.shared.load(from: URL(string: "https://picsum.photos/\(randomNumber)"))
+                    if image != nil { return }
+                    
+                    self.image = newImage
                 }
             }
         }
