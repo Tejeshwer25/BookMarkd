@@ -49,10 +49,6 @@ struct CurrentlyReadingSection: View {
                                     
                                     Text(book.authorName.joined(separator: ", "))
                                         .padding(.bottom, 5)
-                                    
-                                    Text("65% completed")
-                                        .font(.headline)
-                                        .foregroundStyle(.yellow)
                                 }
                             }
                             .buttonStyle(.plain)

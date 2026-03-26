@@ -20,6 +20,7 @@ struct RoundedBoxContainer: View {
                 Image(systemName: icon)
                     .resizable()
                     .frame(width: 18, height: 20)
+                    .foregroundStyle(Color.accent)
                 
                 Spacer()
                 
@@ -31,7 +32,7 @@ struct RoundedBoxContainer: View {
                         .padding(.vertical, 2)
                         .background {
                             Capsule()
-                                .foregroundStyle(Color.yellow.opacity(0.3))
+                                .foregroundStyle(Color.secondaryBrand.opacity(0.3))
                         }
                 }
             }
@@ -48,7 +49,7 @@ struct RoundedBoxContainer: View {
         .background {
             RoundedRectangle(cornerRadius: 12)
                 .stroke(Color.white.opacity(0.2), lineWidth: 1)
-                .fill(Color.blue.opacity(0.1))
+                .fill(Color.neutralButton.opacity(0.2))
         }
     }
 }

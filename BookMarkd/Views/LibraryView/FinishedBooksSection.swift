@@ -23,7 +23,7 @@ struct FinishedBooksSection: View {
     var finishedBookView: some View {
         VStack(alignment: .leading) {
             HStack {
-                Text("Finished Books")
+                Text("Recent Finish")
                     .font(.title3)
                 
                 Spacer()
@@ -33,7 +33,7 @@ struct FinishedBooksSection: View {
                         
                     } label: {
                         Text("Archive")
-                            .foregroundStyle(Color.yellow)
+                            .foregroundStyle(Color.primaryBrand)
                             .fontWeight(.bold)
                     }
                     .buttonStyle(.plain)
@@ -57,7 +57,7 @@ struct FinishedBooksSection: View {
                             
                             HStack {
                                 Image(systemName: "star.fill")
-                                    .foregroundColor(.yellow)
+                                    .foregroundColor(Color.ratingsStar)
                                 
                                 Text("\(book.rating ?? 0)")
                             }
@@ -76,8 +76,8 @@ struct FinishedBooksSection: View {
                     .padding()
                     .background {
                         RoundedRectangle(cornerRadius: 8)
-                            .stroke(Color.white.opacity(0.2), lineWidth: 1)
-                            .fill(Color.indigo.opacity(0.1))
+                            .stroke(Color.secondaryBrand.opacity(0.2), lineWidth: 1)
+                            .fill(Color.neutralButton.opacity(0.2))
                     }
                 }
                 .buttonStyle(.plain)

@@ -86,35 +86,17 @@ struct InsightsView: View {
                             y: .value("Books Read", $0.bookCount)
                         )
                     }
+                    .chartXAxis { AxisMarks(preset: .automatic) { _ in AxisValueLabel() }}
+                    .chartYAxis { AxisMarks(preset: .automatic) { _ in AxisValueLabel() }}
                     .frame(height: 178)
                     .padding()
                     .background {
                         RoundedRectangle(cornerRadius: 12)
                             .stroke(Color.white.opacity(0.2), lineWidth: 1)
-                            .fill(Color.blue.opacity(0.1))
+                            .fill(Color.neutralButton.opacity(0.1))
                     }
                 }
                 .fontDesign(.serif)
-                .padding(.top, 32)
-                
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("Top Genres")
-                            .font(.headline)
-                    
-                    VStack(spacing: 16) {                        
-                        ForEach(self.viewModel.genresRead.keys.sorted(by: { $0.rawValue < $1.rawValue }), id: \.self) { data in
-                            BookProgressBar(genreName: data.rawValue,
-                                            numberOfBooks: self.viewModel.genresRead[data] ?? 0,
-                                            totalBooks: self.books.count)
-                        }
-                    }
-                    .padding()
-                    .background {
-                        RoundedRectangle(cornerRadius: 12)
-                            .stroke(Color.white.opacity(0.2), lineWidth: 1)
-                            .fill(Color.blue.opacity(0.1))
-                    }
-                }
                 .padding(.top, 32)
             }
             .padding()

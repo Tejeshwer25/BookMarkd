@@ -33,7 +33,7 @@ struct WishlistSection: View {
                         
                     } label: {
                         Text("View All")
-                            .foregroundStyle(Color.yellow)
+                            .foregroundStyle(Color.primaryBrand)
                             .fontWeight(.bold)
                     }
                     .buttonStyle(.plain)

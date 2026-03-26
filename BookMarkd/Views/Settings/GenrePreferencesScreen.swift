@@ -141,9 +141,9 @@ struct GenrePreferencesScreen: View {
                             .padding()
                             .overlay {
                                 RoundedRectangle(cornerRadius: 10)
-                                    .stroke(self.isGenreSelected(genre: genre) ? .brown : .clear,
+                                    .stroke(self.isGenreSelected(genre: genre) ? Color.secondaryBrand : .clear,
                                             lineWidth: 1)
-                                    .fill(.brown.opacity(0.2))
+                                    .fill(Color.secondaryBrand.opacity(0.1))
                             }
                             .padding(.horizontal, 5)
                         }
@@ -169,7 +169,7 @@ struct GenrePreferencesScreen: View {
                     .padding()
                     .background {
                         RoundedRectangle(cornerRadius: 8)
-                            .fill(.yellow.opacity(0.9))
+                            .fill(Color.accent)
                     }
             }
             .opacity(self.shouldEnableSaveButton() ? 1 : 0.3)
