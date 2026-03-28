@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct WishlistSection: View {
+    @EnvironmentObject private var router: Router
+    
     let viewModel: LibraryViewModel
     let wishlishtedBooks: [BookModel]
     let onBookComponentTap: (String) -> Void
@@ -71,7 +73,7 @@ struct WishlistSection: View {
     
     var emptyFinishedBooksView: some View {
         VStack(alignment: .center, spacing: 5) {
-            Image(systemName: "checkmark.circle")
+            Image(systemName: "bookmark.circle")
                 .resizable()
                 .frame(width: 36, height: 36)
                 .padding(.bottom, 10)
@@ -82,16 +84,16 @@ struct WishlistSection: View {
             Text("Save books you want to read later")
             
             Button {
-                
+                self.router.pushScreen(.addBookScreen)
             } label: {
                 Text("Discover Books")
-                    .foregroundStyle(Color.yellow)
+                    .foregroundStyle(Color.secondaryBrand)
                     .padding(.horizontal, 30)
                     .padding(.vertical, 10)
                     .background {
                         Capsule()
-                            .stroke(Color.yellow, lineWidth: 1)
-                            .fill(Color.brown.opacity(0.2))
+                            .stroke(Color.secondaryBrand, lineWidth: 1)
+                            .fill(Color.neutralButton.opacity(0.2))
                     }
             }
             .padding(.top)
@@ -103,7 +105,7 @@ struct WishlistSection: View {
         .background {
             RoundedRectangle(cornerRadius: 20)
                 .stroke(Color.white.opacity(0.2), lineWidth: 1)
-                .fill(Color.blue.opacity(0.1))
+                .fill(Color.neutralButton.opacity(0.1))
         }
     }
 }

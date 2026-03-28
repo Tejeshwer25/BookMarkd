@@ -36,6 +36,7 @@ struct RecommendedBookComponent: View {
                     Image(systemName: "plus.circle.fill")
                         .resizable()
                         .frame(width: 30, height: 30)
+                        .foregroundStyle(Color.accent)
                 }
                 .buttonStyle(.plain)
             }
@@ -46,7 +47,7 @@ struct RecommendedBookComponent: View {
                 .font(.subheadline)
             
             HStack(alignment: .top) {
-                Color.brown
+                Color.secondaryBrand
                     .frame(width: 1)
                 
                 VStack(alignment: .leading, spacing: 15) {
@@ -60,14 +61,16 @@ struct RecommendedBookComponent: View {
                 .font(.caption)
                 .fontDesign(.serif)
                 .padding()
+                
+                Spacer()
             }
-            .fixedSize(horizontal: false, vertical: true)
-            .background(.brown.opacity(0.3))
+            .frame(maxWidth: .infinity)
+            .background(.secondaryBrand.opacity(0.1))
         }
         .padding()
         .overlay {
             RoundedRectangle(cornerRadius: 10)
-                .stroke(.gray.opacity(0.3))
+                .stroke(.secondaryBrand.opacity(0.3))
         }
     }
 }

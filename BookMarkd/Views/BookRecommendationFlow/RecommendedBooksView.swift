@@ -16,8 +16,7 @@ struct RecommendedBooksView: View {
                 .padding()
                 .overlay {
                     Circle()
-                        .stroke(.brown)
-                        .fill(.brown.opacity(0.2))
+                        .stroke(.secondaryBrand)
                 }
             
             Text("Discovery Complete")

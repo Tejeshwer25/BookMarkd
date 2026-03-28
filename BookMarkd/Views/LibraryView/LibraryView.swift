@@ -113,11 +113,13 @@ struct LibraryView: View {
                     Image(systemName: "plus")
                     Text("Add a Book")
                 }
+                .fontWeight(.bold)
+                .foregroundStyle(Color.neutralButton)
                 .frame(maxWidth: .infinity)
                 .padding()
                 .background {
                     RoundedRectangle(cornerRadius: 8)
-                        .foregroundStyle(.gray.opacity(0.2))
+                        .foregroundStyle(Color.accent)
                 }
             }
             .padding()

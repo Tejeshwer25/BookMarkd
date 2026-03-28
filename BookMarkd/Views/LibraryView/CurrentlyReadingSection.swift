@@ -81,7 +81,7 @@ struct CurrentlyReadingSection: View {
         .background {
             RoundedRectangle(cornerRadius: 20)
                 .stroke(Color.white.opacity(0.2), lineWidth: 1)
-                .fill(Color.blue.opacity(0.1))
+                .fill(Color.neutralButton.opacity(0.1))
         }
     }
 }

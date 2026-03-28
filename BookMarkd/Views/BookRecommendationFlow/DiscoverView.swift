@@ -13,28 +13,25 @@ struct DiscoverView: View {
     @Query private var booksRead: [BookModel]
     @Query private var preferences: [UserPreferenceModel]
     
-    @State private var recommendedBooks: [RecommendedBooks] = []
-    @State private var loadingBooks: Bool = false
-    @State private var showSearchModal: Bool = false
-    @State private var searchQuery: String = ""
+    @StateObject private var viewModel = BookRecommendationViewModel()
     
     let bookRepository: any BookRepository
     
     var body: some View {
         ScrollView {
-            if !self.recommendedBooks.isEmpty {
+            if !self.viewModel.recommendedBooks.isEmpty {
                 RecommendedBooksView()
                     .padding(.bottom)
                 
-                ForEach(self.recommendedBooks, id: \.bookTitle) { book in
+                ForEach(self.viewModel.recommendedBooks, id: \.bookTitle) { book in
                     RecommendedBookComponent(bookTitle: book.bookTitle,
                                              author: book.bookAuthor,
                                              description: book.bookDescription,
                                              whyRecommend: book.whyRecommendation,
                                              addBookToWishlist: { authorName, bookTitle in
                         print("\(authorName) \(bookTitle)")
-                        self.searchQuery = "\(authorName) \(bookTitle)"
-                        self.showSearchModal.toggle()
+                        self.viewModel.searchQuery = "\(authorName) \(bookTitle)"
+                        self.router.pushScreen(.addBook(query: self.viewModel.searchQuery))
                     })
                     .padding(.vertical, 5)
                 }
@@ -46,11 +43,12 @@ struct DiscoverView: View {
                         Text("Regenerate")
                         Image(systemName: "arrow.clockwise")
                     }
+                    .foregroundStyle(.neutralButton)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical)
-                    .overlay {
+                    .background {
                         RoundedRectangle(cornerRadius: 5)
-                            .stroke(.brown)
+                            .fill(.accent)
                     }
                 }
                 .padding(.vertical)
@@ -62,14 +60,13 @@ struct DiscoverView: View {
         .scrollIndicators(.hidden)
         .padding()
         .overlay {
-            if self.loadingBooks {
+            if self.viewModel.loadingBooks {
                 LoadingRecommendations()
             }
         }
         .overlay {
             if self.booksRead.isEmpty,
-                self.recommendedBooks.isEmpty,
-                !self.loadingBooks {
+               self.viewModel.shouldShowNoResultsLabel() {
                 VStack(alignment: .center) {
                     Spacer()
                     
@@ -94,23 +91,12 @@ struct DiscoverView: View {
             }
         }
         .task {
-            if self.recommendedBooks.isEmpty,
+            if self.viewModel.recommendedBooks.isEmpty,
                 !self.booksRead.isEmpty {
-                do {
-                    self.loadingBooks = true
-                    self.recommendedBooks = try await RecommendationService().generateRecommendations(from: booksRead,
-                                                                                                      with: self.preferences.first?.preferedGenres ?? [])
-                    self.loadingBooks = false
-                } catch {
-                    print(error.localizedDescription)
-                }
+                await self.viewModel.generateBookRecommendations(booksInLibrary: self.booksRead, preferences: self.preferences)
+            } else if self.viewModel.recommendedBooks.isEmpty == false {
+                self.viewModel.refreshRecommendedBooks(booksInLibrary: self.booksRead)
             }
-        }
-        .sheet(isPresented: $showSearchModal) {
-            AddBookView(
-                query: $searchQuery,
-                bookRepository: bookRepository
-            )
         }
     }
 }

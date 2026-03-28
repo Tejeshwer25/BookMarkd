@@ -25,6 +25,10 @@ class AddBookViewModel: ObservableObject {
     init(bookRepository: BookRepository, bookTitle: String = "") {
         self.bookRepository = bookRepository
         self.bookTitle = bookTitle
+        
+        if bookTitle.isEmpty == false {
+            self.searchBook(bookName: self.bookTitle, booksInLibrary: [])
+        }
     }
     
     /// Method to add or remove book from wishlist
