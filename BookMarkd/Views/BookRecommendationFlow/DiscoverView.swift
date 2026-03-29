@@ -58,7 +58,7 @@ struct DiscoverView: View {
             }
         }
         .scrollIndicators(.hidden)
-        .padding()
+        .padding(.horizontal)
         .overlay {
             if self.viewModel.loadingBooks {
                 LoadingRecommendations()

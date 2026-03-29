@@ -125,7 +125,7 @@ struct BookDetailView: View {
                     .padding()
                     .background {
                         Capsule()
-                            .foregroundStyle(.primary)
+                            .foregroundStyle(.accent)
                     }
                 } else if self.viewModel.book?.readState == .wishlist {
                     Button("Start Reading") {
@@ -137,7 +137,7 @@ struct BookDetailView: View {
                     .padding()
                     .background {
                         Capsule()
-                            .foregroundStyle(.primary)
+                            .foregroundStyle(.accent)
                     }
                     .padding(.top)
                 } else if self.viewModel.book?.readState == .read {
@@ -147,7 +147,7 @@ struct BookDetailView: View {
                                 Image(systemName: "star.fill")
                                     .resizable()
                                     .frame(width: 25, height: 25)
-                                    .foregroundStyle(.yellow)
+                                    .foregroundStyle(.secondaryBrand)
                             } else {
                                 Image(systemName: "star")
                                     .resizable()
@@ -176,11 +176,11 @@ struct BookDetailView: View {
                     .padding(.vertical, 7)
                     .background {
                         Capsule()
-                            .fill(tag.stableColor.opacity(0.15))
+                            .fill((Color.allAppColors.randomElement() ?? .secondaryBrand).opacity(0.15))
                     }
                     .overlay {
                         Capsule()
-                            .stroke(tag.stableColor.opacity(0.5), lineWidth: 1)
+                            .stroke((Color.allAppColors.randomElement() ?? .secondaryBrand).opacity(0.5), lineWidth: 1)
                     }
             }
 
@@ -199,7 +199,7 @@ struct BookDetailView: View {
                 .padding(.vertical)
                 .background {
                     RoundedRectangle(cornerRadius: 10)
-                        .foregroundStyle(.gray.opacity(0.15))
+                        .foregroundStyle(.neutralButton.opacity(0.15))
                 }
             }
         }

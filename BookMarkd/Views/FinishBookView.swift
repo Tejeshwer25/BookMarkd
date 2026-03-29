@@ -46,7 +46,7 @@ struct FinishBookView: View {
                     .padding()
                     .background {
                         RoundedRectangle(cornerRadius: 10)
-                            .foregroundStyle(.gray.opacity(0.15))
+                            .foregroundStyle(.neutralButton.opacity(0.15))
                     }
                     .overlay {
                         RoundedRectangle(cornerRadius: 10)
@@ -68,7 +68,7 @@ struct FinishBookView: View {
                     .padding()
                     .background {
                         RoundedRectangle(cornerRadius: 10)
-                            .foregroundStyle(.gray.opacity(0.15))
+                            .foregroundStyle(.neutralButton.opacity(0.15))
                     }
                     .overlay {
                         RoundedRectangle(cornerRadius: 10)
@@ -94,7 +94,7 @@ struct FinishBookView: View {
                                     Image(systemName: "star.fill")
                                         .resizable()
                                         .frame(width: 20, height: 20)
-                                        .foregroundStyle(.yellow)
+                                        .foregroundStyle(.secondaryBrand)
                                 } else {
                                     Image(systemName: "star")
                                         .resizable()
@@ -111,11 +111,12 @@ struct FinishBookView: View {
                     
                 } label: {
                     Text("Write a Review")
+                        .foregroundStyle(Color.neutral)
                         .frame(maxWidth: .infinity)
                         .padding()
                         .background {
                             RoundedRectangle(cornerRadius: 10)
-                                .foregroundStyle(.blue)
+                                .foregroundStyle(.accent)
                         }
                 }
                 .buttonStyle(.plain)
@@ -132,7 +133,7 @@ struct FinishBookView: View {
                         .padding()
                         .background {
                             RoundedRectangle(cornerRadius: 10)
-                                .foregroundStyle(.gray.opacity(0.2))
+                                .foregroundStyle(.neutralButton.opacity(0.2))
                         }
                         .overlay {
                             RoundedRectangle(cornerRadius: 10)
@@ -155,7 +156,7 @@ struct FinishBookView: View {
                         .padding()
                         .background {
                             RoundedRectangle(cornerRadius: 10)
-                                .foregroundStyle(.gray.opacity(0.2))
+                                .foregroundStyle(.neutralButton.opacity(0.2))
                         }
                         .overlay {
                             RoundedRectangle(cornerRadius: 10)

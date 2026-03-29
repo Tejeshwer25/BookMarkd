@@ -32,19 +32,19 @@ struct AddNoteView: View {
                 .padding()
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(.tertiary)
+            .background(.primaryBrand.opacity(0.5))
             
             HStack {
                 Button {
                     
                 } label: {
                     Text("Quote")
-                        .foregroundStyle(.black)
+                        .foregroundStyle(.primaryBrand)
                         .padding(.vertical, 7)
                         .padding(.horizontal, 15)
                         .background {
                             Capsule()
-                                .foregroundStyle(Color.gray)
+                                .stroke(Color.primaryBrand)
                         }
                 }
                 
@@ -52,12 +52,12 @@ struct AddNoteView: View {
                     
                 } label: {
                     Text("Reflection")
-                        .foregroundStyle(.black)
+                        .foregroundStyle(.primaryBrand)
                         .padding(.vertical, 7)
                         .padding(.horizontal, 15)
                         .background {
                             Capsule()
-                                .foregroundStyle(Color.gray)
+                                .stroke(Color.primaryBrand)
                         }
                 }
                 
@@ -65,12 +65,12 @@ struct AddNoteView: View {
                     
                 } label: {
                     Text("Scene")
-                        .foregroundStyle(.black)
+                        .foregroundStyle(.primaryBrand)
                         .padding(.vertical, 7)
                         .padding(.horizontal, 15)
                         .background {
                             Capsule()
-                                .foregroundStyle(Color.gray)
+                                .stroke(Color.primaryBrand)
                         }
                 }
                 
@@ -126,7 +126,6 @@ struct AddNoteView: View {
         .alert("Error", isPresented: $errorOccurred, actions: {}, message: { Text(errorMessage) })
         .frame(maxWidth: .infinity)
         .navigationTitle("Add Note or Quote")
-//        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button {
@@ -138,6 +137,12 @@ struct AddNoteView: View {
             
             ToolbarItem(placement: .confirmationAction) {
                 Button {
+                    let quote = self.quotesModel.text.trimmingCharacters(in: .whitespacesAndNewlines)
+                    if quote.isEmpty {
+                        dismiss()
+                        return
+                    }
+                    
                     if !self.inEditMode {
                         HapticManager.shared.trigger(.success)
                         withAnimation {

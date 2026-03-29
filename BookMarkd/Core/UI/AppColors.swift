@@ -8,6 +8,7 @@
 import SwiftUI
 
 extension Color {
+    static let allAppColors = [Color.primaryBrand, Color.accent, Color.secondaryBrand, Color.neutralButton, Color.tertiaryBrand]
     
     // MARK: - Surfaces
     static let surface = Color.neutral
@@ -24,3 +25,4 @@ extension Color {
     static let primaryContainer = Color.primary
 //    static let tertiaryBrand = Color.tertiary
 }
+
