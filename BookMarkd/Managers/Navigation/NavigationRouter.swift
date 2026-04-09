@@ -19,6 +19,7 @@ enum NavigationRoutes: Hashable {
     case addBook(query: String)
     case settings
     case addBookForm
+    case bookListScreen(bookList: [BookModel])
 }
 
 final class Router: ObservableObject {

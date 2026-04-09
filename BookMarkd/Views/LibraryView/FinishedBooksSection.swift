@@ -11,26 +11,18 @@ struct FinishedBooksSection: View {
     let viewModel: LibraryViewModel
     let finishedBookList: [BookModel]
     let onBookComponentTap: (String) -> Void
+    let viewAllFinishedBooks: () -> Void
     
     var body: some View {
-        if self.finishedBookList.isEmpty {
-            self.emptyFinishedBooksView
-        } else {
-            self.finishedBookView
-        }
-    }
-    
-    var finishedBookView: some View {
         VStack(alignment: .leading) {
             HStack {
                 Text("Recent Finish")
-                    .font(.title3)
                 
                 Spacer()
                 
-                if self.finishedBookList.count > 2 {
+                if self.finishedBookList.count > 5 {
                     Button {
-                        
+                        self.viewAllFinishedBooks()
                     } label: {
                         Text("Archive")
                             .foregroundStyle(Color.primaryBrand)
@@ -39,8 +31,20 @@ struct FinishedBooksSection: View {
                     .buttonStyle(.plain)
                 }
             }
+            .padding(.bottom, 16)
             
-            ForEach(self.finishedBookList) { book in
+            if self.finishedBookList.isEmpty {
+                self.emptyFinishedBooksView
+            } else {
+                self.finishedBookView
+            }
+        }
+        .fontDesign(.serif)
+    }
+    
+    var finishedBookView: some View {
+        VStack(alignment: .leading) {
+            ForEach(self.finishedBookList.prefix(upTo: self.finishedBookList.count > 5 ? 5 : self.finishedBookList.count)) { book in
                 Button {
                     self.onBookComponentTap(book.id)
                 } label: {

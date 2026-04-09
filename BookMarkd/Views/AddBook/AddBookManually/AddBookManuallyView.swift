@@ -18,7 +18,7 @@ struct AddBookManuallyView: View {
     @State private var authorName: String = ""
     @State private var tags: [BookGenre] = []
     @State private var bookDescription: String = ""
-    @State private var addBookToState: BookReadingState? = nil
+    @State private var addBookToState: BookReadingState = .wishlist
     @State private var shouldGenerateUsingAI: Bool = false
     @State private var selectedPhotoItem: PhotosPickerItem? = nil
     @State private var coverImage: Image? = nil
@@ -79,7 +79,7 @@ struct AddBookManuallyView: View {
                         .padding(.top)
                     
                     HStack {
-                        Text("Add to State (Optional)")
+                        Text("Add to State")
                             .font(.Editorial.body)
                             .foregroundStyle(Color.primaryBrand)
                         
@@ -92,7 +92,7 @@ struct AddBookManuallyView: View {
                                 Text(flavor.rawValue.capitalized).tag(flavor)
                             }
                         } label: {
-                            Text(addBookToState?.rawValue.capitalized ?? "Select a value")
+                            Text(addBookToState.rawValue.capitalized)
                         }
                         .pickerStyle(.menu)
                     }

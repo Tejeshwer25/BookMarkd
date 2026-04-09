@@ -33,15 +33,6 @@ struct LibraryView: View {
                 VStack(alignment: .leading) {
                     HStack {
                         Text("\(self.books.count) books | \(finishedBooksList.count) finished this year")
-//                        Spacer()
-//                        Text("4 Day Streak")
-//                            .padding(.horizontal, 12)
-//                            .padding(.vertical, 6)
-//                            .background {
-//                                Capsule()
-//                                    .stroke(Color.yellow, lineWidth: 1)
-//                                    .fill(.yellow.opacity(0.2))
-//                            }
                     }
                     .fontDesign(.serif)
                     .padding(.horizontal)
@@ -60,16 +51,16 @@ struct LibraryView: View {
                                             .padding()
                     
                     FinishedBooksSection(viewModel: self.viewModel,
-                                         finishedBookList: finishedBooksList) {
-                        self.router.pushScreen(.bookDetails(id: $0))
-                    }
-                                         .padding()
+                                         finishedBookList: finishedBooksList,
+                                         onBookComponentTap: { self.router.pushScreen(.bookDetails(id: $0))},
+                                         viewAllFinishedBooks: { self.router.pushScreen(.bookListScreen(bookList: finishedBooksList)) })
+                    .padding()
                     
                     WishlistSection(viewModel: self.viewModel,
-                                    wishlishtedBooks: wishlistedBooks) {
-                        self.router.pushScreen(.bookDetails(id: $0))
-                    }
-                                    .padding()
+                                    wishlishtedBooks: wishlistedBooks,
+                                    onBookComponentTap: { self.router.pushScreen(.bookDetails(id: $0)) },
+                                    viewAllFinishedBooks: { self.router.pushScreen(.bookListScreen(bookList: wishlistedBooks)) })
+                    .padding()
                 }
             }
             .scrollIndicators(.hidden)

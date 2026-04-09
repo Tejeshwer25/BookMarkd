@@ -13,26 +13,18 @@ struct WishlistSection: View {
     let viewModel: LibraryViewModel
     let wishlishtedBooks: [BookModel]
     let onBookComponentTap: (String) -> Void
+    let viewAllFinishedBooks: () -> Void
     
     var body: some View {
-        if self.wishlishtedBooks.isEmpty {
-            self.emptyFinishedBooksView
-        } else {
-            self.finishedBookView
-        }
-    }
-    
-    var finishedBookView: some View {
         VStack(alignment: .leading) {
             HStack {
                 Text("Wishlist")
-                    .font(.title3)
                 
                 Spacer()
                 
-                if self.wishlishtedBooks.count > 2 {
+                if self.wishlishtedBooks.count > 5 {
                     Button {
-                        
+                        self.viewAllFinishedBooks()
                     } label: {
                         Text("View All")
                             .foregroundStyle(Color.primaryBrand)
@@ -42,9 +34,20 @@ struct WishlistSection: View {
                 }
             }
             
+            if self.wishlishtedBooks.isEmpty {
+                self.emptyFinishedBooksView
+            } else {
+                self.finishedBookView
+            }
+        }
+        .fontDesign(.serif)
+    }
+    
+    var finishedBookView: some View {
+        VStack(alignment: .leading) {
             ScrollView(.horizontal) {
                 HStack(alignment: .top, spacing: 25) {
-                    ForEach(self.wishlishtedBooks) { book in
+                    ForEach(self.wishlishtedBooks.prefix(upTo: self.wishlishtedBooks.count > 5 ? 5 : self.wishlishtedBooks.count)) { book in
                         Button {
                             self.onBookComponentTap(book.id)
                         } label: {

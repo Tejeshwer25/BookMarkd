@@ -14,20 +14,8 @@ struct CurrentlyReadingSection: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            HStack {
-                Text("Currently Reading")
-                Spacer()
-                
-                if currentlyReadingBookList.count >= 2 {
-                    Button {
-                        
-                    } label: {
-                        Text("See all")
-                    }
-                    .buttonStyle(.plain)
-                }
-            }
-            .padding(.bottom, 16)
+            Text("Currently Reading")
+                .padding(.bottom, 16)
             
             if currentlyReadingBookList.isEmpty {
                 emptyCurrentlyReadingView
