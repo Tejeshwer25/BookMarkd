@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftData
+import SwiftUI
 
 @Model
 final class QuotesModel {
@@ -33,5 +34,14 @@ final class QuotesModel {
 
 enum NoteType: String, Equatable, Codable {
     case quote
-    case note
+    case reflection
+    case scene
+    
+    var fillColor: Color {
+        switch self {
+        case .quote: return Color.secondaryBrand
+        case .reflection: return Color.tertiaryBrand
+        case .scene: return Color.accentColor
+        }
+    }
 }

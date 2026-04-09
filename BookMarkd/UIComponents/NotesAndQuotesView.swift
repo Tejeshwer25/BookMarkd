@@ -40,12 +40,14 @@ struct NotesAndQuotesView: View {
                     VStack(alignment: .leading) {
                         HStack {
                             Text(quote.noteType.rawValue.capitalized)
-                                .padding(.horizontal, 20)
+                                .padding(.horizontal, 10)
                                 .padding(.vertical, 7)
                                 .background {
                                     Capsule()
-                                        .foregroundStyle(Color.red.opacity(0.3))
+                                        .stroke(quote.noteType.fillColor)
                                 }
+                                .foregroundStyle(quote.noteType.fillColor)
+                                .font(.caption)
                             
                             Spacer()
                             
@@ -109,6 +111,6 @@ struct NotesAndQuotesView: View {
 
 #Preview {
     NotesAndQuotesView(notesList: [
-        .init(id: .init(), noteType: .note, text: "hfuiwhf hfuwe uih uuew u", date: .init())
+        .init(id: .init(), noteType: .reflection, text: "hfuiwhf hfuwe uih uuew u", date: .init())
     ], showAddNoteButton: false, bookReadingStatus: .reading)
 }

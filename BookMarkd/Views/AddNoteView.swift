@@ -36,41 +36,50 @@ struct AddNoteView: View {
             
             HStack {
                 Button {
-                    
+                    withAnimation {
+                        self.quotesModel.noteType = .quote
+                    }
                 } label: {
                     Text("Quote")
-                        .foregroundStyle(.primaryBrand)
+                        .foregroundStyle(self.quotesModel.noteType == .quote ? .neutralButton : .primaryBrand)
                         .padding(.vertical, 7)
                         .padding(.horizontal, 15)
                         .background {
                             Capsule()
                                 .stroke(Color.primaryBrand)
+                                .fill(self.quotesModel.noteType == .quote ? .primaryBrand : .clear)
                         }
                 }
                 
                 Button {
-                    
+                    withAnimation {
+                        self.quotesModel.noteType = .reflection
+                    }
                 } label: {
                     Text("Reflection")
-                        .foregroundStyle(.primaryBrand)
+                        .foregroundStyle(self.quotesModel.noteType == .reflection ? .neutralButton : .primaryBrand)
                         .padding(.vertical, 7)
                         .padding(.horizontal, 15)
                         .background {
                             Capsule()
                                 .stroke(Color.primaryBrand)
+                                .fill(self.quotesModel.noteType == .reflection ? .primaryBrand : .clear)
                         }
                 }
                 
                 Button {
-                    
+                    withAnimation {
+                        self.quotesModel.noteType = .scene
+                    }
                 } label: {
                     Text("Scene")
-                        .foregroundStyle(.primaryBrand)
+                        .foregroundStyle(self.quotesModel.noteType == .scene ? .neutralButton : .primaryBrand)
                         .padding(.vertical, 7)
                         .padding(.horizontal, 15)
                         .background {
                             Capsule()
                                 .stroke(Color.primaryBrand)
+                                .fill(self.quotesModel.noteType == .scene ? .primaryBrand : .clear)
                         }
                 }
                 
