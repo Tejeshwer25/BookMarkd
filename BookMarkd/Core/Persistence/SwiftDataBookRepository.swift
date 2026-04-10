@@ -56,6 +56,11 @@ final class SwiftDataBookRepository: BookRepository {
             )
             guard let book = try context.fetch(descriptor).first else { return }
             book.readState = state
+            if state == .read {
+                book.finishedAt = .now
+            } else if state == .reading {
+                book.startedAt = Date.now
+            }
             try context.save()
         } catch {
             throw .updateBookFailed
@@ -86,6 +91,19 @@ final class SwiftDataBookRepository: BookRepository {
             try context.save()
         } catch {
             throw .addQuoteFailed
+        }
+    }
+    
+    func addBookReview(_ review: String, for id: String) throws(PersistenceError) {
+        do {
+            let descriptor = FetchDescriptor<BookModel>(
+                predicate: #Predicate { $0.id == id }
+            )
+            guard let book = try context.fetch(descriptor).first else { return }
+            book.bookReview = review
+            try context.save()
+        } catch {
+            throw .updateBookFailed
         }
     }
 }

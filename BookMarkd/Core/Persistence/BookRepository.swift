@@ -15,4 +15,5 @@ protocol BookRepository {
     func updateRating(_ rating: Int, for id: String) throws
     
     func addQuote(_ quote: QuotesModel, toBook id: String) throws
+    func addBookReview(_ review: String, for id: String) throws
 }

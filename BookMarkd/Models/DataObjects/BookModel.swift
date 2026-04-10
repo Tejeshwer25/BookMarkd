@@ -24,6 +24,7 @@ final class BookModel {
     var rating: Int?
     var bookDescription: String?
     var themes: [String]?
+    var bookReview: String?
     
     var isManuallyCreated: Bool = false
     var createdAt: Date
@@ -50,7 +51,7 @@ final class BookModel {
         self.rating = rating
         self.bookDescription = bookDescription
         self.themes = themes
-        self.createdAt = Date()
+        self.createdAt = Date.now
         self.quotes = []
         self.coverImageData = coverImageData
         self.isManuallyCreated = isManuallyCreated

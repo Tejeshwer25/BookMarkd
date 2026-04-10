@@ -104,14 +104,16 @@ class AddBookViewModel: ObservableObject {
                 self.books = []
                 let searchResult = await search()
                 
-                if !searchResult.isEmpty {
-                    self.books = searchResult.filter({ book in
-                        let isPresent = booksInLibrary.contains(where: { $0.id == book.id })
-                        return !isPresent
-                    })
-                    self.viewToShow = .searchResults
-                } else {
-                    self.viewToShow = .error
+                if Task.isCancelled == false {
+                    if !searchResult.isEmpty {
+                        self.books = searchResult.filter({ book in
+                            let isPresent = booksInLibrary.contains(where: { $0.id == book.id })
+                            return !isPresent
+                        })
+                        self.viewToShow = .searchResults
+                    } else {
+                        self.viewToShow = .error
+                    }
                 }
             }
         } else {

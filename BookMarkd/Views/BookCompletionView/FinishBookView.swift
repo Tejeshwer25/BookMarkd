@@ -38,7 +38,7 @@ struct FinishBookView: View {
                             .padding(.bottom)
                         
                         Text("Time to finish")
-                        Text("12 Days")
+                        Text("\(self.viewModel.getNumberOfDaysTakenToComplete())")
                             .font(.title2)
                             .fontWeight(.bold)
                     }
@@ -107,19 +107,21 @@ struct FinishBookView: View {
                 }
                 .padding(.vertical)
                 
-                Button {
-                    
-                } label: {
-                    Text("Write a Review")
-                        .foregroundStyle(Color.neutral)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background {
-                            RoundedRectangle(cornerRadius: 10)
-                                .foregroundStyle(.accent)
-                        }
+                if self.viewModel.doesBookContainReview == false {
+                    Button {
+                        self.viewModel.openAddReviewSheet.toggle()
+                    } label: {
+                        Text("Write a Review")
+                            .foregroundStyle(Color.neutral)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background {
+                                RoundedRectangle(cornerRadius: 10)
+                                    .foregroundStyle(.accent)
+                            }
+                    }
+                    .buttonStyle(.plain)
                 }
-                .buttonStyle(.plain)
                 
                 HStack {
                     Button {
@@ -149,7 +151,6 @@ struct FinishBookView: View {
                     } label: {
                         HStack(alignment: .center) {
                             Image(systemName: "checkmark.circle.fill")
-                            
                             Text("Done")
                         }
                         .frame(maxWidth: .infinity)
@@ -169,14 +170,19 @@ struct FinishBookView: View {
             .padding()
         }
         .navigationTitle("Reading Milestone")
-//        .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             self.viewModel.loadBook(self.bookID)
         }
         .alert("Error", isPresented: $viewModel.errorOccurred) {} message: {
             Text(self.viewModel.errorMessage ?? "Unknown error occured")
         }
-
+        .sheet(isPresented: $viewModel.openAddReviewSheet) {
+            NavigationStack {
+                BookReviewSheet() { review in
+                    self.viewModel.saveBookReview(bookReview: review)
+                }
+            }
+        }
     }
 }
 

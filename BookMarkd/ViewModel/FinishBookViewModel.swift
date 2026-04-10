@@ -12,6 +12,12 @@ class FinishBookViewModel: ObservableObject {
     @Published private(set) var book: BookModel?
     @Published var errorOccurred: Bool = false
     @Published var errorMessage: String?
+    @Published var openAddReviewSheet: Bool = false
+    
+    var doesBookContainReview: Bool {
+        guard let review = self.book?.bookReview, review.isEmpty == false else { return false }
+        return true
+    }
     
     private let bookRepository: any BookRepository
     
@@ -55,5 +61,29 @@ class FinishBookViewModel: ObservableObject {
         }
         
         self.errorMessage = err.errrorDescription
+    }
+    
+    func getNumberOfDaysTakenToComplete() -> Int {
+        guard let dateStarted = book?.startedAt else { return 0 }
+        print(dateStarted)
+        
+        let now = Date()
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.day], from: dateStarted, to: now)
+        print(components)
+        
+        return components.day ?? 0
+    }
+    
+    func saveBookReview(bookReview: String) {
+        if let bookID = self.book?.id {
+            do {
+                self.book?.bookReview = bookReview
+                self.book?.finishedAt = .now
+                try bookRepository.addBookReview(bookReview, for: bookID)
+            } catch {
+                self.handlePersistenceErrors(error)
+            }
+        }
     }
 }

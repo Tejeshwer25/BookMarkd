@@ -12,6 +12,7 @@ struct NavigationStackContainer<Content: View>: View {
     @ObservedObject var router: Router
     let bookRepository: any BookRepository
     let preferenceRepository: any UserPreferenceRepository
+    @Namespace private var namespace
     
     @ViewBuilder var content: () -> Content
     
@@ -30,6 +31,7 @@ struct NavigationStackContainer<Content: View>: View {
                     case .bookDetails(let id):
                         BookDetailView(bookId: id,
                                        bookRepository: bookRepository)
+                        .navigationTransition(.zoom(sourceID: id, in: namespace))
                         .background(Color.neutral)
                     case .searchResults(query: _):
                         SearchView(results: .constant([]))

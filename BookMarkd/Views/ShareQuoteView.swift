@@ -74,7 +74,7 @@ struct ShareQuoteView: View {
             .padding()
         }
         .navigationTitle("Choose your theme!")
-//        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarTitleDisplayMode(.inline)
         .presentationDetents([.height(500), .large])
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
@@ -140,6 +140,7 @@ struct ShareableCardView: View {
                         Color.black.opacity(0.5)
                             .frame(height: 0.34)
                             .padding(.horizontal)
+                        
                         Text(book?.title ?? "")
                             .fontDesign(.serif)
                             .font(.caption)
@@ -148,7 +149,6 @@ struct ShareableCardView: View {
                         Text(book?.authorName.joined(separator: ", ") ?? "")
                             .font(.caption2)
                             .fontDesign(.serif)
-                            .padding(.top, 1)
                     }
                     
                 }
