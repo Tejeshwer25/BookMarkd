@@ -15,6 +15,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
+				Managers/BookMetaDataExtractor.swift,
 			);
 			target = A44CB3022F00405600CD489F /* BookMarkd */;
 		};

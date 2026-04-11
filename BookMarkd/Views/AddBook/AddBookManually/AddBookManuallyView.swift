@@ -8,6 +8,7 @@
 import SwiftUI
 import PhotosUI
 import _SwiftData_SwiftUI
+import Vision
 
 @MainActor
 struct AddBookManuallyView: View {
@@ -24,8 +25,23 @@ struct AddBookManuallyView: View {
     @State private var coverImage: Image? = nil
     @State private var coverImageData: Data? = nil
     @State private var showAddGenresSheet: Bool = false
+    @State private var extractedText: String = ""
+    @State private var errorOccured: Bool = false
+    @State private var errorMessage: String? = nil
     
     let bookRepository: any BookRepository
+    
+    init(bookRepository: any BookRepository, bookImage: UIImage? = nil) {
+        self.bookRepository = bookRepository
+        
+        if let bookImage {
+            self._coverImage = State(initialValue: Image(uiImage: bookImage))
+            self._coverImageData = State(initialValue: bookImage.pngData())
+        } else {
+            self._coverImage = State(initialValue: nil)
+            self._coverImageData = State(initialValue: nil)
+        }
+    }
     
     var body: some View {
         let currentCoverImage = coverImage
@@ -33,39 +49,46 @@ struct AddBookManuallyView: View {
         VStack {
             ScrollView {
                 VStack(alignment: .leading) {
-                    PhotosPicker(
-                        selection: $selectedPhotoItem,
-                        matching: .images,
-                        photoLibrary: .shared()
-                    ) {
-                        if let coverImage = currentCoverImage {
-                            coverImage
-                                .resizable()
-                                .frame(width: 168, height: 228)
-                                .clipShape(RoundedRectangle(cornerRadius: 8))
-                        } else {
-                            VStack(alignment: .center) {
-                                Image(systemName: "photo.badge.plus")
+                    if let coverImage {
+                        coverImage
+                            .resizable()
+                            .frame(width: 168, height: 228)
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                    } else {
+                        PhotosPicker(
+                            selection: $selectedPhotoItem,
+                            matching: .images,
+                            photoLibrary: .shared()
+                        ) {
+                            if let coverImage = currentCoverImage {
+                                coverImage
                                     .resizable()
-                                    .frame(width: 27, height: 24)
-                                Text("ADD COVER")
-                            }
-                            .padding(.horizontal, 50)
-                            .padding(.vertical, 90)
-                            .background {
-                                RoundedRectangle(cornerRadius: 16)
-                                    .fill(Color.gray.opacity(0.2))
+                                    .frame(width: 168, height: 228)
+                                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                            } else {
+                                VStack(alignment: .center) {
+                                    Image(systemName: "photo.badge.plus")
+                                        .resizable()
+                                        .frame(width: 27, height: 24)
+                                    Text("ADD COVER")
+                                }
+                                .padding(.horizontal, 50)
+                                .padding(.vertical, 90)
+                                .background {
+                                    RoundedRectangle(cornerRadius: 16)
+                                        .fill(Color.gray.opacity(0.2))
+                                }
                             }
                         }
-                    }
-                    .onChange(of: selectedPhotoItem) { oldValue, newValue in
-                        guard let newValue else { return }
-                        
-                        Task { @MainActor in
-                            if let data = try? await newValue.loadTransferable(type: Data.self),
-                               let uiImage = UIImage(data: data) {
-                                self.coverImage = Image(uiImage: uiImage)
-                                self.coverImageData = data
+                        .onChange(of: selectedPhotoItem) { oldValue, newValue in
+                            guard let newValue else { return }
+                            
+                            Task { @MainActor in
+                                if let data = try? await newValue.loadTransferable(type: Data.self),
+                                   let uiImage = UIImage(data: data) {
+                                    self.coverImage = Image(uiImage: uiImage)
+                                    self.coverImageData = data
+                                }
                             }
                         }
                     }
@@ -199,18 +222,29 @@ struct AddBookManuallyView: View {
                 .presentationDetents([.medium])
             }
         }
+        .onAppear {
+            if let coverImage {
+                self.extractText(from: coverImage.renderAsImage())
+            }
+        }
+        .alert("Error", isPresented: $errorOccured) {} message: {
+            Text(self.errorMessage ?? "")
+        }
+
     }
     
     /// Method to add book to DB
     func addBookToDB() async throws {
         guard !self.bookTitle.isEmpty, !self.authorName.isEmpty else {
-            print("Show alert here: Data Empty book cannot be added")
+            self.errorMessage = "Data empty! Book cannot be added"
+            self.errorOccured = true
             return
         }
         
         print(self.books.map(\.title))
         if self.books.contains(where: { $0.title.lowercased() == self.bookTitle.lowercased() }) {
-            print("Show alert here : Book Exists")
+            self.errorMessage = "Book already exists in library."
+            self.errorOccured = true
             return
         }
         
@@ -234,6 +268,58 @@ struct AddBookManuallyView: View {
             self.router.popScreen()
         } catch {
             print(error.localizedDescription)
+        }
+    }
+    
+    /// Method to extract text from imported image
+    /// - Parameter image: imported image
+    func extractText(from image: UIImage) {
+        guard let cgImage = image.cgImage else { return }
+        
+        // Set up the request for text recognition
+        let request = VNRecognizeTextRequest { request, error in
+            if let error = error {
+                self.errorMessage = "Cover recognition failed: \(error.localizedDescription)"
+                self.errorOccured = true
+                return
+            }
+            
+            // Process the results from the Vision request
+            if let observations = request.results as? [VNRecognizedTextObservation] {
+                // Extract the top-most recognized text
+                var fullText = ""
+                for observation in observations {
+                    guard let topCandidate = observation.topCandidates(1).first else { continue }
+                    fullText += topCandidate.string + "\n"
+                }
+                
+                Task {
+                    do {
+                        let extractedBook = try await RecommendationService().getBookDetailsFromBookCover(for: fullText)
+                        await MainActor.run {
+                            withAnimation {
+                                self.bookTitle = extractedBook.title
+                                self.authorName = extractedBook.authorName.first ?? ""
+                                self.bookDescription = extractedBook.bookDescription ?? ""
+                                self.tags = (extractedBook.themes?.map { BookGenre(rawValue: $0) } as? [BookGenre]) ?? []
+                            }
+                        }
+                    } catch {
+                        self.errorMessage = "Cover recognition failed: \(error.localizedDescription)"
+                        self.errorOccured = true
+                    }
+                }
+                
+            }
+        }
+        
+        // Perform the text recognition
+        let requestHandler = VNImageRequestHandler(cgImage: cgImage, options: [:])
+        do {
+            try requestHandler.perform([request])
+        } catch {
+            self.errorMessage = "Cover recognition failed: \(error.localizedDescription)"
+            self.errorOccured = true
         }
     }
 }

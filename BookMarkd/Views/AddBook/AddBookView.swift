@@ -30,9 +30,7 @@ struct AddBookView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            AddBookHeaderSection(bookTitle: $viewModel.bookTitle) {
-                self.router.pushScreen(.addBookForm)
-            }
+            AddBookHeaderSection(bookTitle: $viewModel.bookTitle, router: router)
             
             if self.viewModel.viewToShow == .searchResults {
                 AddBookSearchResults(viewModel: viewModel)

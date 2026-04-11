@@ -6,11 +6,14 @@
 //
 
 import SwiftUI
+import PhotosUI
 
 struct AddBookHeaderSection: View {
     @Binding var bookTitle: String
-    
-    let handleTapOnAddBookManually: () -> Void
+    @State private var selectedPhotoItem: PhotosPickerItem? = nil
+    @State private var showPhotoPicker: Bool = false
+    @State private var extractedText: String = ""
+    let router: Router
     
     var body: some View {
         HStack {
@@ -26,12 +29,31 @@ struct AddBookHeaderSection: View {
         }
         
         HStack(alignment: .center, spacing: 10) {
-            RoundedRectangleButton(buttonText: "Scan Cover",
-                                   imageName: "camera.fill",
-                                   buttonFillColor: Color.neutralButton,
-                                   buttonTextColor: Color.accent,
-                                   cornerRadius: 8) {
+            Menu {
+                Button(action: {
+                }) {
+                    Label("Capture Image", systemImage: "camera.fill")
+                }
                 
+                Button {
+                    showPhotoPicker = true
+                } label: {
+                    Label("Import from gallery", systemImage: "photo.fill")
+                }
+            } label: {
+                HStack(alignment: .center, spacing: 5) {
+                    Image(systemName: "camera.fill")
+                    Text("Scan Cover")
+                }
+                .font(.Editorial.button)
+                .frame(maxWidth: .infinity)
+                .foregroundStyle(Color.accent)
+                .padding(.horizontal, 18)
+                .padding(.vertical, 18)
+                .background {
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(Color.neutralButton)
+                }
             }
             
             RoundedRectangleButton(buttonText: "Edit Manually",
@@ -39,16 +61,19 @@ struct AddBookHeaderSection: View {
                                    buttonFillColor: Color.neutralButton,
                                    buttonTextColor: Color.accent,
                                    cornerRadius: 8) {
-                self.handleTapOnAddBookManually()
+                self.router.pushScreen(.addBookForm(bookImage: nil))
             }
         }
         .frame(maxWidth: .infinity)
+        .photosPicker(isPresented: $showPhotoPicker, selection: $selectedPhotoItem)
+        .onChange(of: selectedPhotoItem) { oldValue, newValue in
+            guard let newValue else { return }
+            Task { @MainActor in
+                if let data = try? await newValue.loadTransferable(type: Data.self),
+                   let uiImage = UIImage(data: data) {
+                    self.router.pushScreen(.addBookForm(bookImage: uiImage))
+                }
+            }
+        }
     }
-}
-
-#Preview {
-    AddBookHeaderSection(bookTitle: .constant(""), handleTapOnAddBookManually: {
-        
-    })
-    .padding()
 }

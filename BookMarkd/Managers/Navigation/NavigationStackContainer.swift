@@ -56,8 +56,9 @@ struct NavigationStackContainer<Content: View>: View {
                     case .settings:
                         SettingsView()
                             .background(Color.neutral)
-                    case .addBookForm:
-                        AddBookManuallyView(bookRepository: bookRepository)
+                    case .addBookForm(let image):
+                        AddBookManuallyView(bookRepository: bookRepository,
+                                            bookImage: image)
                             .background(Color.neutral)
                     case .bookListScreen(let bookList):
                         BookListView(bookList: bookList)

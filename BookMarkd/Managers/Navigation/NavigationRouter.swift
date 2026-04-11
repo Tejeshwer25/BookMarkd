@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import UIKit
 
 enum NavigationRoutes: Hashable {
     case bookDetails(id: String)
@@ -18,7 +19,7 @@ enum NavigationRoutes: Hashable {
     case genrePreferenceScreen
     case addBook(query: String)
     case settings
-    case addBookForm
+    case addBookForm(bookImage: UIImage?)
     case bookListScreen(bookList: [BookModel])
 }
 

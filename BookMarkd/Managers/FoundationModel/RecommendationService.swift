@@ -6,6 +6,7 @@
 //
 
 import FoundationModels
+import Foundation
 
 @Generable struct RecommendedBooks {
     let bookTitle: String
@@ -18,6 +19,13 @@ import FoundationModels
     @Guide(description: "An explanatory book description, not giving any spoilers") let bookDescription: String
     @Guide(description: "Genres in which this book might fit") let bookGenres: [String]
     @Guide(description: "Error incase you have no knowledge about the book") let errorMessage: String?
+}
+
+@Generable struct BookExtracted {
+    @Guide(description: "Book title extracted from ocr text") let bookTitle: String
+    @Guide(description: "Book author name extracted from ocr text") let bookAuthor: String
+    @Guide(description: "An explanatory book description, not giving any spoilers") let bookDescription: String
+    @Guide(description: "Genres in which this book might fit") let bookGenres: [String]
 }
 
 struct RecommendationService {
@@ -51,6 +59,27 @@ struct RecommendationService {
         newBook.bookDescription = response.content.bookDescription
         newBook.themes = response.content.bookGenres
         
+        return newBook
+    }
+    
+    func getBookDetailsFromBookCover(for extractedText: String) async throws -> BookModel {
+        let promptSystem = """
+        Your task is to extract meaningful information from the OCR text, which contains data read from book cover image. I want you to map data into its meaningful context as in book title, author name and whatever you can intelligently guess about the book. Also generate description. Also map this book to any genres that you find fit from the following list: \(BookGenre.allCases.map({$0.rawValue})). 
+        """
+        
+        let session = LanguageModelSession(instructions: instruction)
+        let response = try await session.respond(to: """
+                                                 Extract book metadata from the following OCR text:
+                                                 \"\"\"
+                                                 \(extractedText)
+                                                 \"\"\"
+                                                 """, generating: BookExtracted.self)
+        let newBook = BookModel(id: UUID().uuidString,
+                                title: response.content.bookTitle,
+                                authorName: [response.content.bookAuthor],
+                                readState: .wishlist,
+                                bookDescription: response.content.bookDescription,
+                                themes: response.content.bookGenres)
         return newBook
     }
 }
