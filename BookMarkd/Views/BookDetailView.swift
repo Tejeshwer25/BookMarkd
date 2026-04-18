@@ -28,6 +28,7 @@ struct BookDetailView: View {
                 if self.viewModel.book?.readState == .reading {
                     let notesList = try? viewModel.bookRepository.book(id: bookId)?.quotes
                     let readState = try? viewModel.bookRepository.book(id: bookId)?.readState
+                    
                     NotesAndQuotesView(notesList: notesList ?? [],
                                        showAddNoteButton: true,
                                        bookReadingStatus: readState) { quoteAction, quote in
@@ -45,6 +46,17 @@ struct BookDetailView: View {
                     }
                     .padding()
                 } else if self.viewModel.book?.readState == .read {
+                    let bookReview = try? self.viewModel.bookRepository.book(id: bookId)?.bookReview
+                    
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("Book Review")
+                            .font(.title3)
+                            .fontWeight(.bold)
+                        
+                        Text(bookReview ?? "")
+                            .font(.callout)
+                    }
+                    
                     NotesAndQuotesView(notesList: try! viewModel.bookRepository.book(id: bookId)?.quotes ?? [],
                                        showAddNoteButton: false,
                                        bookReadingStatus: try? viewModel.bookRepository.book(id: bookId)?.readState) { quoteAction, quote in

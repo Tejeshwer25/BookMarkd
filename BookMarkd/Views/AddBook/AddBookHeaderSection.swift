@@ -7,6 +7,7 @@
 
 import SwiftUI
 import PhotosUI
+import Vision
 
 struct AddBookHeaderSection: View {
     @Binding var bookTitle: String
@@ -14,6 +15,10 @@ struct AddBookHeaderSection: View {
     @State private var showPhotoPicker: Bool = false
     @State private var extractedText: String = ""
     let router: Router
+    
+    @State private var showCamera: Bool = false
+    @State private var isProcessingCapture: Bool = false
+    @State private var processingError: String? = nil
     
     var body: some View {
         HStack {
@@ -31,6 +36,7 @@ struct AddBookHeaderSection: View {
         HStack(alignment: .center, spacing: 10) {
             Menu {
                 Button(action: {
+                    showCamera = true
                 }) {
                     Label("Capture Image", systemImage: "camera.fill")
                 }
@@ -74,6 +80,87 @@ struct AddBookHeaderSection: View {
                     self.router.pushScreen(.addBookForm(bookImage: uiImage))
                 }
             }
+        }
+        .sheet(isPresented: $showCamera) {
+            CameraCaptureView(
+                onImageCaptured: { image in
+                    Task { await handleCapturedImage(image) }
+                },
+                onCancel: {
+                    isProcessingCapture = false
+                }
+            )
+            .padding()
+        }
+        .overlay {
+            if isProcessingCapture {
+                ZStack {
+                    Color.black.opacity(0.5).ignoresSafeArea()
+                    ProgressView("Analyzing cover…")
+                }
+            }
+        }
+        .alert("Error", isPresented: .constant(processingError != nil)) {
+            Button("OK") {
+                processingError = nil
+            }
+        } message: {
+            Text(processingError ?? "")
+        }
+    }
+    
+    private func handleCapturedImage(_ image: UIImage) async {
+        await MainActor.run {
+            isProcessingCapture = true
+        }
+        
+        do {
+            guard let cgImage = image.cgImage else {
+                throw NSError(domain: "AddBookHeaderSection", code: 0, userInfo: [NSLocalizedDescriptionKey: "Could not get CGImage from captured UIImage."])
+            }
+            
+            let requestHandler = VNImageRequestHandler(cgImage: cgImage)
+            var fullText = ""
+            
+            let request = VNRecognizeTextRequest { request, error in
+                guard error == nil else {
+                    return
+                }
+                
+                if let observations = request.results as? [VNRecognizedTextObservation] {
+                    for observation in observations {
+                        if let topCandidate = observation.topCandidates(1).first {
+                            fullText += topCandidate.string + "\n"
+                        }
+                    }
+                }
+            }
+            request.recognitionLevel = .accurate
+            request.recognitionLanguages = ["en-US"]
+            request.usesLanguageCorrection = true
+            
+            try requestHandler.perform([request])
+            
+            let recommendationService = RecommendationService()
+            let extractedBook = try await recommendationService.getBookDetailsFromBookCover(for: fullText)
+            
+            await MainActor.run {
+                self.router.pushScreen(.addBookForm(bookImage: image))
+                NotificationCenter.default.post(name: Notification.Name("PrefillAddBookFields"), object: nil, userInfo: [
+                    "title": extractedBook.title,
+                    "author": extractedBook.authorName,
+                    "description": extractedBook.bookDescription ?? "",
+                    "themes": extractedBook.themes ?? []
+                ])
+            }
+        } catch {
+            await MainActor.run {
+                processingError = error.localizedDescription
+            }
+        }
+        
+        await MainActor.run {
+            isProcessingCapture = false
         }
     }
 }

@@ -9,6 +9,7 @@ import SwiftUI
 import PhotosUI
 import _SwiftData_SwiftUI
 import Vision
+import Foundation
 
 @MainActor
 struct AddBookManuallyView: View {
@@ -230,7 +231,20 @@ struct AddBookManuallyView: View {
         .alert("Error", isPresented: $errorOccured) {} message: {
             Text(self.errorMessage ?? "")
         }
-
+        .onReceive(NotificationCenter.default.publisher(for: Notification.Name("PrefillAddBookFields"))) { output in
+            if let info = output.userInfo as? [String: Any] {
+                let title = info["title"] as? String
+                let author = info["author"] as? String
+                let description = info["description"] as? String
+                let themes = info["themes"] as? [String]
+                withAnimation {
+                    if let title { self.bookTitle = title }
+                    if let author { self.authorName = author }
+                    if let description { self.bookDescription = description }
+                    if let themes { self.tags = themes.compactMap { BookGenre(rawValue: $0) } }
+                }
+            }
+        }
     }
     
     /// Method to add book to DB
