@@ -15,9 +15,9 @@ struct HorizontalBookPreview: View {
     var body: some View {
         HStack(spacing: 10) {
             if let coverImageURL = book.coverImageURL {
-                BookImage(bookImageURL: coverImageURL, imageFrame: imageFrame)
+                BookImage(bookImageURL: coverImageURL, bookTitle: book.title, imageFrame: imageFrame)
             } else {
-                BookImage(bookImageURL: "", imageFrame: imageFrame)
+                BookImage(bookImageURL: "", bookTitle: book.title, imageFrame: imageFrame)
             }
             
             VStack(alignment: .leading) {

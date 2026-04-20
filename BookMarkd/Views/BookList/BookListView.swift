@@ -21,6 +21,7 @@ struct BookListView: View {
                     VStack(alignment: .leading) {
                         BookImage(bookImageURL: book.coverImageURL ?? "",
                                   bookImageData: book.coverImageData,
+                                  bookTitle: book.title, 
                                   imageFrame: (150, 200))
                         
                         VStack(alignment: .leading) {

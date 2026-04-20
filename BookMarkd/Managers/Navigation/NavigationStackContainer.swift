@@ -34,8 +34,7 @@ struct NavigationStackContainer<Content: View>: View {
                         .navigationTransition(.zoom(sourceID: id, in: namespace))
                         .background(Color.neutral)
                     case .searchResults(query: _):
-                        SearchView(results: .constant([]))
-                            .background(Color.neutral)
+                        AddBookView(query: .constant(""), bookRepository: bookRepository)
                     case .bookFinishScreen(let id):
                         FinishBookView(bookID: id,
                                        bookRepository: bookRepository)

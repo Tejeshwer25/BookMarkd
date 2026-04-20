@@ -34,7 +34,7 @@ struct CameraCaptureView: UIViewControllerRepresentable {
         let picker = UIImagePickerController()
         picker.delegate = context.coordinator
         picker.sourceType = .camera
-        picker.allowsEditing = false
+        picker.allowsEditing = true
         return picker
     }
 

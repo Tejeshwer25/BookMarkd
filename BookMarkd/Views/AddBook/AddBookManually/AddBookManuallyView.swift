@@ -265,7 +265,7 @@ struct AddBookManuallyView: View {
         var newBook = BookModel(id: UUID().uuidString,
                                 title: self.bookTitle,
                                 authorName: [self.authorName],
-                                readState: self.addBookToState ?? .wishlist,
+                                readState: self.addBookToState,
                                 bookDescription: self.bookDescription,
                                 coverImageData: self.coverImageData,
                                 isManuallyCreated: true,

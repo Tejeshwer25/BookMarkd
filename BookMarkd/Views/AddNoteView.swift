@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Vision
 
 struct AddNoteView: View {
     @Environment(\.dismiss) var dismiss
@@ -13,16 +14,20 @@ struct AddNoteView: View {
     
     @State private var errorOccurred: Bool = false
     @State private var errorMessage: String = ""
+    @State private var showCamera: Bool = false
+    @State private var isProcessingCapture: Bool = false
+    @State private var processingError: String? = nil
     
     let inEditMode: Bool = false
     let book: BookModel?
     
     let bookRepository: BookRepository
+    let router: Router
     
     var body: some View {
         VStack(alignment: .leading) {
             VStack(alignment: .leading) {
-                VStack(alignment: .leading, spacing: 10) {
+                VStack(alignment: .leading) {
                     Text(book?.title ?? "")
                         .font(.title3)
                         .fontWeight(.bold)
@@ -41,9 +46,10 @@ struct AddNoteView: View {
                     }
                 } label: {
                     Text("Quote")
+                        .font(.callout)
                         .foregroundStyle(self.quotesModel.noteType == .quote ? .neutralButton : .primaryBrand)
-                        .padding(.vertical, 7)
-                        .padding(.horizontal, 15)
+                        .padding(.vertical, 5)
+                        .padding(.horizontal, 10)
                         .background {
                             Capsule()
                                 .stroke(Color.primaryBrand)
@@ -57,9 +63,10 @@ struct AddNoteView: View {
                     }
                 } label: {
                     Text("Reflection")
+                        .font(.callout)
                         .foregroundStyle(self.quotesModel.noteType == .reflection ? .neutralButton : .primaryBrand)
-                        .padding(.vertical, 7)
-                        .padding(.horizontal, 15)
+                        .padding(.vertical, 5)
+                        .padding(.horizontal, 10)
                         .background {
                             Capsule()
                                 .stroke(Color.primaryBrand)
@@ -73,9 +80,10 @@ struct AddNoteView: View {
                     }
                 } label: {
                     Text("Scene")
+                        .font(.callout)
                         .foregroundStyle(self.quotesModel.noteType == .scene ? .neutralButton : .primaryBrand)
-                        .padding(.vertical, 7)
-                        .padding(.horizontal, 15)
+                        .padding(.vertical, 5)
+                        .padding(.horizontal, 10)
                         .background {
                             Capsule()
                                 .stroke(Color.primaryBrand)
@@ -84,6 +92,12 @@ struct AddNoteView: View {
                 }
                 
                 Spacer()
+                
+                Button {
+                    self.showCamera = true
+                } label: {
+                    Image(systemName: "camera.fill")
+                }
             }
             .padding()
             
@@ -102,7 +116,7 @@ struct AddNoteView: View {
                     }
                 }
             
-            Spacer()
+            Spacer(minLength: 25)
             
             HStack {
                 Text("Page Number (optional)")
@@ -135,6 +149,17 @@ struct AddNoteView: View {
         .alert("Error", isPresented: $errorOccurred, actions: {}, message: { Text(errorMessage) })
         .frame(maxWidth: .infinity)
         .navigationTitle("Add Note or Quote")
+        .navigationBarTitleDisplayMode(.inline)
+        .sheet(isPresented: $showCamera) {
+            CameraCaptureView(
+                onImageCaptured: { image in
+                    Task { await handleCapturedImage(image) }
+                },
+                onCancel: {
+                    isProcessingCapture = false
+                }
+            )
+        }
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button {
@@ -177,8 +202,26 @@ struct AddNoteView: View {
             }
         }
     }
-}
-
-#Preview {
-    //AddNoteView(book: .init(id: "", title: "", authorName: [], readState: .read))
+    
+    /// <#Description#>
+    /// - Parameter image: <#image description#>
+    private func handleCapturedImage(_ image: UIImage) async {
+        await MainActor.run {
+            isProcessingCapture = true
+        }
+        
+        do {
+            let cameraManager = CameraManager()
+            self.quotesModel.text = try await cameraManager.handleCapturedImage(image)
+        }
+        catch {
+            await MainActor.run {
+                processingError = error.localizedDescription
+            }
+        }
+        
+        await MainActor.run {
+            isProcessingCapture = false
+        }
+    }
 }

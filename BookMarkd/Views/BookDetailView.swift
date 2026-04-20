@@ -56,6 +56,7 @@ struct BookDetailView: View {
                         Text(bookReview ?? "")
                             .font(.callout)
                     }
+                    .padding()
                     
                     NotesAndQuotesView(notesList: try! viewModel.bookRepository.book(id: bookId)?.quotes ?? [],
                                        showAddNoteButton: false,
@@ -74,14 +75,14 @@ struct BookDetailView: View {
                                                text: "",
                                                date: Date()),
                             book: viewModel.book,
-                            bookRepository: viewModel.bookRepository)
+                            bookRepository: viewModel.bookRepository, router: router)
             }
         }
         .sheet(item: $viewModel.noteToEdit) { quote in
             NavigationStack {
                 AddNoteView(quotesModel: quote,
                             book: self.viewModel.book,
-                            bookRepository: viewModel.bookRepository)
+                            bookRepository: viewModel.bookRepository, router: router)
             }
         }
         .sheet(item: $viewModel.noteToShare, onDismiss: {
@@ -118,6 +119,7 @@ struct BookDetailView: View {
         HStack(alignment: .top, spacing: 25) {
             BookImage(bookImageURL: self.viewModel.book?.coverImageURL,
                       bookImageData: self.viewModel.book?.coverImageData,
+                      bookTitle: self.viewModel.book?.title ?? "",
                       imageFrame: (width: 150, height: 200))
             
             VStack(alignment: .leading, spacing: 10) {

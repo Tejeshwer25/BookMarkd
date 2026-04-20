@@ -67,7 +67,7 @@ struct RecommendationService {
         Your task is to extract meaningful information from the OCR text, which contains data read from book cover image. I want you to map data into its meaningful context as in book title, author name and whatever you can intelligently guess about the book. Also generate description. Also map this book to any genres that you find fit from the following list: \(BookGenre.allCases.map({$0.rawValue})). 
         """
         
-        let session = LanguageModelSession(instructions: instruction)
+        let session = LanguageModelSession(instructions: promptSystem)
         let response = try await session.respond(to: """
                                                  Extract book metadata from the following OCR text:
                                                  \"\"\"

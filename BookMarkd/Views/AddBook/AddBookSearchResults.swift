@@ -17,7 +17,7 @@ struct AddBookSearchResults: View {
             ForEach(self.viewModel.books, id: \.id) { book in
                 HStack(spacing: 10) {
                     BookImage(bookImageURL: book.coverImageURL ?? "",
-                              imageFrame: (100, 150))
+                              bookTitle: book.title, imageFrame: (100, 150))
                     
                     VStack(alignment: .leading, spacing: 5) {
                         Text(book.title)

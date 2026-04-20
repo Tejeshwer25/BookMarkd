@@ -90,14 +90,11 @@ struct AddBookHeaderSection: View {
                     isProcessingCapture = false
                 }
             )
-            .padding()
         }
-        .overlay {
-            if isProcessingCapture {
-                ZStack {
-                    Color.black.opacity(0.5).ignoresSafeArea()
-                    ProgressView("Analyzing cover…")
-                }
+        .fullScreenCover(isPresented: $isProcessingCapture) {
+            ZStack {
+                Color.black.opacity(0.5).ignoresSafeArea()
+                ProgressView("Analyzing cover…")
             }
         }
         .alert("Error", isPresented: .constant(processingError != nil)) {
@@ -109,37 +106,16 @@ struct AddBookHeaderSection: View {
         }
     }
     
+    /// <#Description#>
+    /// - Parameter image: <#image description#>
     private func handleCapturedImage(_ image: UIImage) async {
         await MainActor.run {
             isProcessingCapture = true
         }
         
         do {
-            guard let cgImage = image.cgImage else {
-                throw NSError(domain: "AddBookHeaderSection", code: 0, userInfo: [NSLocalizedDescriptionKey: "Could not get CGImage from captured UIImage."])
-            }
-            
-            let requestHandler = VNImageRequestHandler(cgImage: cgImage)
-            var fullText = ""
-            
-            let request = VNRecognizeTextRequest { request, error in
-                guard error == nil else {
-                    return
-                }
-                
-                if let observations = request.results as? [VNRecognizedTextObservation] {
-                    for observation in observations {
-                        if let topCandidate = observation.topCandidates(1).first {
-                            fullText += topCandidate.string + "\n"
-                        }
-                    }
-                }
-            }
-            request.recognitionLevel = .accurate
-            request.recognitionLanguages = ["en-US"]
-            request.usesLanguageCorrection = true
-            
-            try requestHandler.perform([request])
+            let cameraManager = CameraManager()
+            let fullText = try await cameraManager.handleCapturedImage(image)
             
             let recommendationService = RecommendationService()
             let extractedBook = try await recommendationService.getBookDetailsFromBookCover(for: fullText)

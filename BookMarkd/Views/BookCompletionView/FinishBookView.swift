@@ -28,6 +28,7 @@ struct FinishBookView: View {
                 
                 BookImage(bookImageURL: self.viewModel.book?.coverImageURL,
                           bookImageData: self.viewModel.book?.coverImageData,
+                          bookTitle: self.viewModel.book?.title ?? "",
                           imageFrame: (150, 190))
                 
                 HStack(spacing: 30) {

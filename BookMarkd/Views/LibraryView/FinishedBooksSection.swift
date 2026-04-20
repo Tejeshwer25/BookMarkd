@@ -51,6 +51,7 @@ struct FinishedBooksSection: View {
                     HStack {
                         BookImage(bookImageURL: book.coverImageURL,
                                   bookImageData: book.coverImageData,
+                                  bookTitle: book.title,
                                   imageFrame: (75, 100))
                         
                         VStack(alignment: .leading) {

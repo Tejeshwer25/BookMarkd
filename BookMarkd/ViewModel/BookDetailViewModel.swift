@@ -41,7 +41,6 @@ class BookDetailViewModel: ObservableObject {
                                                    characters: [],
                                                    genre: book.themes)
             self.isPageLoading = false
-            print(self.bookDetails)
             return
         }
         
