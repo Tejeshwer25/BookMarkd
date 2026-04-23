@@ -19,6 +19,8 @@ struct AddBookHeaderSection: View {
     @State private var showCamera: Bool = false
     @State private var isProcessingCapture: Bool = false
     @State private var processingError: String? = nil
+    @State private var showCropper: Bool = false
+    @State private var pendingCapturedImage: UIImage? = nil
     
     var body: some View {
         HStack {

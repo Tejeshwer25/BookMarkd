@@ -58,16 +58,18 @@ struct BookDetailView: View {
                     }
                     .padding()
                     
-                    NotesAndQuotesView(notesList: try! viewModel.bookRepository.book(id: bookId)?.quotes ?? [],
-                                       showAddNoteButton: false,
-                                       bookReadingStatus: try? viewModel.bookRepository.book(id: bookId)?.readState) { quoteAction, quote in
-                        self.viewModel.performQuoteAction(quoteAction, on: quote)
+                    let notesList = try! viewModel.bookRepository.book(id: bookId)?.quotes ?? []
+                    if !notesList.isEmpty {
+                        NotesAndQuotesView(notesList: try! viewModel.bookRepository.book(id: bookId)?.quotes ?? [],
+                                           showAddNoteButton: false,
+                                           bookReadingStatus: try? viewModel.bookRepository.book(id: bookId)?.readState) { quoteAction, quote in
+                            self.viewModel.performQuoteAction(quoteAction, on: quote)
+                        }
                     }
                 }
             }
         }
         .navigationTitle("")
-//        .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $viewModel.showAddNoteSheet) {
             NavigationStack {
                 AddNoteView(quotesModel: .init(id: .init(),

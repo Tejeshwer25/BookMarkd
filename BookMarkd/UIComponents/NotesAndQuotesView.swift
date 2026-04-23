@@ -12,11 +12,13 @@ struct NotesAndQuotesView: View {
     let showAddNoteButton: Bool
     let bookReadingStatus: BookReadingState?
     var quoteAction: ((QuoteAction, QuotesModel?) -> Void)? = nil
+    @State private var currentNoteIndex: Int = 1
+    @State private var currentQuoteId: QuotesModel.ID?
     
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
-                Text("Notes & Quotes")
+                Text("Notes & Quotes (\(currentNoteIndex) / \(self.notesList.count))")
                     .font(.title2)
                     .fontWeight(.bold)
                 
@@ -36,60 +38,78 @@ struct NotesAndQuotesView: View {
             .padding(.bottom)
             
             if !self.notesList.isEmpty {
-                ForEach(self.notesList, id: \.self.id) { quote in
-                    VStack(alignment: .leading) {
-                        HStack {
-                            Text(quote.noteType.rawValue.capitalized)
-                                .padding(.horizontal, 10)
-                                .padding(.vertical, 7)
-                                .background {
-                                    Capsule()
-                                        .stroke(quote.noteType.fillColor)
+                ScrollView(.horizontal) {
+                    HStack(alignment: .top, spacing: 10) {
+                        ForEach(self.notesList, id: \.self.id) { quote in
+                            VStack(alignment: .leading) {
+                                HStack {
+                                    Text(quote.noteType.rawValue.capitalized)
+                                        .padding(.horizontal, 10)
+                                        .padding(.vertical, 7)
+                                        .background {
+                                            Capsule()
+                                                .stroke(quote.noteType.fillColor)
+                                        }
+                                        .foregroundStyle(quote.noteType.fillColor)
+                                        .font(.caption)
+                                    
+                                    Spacer()
+                                    
+                                    Button {
+                                        self.quoteAction?(.share, quote)
+                                    } label: {
+                                        Image(systemName: "square.and.arrow.up")
+                                            .resizable()
+                                            .frame(width: 15, height: 20)
+                                    }
+                                    .buttonStyle(.plain)
                                 }
-                                .foregroundStyle(quote.noteType.fillColor)
-                                .font(.caption)
-                            
-                            Spacer()
-                            
-                            Button {
-                                self.quoteAction?(.share, quote)
-                            } label: {
-                                Image(systemName: "square.and.arrow.up")
-                                    .resizable()
-                                    .frame(width: 15, height: 20)
-                            }
-                            .buttonStyle(.plain)
-                        }
-                        
-                        Text(quote.text)
-                            .padding(.top, 7)
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding()
-                    .background {
-                        RoundedRectangle(cornerRadius: 10)
-                            .foregroundStyle(.gray.opacity(0.2))
-                    }
-                    .contextMenu {
-                        Button(action: {
-                            self.quoteAction?(.share, quote)
-                        }) {
-                            Label("Share", systemImage: "square.and.arrow.up")
-                        }
-                        
-                        if bookReadingStatus == .reading {
-                            Button(action: {
-                                self.quoteAction?(.edit, quote)
-                            }) {
-                                Label("Edit", systemImage: "pencil")
-                            }
-                            
-                            Button(role: .destructive, action: {
                                 
-                            }) {
-                                Label("Delete", systemImage: "trash")
+                                ScrollView {
+                                    Text(quote.text)
+                                        .padding(.top, 7)
+                                }
                             }
+                            .frame(width: 300, height: 350, alignment: .leading)
+                            .padding()
+                            .background {
+                                RoundedRectangle(cornerRadius: 10)
+                                    .foregroundStyle(.gray.opacity(0.2))
+                            }
+                            .contextMenu {
+                                Button(action: {
+                                    self.quoteAction?(.share, quote)
+                                }) {
+                                    Label("Share", systemImage: "square.and.arrow.up")
+                                }
+                                
+                                if bookReadingStatus == .reading {
+                                    Button(action: {
+                                        self.quoteAction?(.edit, quote)
+                                    }) {
+                                        Label("Edit", systemImage: "pencil")
+                                    }
+                                    
+                                    Button(role: .destructive, action: {
+                                        
+                                    }) {
+                                        Label("Delete", systemImage: "trash")
+                                    }
+                                }
+                            }
+                            .id(quote.id)
                         }
+                    }
+                    .scrollTargetLayout() // Align content to the view
+                }
+                .scrollIndicators(.hidden)
+                .contentMargins(5, for: .scrollContent) // Add padding
+                .scrollTargetBehavior(.viewAligned) // Align content behavior
+                .scrollPosition(id: $currentQuoteId)
+                .onChange(of: currentQuoteId) { _, newValue in
+                    if let newValue,
+                       let idx = self.notesList.firstIndex(where: { $0.id == newValue }) {
+                        self.currentNoteIndex = idx + 1
                     }
                 }
             } else {
