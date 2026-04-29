@@ -6,8 +6,42 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		A4A5EF852F9FD235006EF198 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4A5EF842F9FD235006EF198 /* WidgetKit.framework */; };
+		A4A5EF872F9FD235006EF198 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4A5EF862F9FD235006EF198 /* SwiftUI.framework */; };
+		A4A5EF982F9FD236006EF198 /* BookMarkdWidgetsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A4A5EF822F9FD235006EF198 /* BookMarkdWidgetsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		A4A5EF962F9FD236006EF198 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A44CB2FB2F00405600CD489F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A4A5EF812F9FD235006EF198;
+			remoteInfo = BookMarkdWidgetsExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		A4A5EF992F9FD236006EF198 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				A4A5EF982F9FD236006EF198 /* BookMarkdWidgetsExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		A44CB3032F00405600CD489F /* BookMarkd.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BookMarkd.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A4A5EF822F9FD235006EF198 /* BookMarkdWidgetsExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = BookMarkdWidgetsExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		A4A5EF842F9FD235006EF198 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		A4A5EF862F9FD235006EF198 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		A4A5EFA22F9FDB64006EF198 /* BookMarkdWidgetsExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BookMarkdWidgetsExtension.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -19,6 +53,21 @@
 			);
 			target = A44CB3022F00405600CD489F /* BookMarkd */;
 		};
+		A4A5EF9D2F9FD236006EF198 /* Exceptions for "BookMarkdWidgets" folder in "BookMarkdWidgetsExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = A4A5EF812F9FD235006EF198 /* BookMarkdWidgetsExtension */;
+		};
+		A4A5EF9F2F9FD274006EF198 /* Exceptions for "BookMarkd" folder in "BookMarkdWidgetsExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Models/DataObjects/BookModel.swift,
+				Models/DataObjects/QuotesModel.swift,
+			);
+			target = A4A5EF812F9FD235006EF198 /* BookMarkdWidgetsExtension */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -26,8 +75,17 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				A452B3502F6EB3A4009070E8 /* Exceptions for "BookMarkd" folder in "BookMarkd" target */,
+				A4A5EF9F2F9FD274006EF198 /* Exceptions for "BookMarkd" folder in "BookMarkdWidgetsExtension" target */,
 			);
 			path = BookMarkd;
+			sourceTree = "<group>";
+		};
+		A4A5EF882F9FD235006EF198 /* BookMarkdWidgets */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				A4A5EF9D2F9FD236006EF198 /* Exceptions for "BookMarkdWidgets" folder in "BookMarkdWidgetsExtension" target */,
+			);
+			path = BookMarkdWidgets;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -40,13 +98,25 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A4A5EF7F2F9FD235006EF198 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A4A5EF872F9FD235006EF198 /* SwiftUI.framework in Frameworks */,
+				A4A5EF852F9FD235006EF198 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		A44CB2FA2F00405600CD489F = {
 			isa = PBXGroup;
 			children = (
+				A4A5EFA22F9FDB64006EF198 /* BookMarkdWidgetsExtension.entitlements */,
 				A44CB3052F00405600CD489F /* BookMarkd */,
+				A4A5EF882F9FD235006EF198 /* BookMarkdWidgets */,
+				A4A5EF832F9FD235006EF198 /* Frameworks */,
 				A44CB3042F00405600CD489F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -55,8 +125,18 @@
 			isa = PBXGroup;
 			children = (
 				A44CB3032F00405600CD489F /* BookMarkd.app */,
+				A4A5EF822F9FD235006EF198 /* BookMarkdWidgetsExtension.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		A4A5EF832F9FD235006EF198 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				A4A5EF842F9FD235006EF198 /* WidgetKit.framework */,
+				A4A5EF862F9FD235006EF198 /* SwiftUI.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -69,10 +149,12 @@
 				A44CB2FF2F00405600CD489F /* Sources */,
 				A44CB3002F00405600CD489F /* Frameworks */,
 				A44CB3012F00405600CD489F /* Resources */,
+				A4A5EF992F9FD236006EF198 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				A4A5EF972F9FD236006EF198 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				A44CB3052F00405600CD489F /* BookMarkd */,
@@ -84,6 +166,28 @@
 			productReference = A44CB3032F00405600CD489F /* BookMarkd.app */;
 			productType = "com.apple.product-type.application";
 		};
+		A4A5EF812F9FD235006EF198 /* BookMarkdWidgetsExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A4A5EF9C2F9FD236006EF198 /* Build configuration list for PBXNativeTarget "BookMarkdWidgetsExtension" */;
+			buildPhases = (
+				A4A5EF7E2F9FD235006EF198 /* Sources */,
+				A4A5EF7F2F9FD235006EF198 /* Frameworks */,
+				A4A5EF802F9FD235006EF198 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				A4A5EF882F9FD235006EF198 /* BookMarkdWidgets */,
+			);
+			name = BookMarkdWidgetsExtension;
+			packageProductDependencies = (
+			);
+			productName = BookMarkdWidgetsExtension;
+			productReference = A4A5EF822F9FD235006EF198 /* BookMarkdWidgetsExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -91,11 +195,14 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 2610;
+				LastSwiftUpdateCheck = 2630;
 				LastUpgradeCheck = 2610;
 				TargetAttributes = {
 					A44CB3022F00405600CD489F = {
 						CreatedOnToolsVersion = 26.1;
+					};
+					A4A5EF812F9FD235006EF198 = {
+						CreatedOnToolsVersion = 26.3;
 					};
 				};
 			};
@@ -114,12 +221,20 @@
 			projectRoot = "";
 			targets = (
 				A44CB3022F00405600CD489F /* BookMarkd */,
+				A4A5EF812F9FD235006EF198 /* BookMarkdWidgetsExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		A44CB3012F00405600CD489F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A4A5EF802F9FD235006EF198 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -136,7 +251,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A4A5EF7E2F9FD235006EF198 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A4A5EF972F9FD236006EF198 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A4A5EF812F9FD235006EF198 /* BookMarkdWidgetsExtension */;
+			targetProxy = A4A5EF962F9FD236006EF198 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		A44CB30E2F00405700CD489F /* Debug */ = {
@@ -265,6 +395,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = BookMarkd/BookMarkd.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5W5CN7CQ9Q;
@@ -298,6 +429,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = BookMarkd/BookMarkd.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5W5CN7CQ9Q;
@@ -326,6 +458,70 @@
 			};
 			name = Release;
 		};
+		A4A5EF9A2F9FD236006EF198 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = BookMarkdWidgetsExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5W5CN7CQ9Q;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = BookMarkdWidgets/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = BookMarkdWidgets;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tejeshwer.BookMarkd.BookMarkdWidgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A4A5EF9B2F9FD236006EF198 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = BookMarkdWidgetsExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5W5CN7CQ9Q;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = BookMarkdWidgets/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = BookMarkdWidgets;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tejeshwer.BookMarkd.BookMarkdWidgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -343,6 +539,15 @@
 			buildConfigurations = (
 				A44CB3112F00405700CD489F /* Debug */,
 				A44CB3122F00405700CD489F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A4A5EF9C2F9FD236006EF198 /* Build configuration list for PBXNativeTarget "BookMarkdWidgetsExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A4A5EF9A2F9FD236006EF198 /* Debug */,
+				A4A5EF9B2F9FD236006EF198 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
