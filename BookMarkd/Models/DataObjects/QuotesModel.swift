@@ -44,4 +44,12 @@ enum NoteType: String, Equatable, Codable {
         case .scene: return Color.accentColor
         }
     }
+    
+    var text: String {
+        switch self {
+        case .quote: return "Quote"
+        case .reflection: return "Reflection"
+        case .scene: return "Scene"
+        }
+    }
 }

@@ -40,55 +40,19 @@ struct AddNoteView: View {
             .background(.primaryBrand.opacity(0.5))
             
             HStack {
-                Button {
-                    withAnimation {
-                        self.quotesModel.noteType = .quote
-                    }
-                } label: {
-                    Text("Quote")
-                        .font(.callout)
-                        .foregroundStyle(self.quotesModel.noteType == .quote ? .neutralButton : .primaryBrand)
-                        .padding(.vertical, 5)
-                        .padding(.horizontal, 10)
-                        .background {
-                            Capsule()
-                                .stroke(Color.primaryBrand)
-                                .fill(self.quotesModel.noteType == .quote ? .primaryBrand : .clear)
-                        }
+                RadioButton(selectedNoteType: $quotesModel.noteType,
+                            noteType: .quote) { noteType in
+                    self.quotesModel.noteType = noteType
                 }
                 
-                Button {
-                    withAnimation {
-                        self.quotesModel.noteType = .reflection
-                    }
-                } label: {
-                    Text("Reflection")
-                        .font(.callout)
-                        .foregroundStyle(self.quotesModel.noteType == .reflection ? .neutralButton : .primaryBrand)
-                        .padding(.vertical, 5)
-                        .padding(.horizontal, 10)
-                        .background {
-                            Capsule()
-                                .stroke(Color.primaryBrand)
-                                .fill(self.quotesModel.noteType == .reflection ? .primaryBrand : .clear)
-                        }
+                RadioButton(selectedNoteType: $quotesModel.noteType,
+                            noteType: .reflection) { noteType in
+                    self.quotesModel.noteType = noteType
                 }
                 
-                Button {
-                    withAnimation {
-                        self.quotesModel.noteType = .scene
-                    }
-                } label: {
-                    Text("Scene")
-                        .font(.callout)
-                        .foregroundStyle(self.quotesModel.noteType == .scene ? .neutralButton : .primaryBrand)
-                        .padding(.vertical, 5)
-                        .padding(.horizontal, 10)
-                        .background {
-                            Capsule()
-                                .stroke(Color.primaryBrand)
-                                .fill(self.quotesModel.noteType == .scene ? .primaryBrand : .clear)
-                        }
+                RadioButton(selectedNoteType: $quotesModel.noteType,
+                            noteType: .scene) { noteType in
+                    self.quotesModel.noteType = noteType
                 }
                 
                 Spacer()
@@ -154,9 +118,6 @@ struct AddNoteView: View {
             CameraCaptureView(
                 onImageCaptured: { image in
                     Task { await handleCapturedImage(image) }
-                },
-                onCancel: {
-                    isProcessingCapture = false
                 }
             )
         }
@@ -170,36 +131,40 @@ struct AddNoteView: View {
             }
             
             ToolbarItem(placement: .confirmationAction) {
-                Button {
-                    let quote = self.quotesModel.text.trimmingCharacters(in: .whitespacesAndNewlines)
-                    if quote.isEmpty {
-                        dismiss()
-                        return
-                    }
-                    
-                    if !self.inEditMode {
-                        HapticManager.shared.trigger(.success)
-                        withAnimation {
-                            do {
-                                try self.bookRepository.addQuote(self.quotesModel,
-                                                                 toBook: self.book?.id ?? "")
-                            } catch {
-                                self.errorOccurred = true
-                                
-                                guard let err = error as? PersistenceError else {
-                                    self.errorMessage = error.localizedDescription
-                                    return
-                                }
-                                
-                                self.errorMessage = err.errrorDescription ?? error.localizedDescription
-                            }
+                self.addNotesToolbar
+            }
+        }
+    }
+    
+    var addNotesToolbar: some View {
+        Button {
+            let quote = self.quotesModel.text.trimmingCharacters(in: .whitespacesAndNewlines)
+            if quote.isEmpty {
+                dismiss()
+                return
+            }
+            
+            if !self.inEditMode {
+                HapticManager.shared.trigger(.success)
+                withAnimation {
+                    do {
+                        try self.bookRepository.addQuote(self.quotesModel,
+                                                         toBook: self.book?.id ?? "")
+                    } catch {
+                        self.errorOccurred = true
+                        
+                        guard let err = error as? PersistenceError else {
+                            self.errorMessage = error.localizedDescription
+                            return
                         }
+                        
+                        self.errorMessage = err.errrorDescription ?? error.localizedDescription
                     }
-                    dismiss()
-                } label: {
-                    Text(self.inEditMode ? "Edit" : "Save")
                 }
             }
+            dismiss()
+        } label: {
+            Text(self.inEditMode ? "Edit" : "Save")
         }
     }
     

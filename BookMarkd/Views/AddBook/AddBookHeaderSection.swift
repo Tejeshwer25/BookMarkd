@@ -87,9 +87,6 @@ struct AddBookHeaderSection: View {
             CameraCaptureView(
                 onImageCaptured: { image in
                     Task { await handleCapturedImage(image) }
-                },
-                onCancel: {
-                    isProcessingCapture = false
                 }
             )
         }

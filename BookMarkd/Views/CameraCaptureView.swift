@@ -1,42 +1,57 @@
 import SwiftUI
 import UIKit
 
-struct CameraCaptureView: UIViewControllerRepresentable {
-    class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
-        let parent: CameraCaptureView
-        
-        init(_ parent: CameraCaptureView) {
-            self.parent = parent
-        }
-        
-        func imagePickerController(_ picker: UIImagePickerController,
-                                   didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-            if let image = info[.originalImage] as? UIImage {
-                parent.onImageCaptured(image)
-            }
+struct CameraCaptureView: View {
+    @Environment(\.dismiss) private var dismiss
+    @StateObject private var camera = CameraManager()
+    
+    let onImageCaptured: (UIImage) -> Void
+    
+    var body: some View {
+        VStack {
+            CameraPreviewView(session: camera.session)
+                .frame(maxWidth: .infinity, minHeight: 650)
+                .clipShape(.containerRelative)
+                .padding()
             
-            parent.presentationMode.wrappedValue.dismiss()
+            HStack {
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "xmark")
+                        .frame(width: 80, height: 80)
+                        .glassEffect()
+                }
+                
+                Spacer()
+                
+                Button {
+                    camera.capturePhoto()
+                } label: {
+                    Circle()
+                        .fill(.white)
+                        .frame(width: 80, height: 80)
+                        .overlay {
+                            Circle()
+                                .stroke(.black, lineWidth: 2)
+                        }
+                }
+            }
+            .padding(.vertical)
+            .padding(.horizontal, 50)
         }
-        
-        func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-            parent.presentationMode.wrappedValue.dismiss()
-            parent.onCancel?()
+        .onAppear {
+            camera.startSession()
+        }
+        .onDisappear {
+            camera.stopSession()
+        }
+        .onChange(of: camera.capturedImage) { old, new in
+            guard let new else { return }
+            
+            onImageCaptured(new)
+            dismiss()
         }
     }
-
-    @Environment(\.presentationMode) private var presentationMode
-    var onImageCaptured: (UIImage) -> Void
-    var onCancel: (() -> Void)? = nil
-
-    func makeCoordinator() -> Coordinator { Coordinator(self) }
-
-    func makeUIViewController(context: Context) -> UIImagePickerController {
-        let picker = UIImagePickerController()
-        picker.delegate = context.coordinator
-        picker.sourceType = .camera
-        picker.allowsEditing = false
-        return picker
-    }
-
-    func updateUIViewController(_ uiViewController: UIImagePickerController, context: Context) {}
 }
+

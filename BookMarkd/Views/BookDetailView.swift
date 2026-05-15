@@ -58,9 +58,10 @@ struct BookDetailView: View {
                     }
                     .padding()
                     
-                    let notesList = try! viewModel.bookRepository.book(id: bookId)?.quotes ?? []
-                    if !notesList.isEmpty {
-                        NotesAndQuotesView(notesList: try! viewModel.bookRepository.book(id: bookId)?.quotes ?? [],
+                    let notesList = try? viewModel.bookRepository.book(id: bookId)?.quotes ?? []
+                    if notesList?.isEmpty == false {
+                        let notesList = (try? viewModel.bookRepository.book(id: bookId)?.quotes) ?? []
+                        NotesAndQuotesView(notesList:  notesList,
                                            showAddNoteButton: false,
                                            bookReadingStatus: try? viewModel.bookRepository.book(id: bookId)?.readState) { quoteAction, quote in
                             self.viewModel.performQuoteAction(quoteAction, on: quote)

@@ -8,14 +8,27 @@
 import SwiftUI
 import SwiftData
 
+enum BookMarkdSchemaV1: VersionedSchema {
+    static let versionIdentifier = Schema.Version(1, 0, 0)
+    static var models: [any PersistentModel.Type] {
+        [BookModel.self, QuotesModel.self, UserPreferenceModel.self]
+    }
+}
+
+enum BookMarkdMigrationPlan: SchemaMigrationPlan {
+    static var schemas: [any VersionedSchema.Type] {
+        [BookMarkdSchemaV1.self]
+    }
+
+    static var stages: [MigrationStage] {
+        [] // No migrations needed yet
+    }
+}
+
 @main
 struct BookMarkdApp: App {
     var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            BookModel.self,
-            QuotesModel.self,
-            UserPreferenceModel.self
-        ])
+        let schema = Schema(versionedSchema: BookMarkdSchemaV1.self)
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
         do {
