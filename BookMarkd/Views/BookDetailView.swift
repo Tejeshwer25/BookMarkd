@@ -88,15 +88,9 @@ struct BookDetailView: View {
                             bookRepository: viewModel.bookRepository, router: router)
             }
         }
-        .sheet(item: $viewModel.noteToShare, onDismiss: {
-            if let imageToShare {
-                self.shareImage(imageToShare)
-            }
-        }) { quote in
+        .sheet(item: $viewModel.noteToShare) { quote in
             NavigationStack {
-                ShareQuoteView(book: viewModel.book, quote: quote, onDismiss: { image in
-                    self.imageToShare = image
-                })
+                ShareQuoteView(book: viewModel.book, quote: quote)
             }
         }
         .onAppear {
