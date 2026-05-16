@@ -25,9 +25,11 @@ class BookDetailViewModel: ObservableObject {
     @Published var noteToShare: QuotesModel? = nil
     
     let bookRepository: any BookRepository
+    let bookService: any BookService
     
-    init(bookRepository: any BookRepository) {
+    init(bookRepository: any BookRepository, bookService: any BookService) {
         self.bookRepository = bookRepository
+        self.bookService = bookService
     }
     
     /// Method to get additional book details
@@ -44,10 +46,9 @@ class BookDetailViewModel: ObservableObject {
             return
         }
         
-        let service = BookServiceUtility(api: APIClient())
         Task {
             do {
-                let book = try await service.getBookDetails(bookID)
+                let book = try await self.bookService.getBookDetails(bookID)
                 self.bookDetails = book
                 withAnimation {
                     self.isPageLoading = false

@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import _SwiftData_SwiftUI
+import SwiftData
 
 struct BookWishlistView: View {
     @Query(filter: #Predicate<BookModel> { $0.readStateRaw == "wishlist" })

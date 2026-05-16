@@ -20,11 +20,15 @@ class AddBookViewModel: ObservableObject {
     @Published var errorMessage: String?
     @Published var viewToShow: ViewsAvailable = .beginSearch
     
-    let bookRepository: BookRepository
+    let bookRepository: any BookRepository
+    let bookService: any BookService
     
-    init(bookRepository: BookRepository, bookTitle: String = "") {
+    init(bookRepository: BookRepository,
+         bookService: BookService,
+         bookTitle: String = "") {
         self.bookRepository = bookRepository
         self.bookTitle = bookTitle
+        self.bookService = bookService
         
         if bookTitle.isEmpty == false {
             self.searchBook(bookName: self.bookTitle, booksInLibrary: [])
@@ -85,9 +89,8 @@ class AddBookViewModel: ObservableObject {
         /// Method to search book using service
         /// - Returns: search results
         func search() async -> [SearchedBooks] {
-            let service = BookServiceUtility(api: APIClient())
             do {
-                let books = try await service.searchBooks(bookName)
+                let books = try await self.bookService.searchBooks(bookName)
                 return books
             } catch {
                 print(error.localizedDescription)

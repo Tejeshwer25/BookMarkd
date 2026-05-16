@@ -15,8 +15,9 @@ struct BookDetailView: View {
     var bookId: String
     @State var imageToShare: UIImage?
     
-    init(bookId: String, bookRepository: any BookRepository) {
-        self._viewModel = StateObject(wrappedValue: BookDetailViewModel(bookRepository: bookRepository))
+    init(bookId: String, bookRepository: any BookRepository, bookService: any BookService) {
+        self._viewModel = StateObject(wrappedValue: BookDetailViewModel(bookRepository: bookRepository,
+                                                                        bookService: bookService))
         self.bookId = bookId
     }
     

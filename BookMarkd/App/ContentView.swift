@@ -16,6 +16,7 @@ struct ContentView: View {
     
     let bookRepository: any BookRepository
     let preferenceRepository: any UserPreferenceRepository
+    let bookService: any BookService
     
     var body: some View {
         TabView {
@@ -23,6 +24,7 @@ struct ContentView: View {
                 NavigationStackContainer(
                     router: libraryRouter,
                     bookRepository: bookRepository,
+                    bookService: bookService,
                     preferenceRepository: preferenceRepository) {
                         LibraryView(bookRepository: bookRepository)
                 }
@@ -32,6 +34,7 @@ struct ContentView: View {
                 NavigationStackContainer(
                     router: discoverRouter,
                     bookRepository: bookRepository,
+                    bookService: bookService,
                     preferenceRepository: preferenceRepository) {
                         DiscoverView(bookRepository: bookRepository)
                 }
@@ -41,6 +44,7 @@ struct ContentView: View {
                 NavigationStackContainer(
                     router: insightsRouter,
                     bookRepository: bookRepository,
+                    bookService: bookService,
                     preferenceRepository: preferenceRepository) {
                         InsightsView()
                 }
@@ -67,6 +71,7 @@ struct ContentView: View {
     
     ContentView(
         bookRepository: SwiftDataBookRepository(context: sharedModelContainer.mainContext),
-        preferenceRepository: SwiftDataUserPreferenceRepository(context: sharedModelContainer.mainContext)
+        preferenceRepository: SwiftDataUserPreferenceRepository(context: sharedModelContainer.mainContext),
+        bookService: BookServiceUtility(apiClient: APIClient())
     )
 }

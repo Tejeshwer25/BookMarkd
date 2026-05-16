@@ -11,6 +11,7 @@ import Combine
 struct NavigationStackContainer<Content: View>: View {
     @ObservedObject var router: Router
     let bookRepository: any BookRepository
+    let bookService: any BookService
     let preferenceRepository: any UserPreferenceRepository
     @Namespace private var namespace
     
@@ -26,22 +27,24 @@ struct NavigationStackContainer<Content: View>: View {
                     switch route {
                     case .authorDetails(let id):
                         BookDetailView(bookId: id,
-                                       bookRepository: bookRepository)
+                                       bookRepository: bookRepository,
+                                       bookService: bookService)
                         .background(Color.neutral)
                     case .bookDetails(let id):
                         BookDetailView(bookId: id,
-                                       bookRepository: bookRepository)
+                                       bookRepository: bookRepository,
+                                       bookService: bookService)
                         .navigationTransition(.zoom(sourceID: id, in: namespace))
                         .background(Color.neutral)
                     case .searchResults(query: _):
-                        AddBookView(query: .constant(""), bookRepository: bookRepository)
+                        AddBookView(query: .constant(""), bookRepository: bookRepository, bookService: bookService)
                     case .bookFinishScreen(let id):
                         FinishBookView(bookID: id,
                                        bookRepository: bookRepository)
                         .background(Color.neutral)
                     case .addBookScreen:
                         AddBookView(query: .constant(""),
-                                    bookRepository: bookRepository)
+                                    bookRepository: bookRepository, bookService: bookService)
                         .background(Color.neutral)
                     case .bookWishlistScreen:
                         BookWishlistView()
@@ -50,7 +53,7 @@ struct NavigationStackContainer<Content: View>: View {
                         GenrePreferencesScreen(preferenceRepository: preferenceRepository)
                             .background(Color.neutral)
                     case .addBook(let query):
-                        AddBookView(query: .constant(query), bookRepository: bookRepository)
+                        AddBookView(query: .constant(query), bookRepository: bookRepository, bookService: bookService)
                             .background(Color.neutral)
                     case .settings:
                         SettingsView()

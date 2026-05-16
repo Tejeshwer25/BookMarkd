@@ -14,6 +14,10 @@ protocol BookService {
 
 struct BookServiceUtility: BookService {
     let api: APIClient
+    
+    init(apiClient: APIClient = APIClient()) {
+        self.api = apiClient
+    }
 
     func searchBooks(_ query: String) async throws(BookMarkdError) -> [SearchedBooks] {
         do {

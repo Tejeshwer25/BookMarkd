@@ -7,7 +7,7 @@
 
 import SwiftUI
 import Charts
-import _SwiftData_SwiftUI
+import SwiftData
 
 struct MonthlyHoursOfSunshine: Identifiable {
     var id = UUID()

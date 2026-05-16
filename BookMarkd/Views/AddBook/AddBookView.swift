@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import _SwiftData_SwiftUI
+import SwiftData
 
 struct AddBookView: View {
     let hapticsManager = HapticManager.shared
@@ -15,16 +15,16 @@ struct AddBookView: View {
     @StateObject private var viewModel: AddBookViewModel
     @EnvironmentObject private var router: Router
     
-    let bookRepository: any BookRepository
-    
-    init(query: Binding<String>, bookRepository: any BookRepository) {
+    init(query: Binding<String>, bookRepository: any BookRepository, bookService: any BookService) {
         self._query = query
-        self.bookRepository = bookRepository
         
         if !query.wrappedValue.isEmpty {
-            self._viewModel = StateObject(wrappedValue: AddBookViewModel(bookRepository: bookRepository, bookTitle: query.wrappedValue))
+            self._viewModel = StateObject(wrappedValue: AddBookViewModel(bookRepository: bookRepository,
+                                                                         bookService: bookService,
+                                                                         bookTitle: query.wrappedValue))
         } else {
-            self._viewModel = StateObject(wrappedValue: AddBookViewModel(bookRepository: bookRepository))
+            self._viewModel = StateObject(wrappedValue: AddBookViewModel(bookRepository: bookRepository,
+                                                                         bookService: bookService))
         }
     }
     

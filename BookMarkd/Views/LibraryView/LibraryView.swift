@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import _SwiftData_SwiftUI
+import SwiftData
 
 struct LibraryView: View {
     @Query private var books: [BookModel]

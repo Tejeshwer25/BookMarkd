@@ -40,18 +40,21 @@ struct BookMarkdApp: App {
     
     private var bookRepository: any BookRepository
     private var preferenceRepository: any UserPreferenceRepository
+    private var bookService: any BookService
     
     init() {
         let context = sharedModelContainer.mainContext
         bookRepository = SwiftDataBookRepository(context: context)
         preferenceRepository = SwiftDataUserPreferenceRepository(context: context)
+        bookService = BookServiceUtility(apiClient: APIClient())
     }
     
     var body: some Scene {
         WindowGroup {
             ContentView(
                 bookRepository: bookRepository,
-                preferenceRepository: preferenceRepository
+                preferenceRepository: preferenceRepository,
+                bookService: bookService
             )
         }
         .modelContainer(sharedModelContainer)

@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import _SwiftData_SwiftUI
+import SwiftData
 
 struct DiscoverView: View {
     @EnvironmentObject private var router: Router

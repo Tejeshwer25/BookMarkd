@@ -7,7 +7,7 @@
 
 import SwiftUI
 import PhotosUI
-import _SwiftData_SwiftUI
+import SwiftData
 import Vision
 import Foundation
 

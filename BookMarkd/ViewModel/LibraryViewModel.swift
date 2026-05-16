@@ -7,7 +7,6 @@
 
 import Foundation
 import Combine
-import _SwiftData_SwiftUI
 
 class LibraryViewModel: ObservableObject {
     @Published var searchText: String = ""
