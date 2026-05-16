@@ -12,6 +12,7 @@ class BookRecommendationViewModel: ObservableObject {
     @Published var recommendedBooks: [RecommendedBooks] = []
     @Published var loadingBooks: Bool = false
     @Published var searchQuery: String = ""
+    @Published var errorInfo: AlertInfoModel = .init(title: "", message: "")
     
     func shouldShowNoResultsLabel() -> Bool {
         return self.recommendedBooks.isEmpty
@@ -39,7 +40,8 @@ class BookRecommendationViewModel: ObservableObject {
                                                                                               with: preferredGenres)
             self.loadingBooks = false
         } catch {
-            print(error.localizedDescription)
+            print(error.errorDescription)
+            self.errorInfo = .init(title: "Error", message: error.errorDescription)
         }
     }
     

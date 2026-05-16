@@ -130,7 +130,11 @@ struct AddBookHeaderSection: View {
             }
         } catch {
             await MainActor.run {
-                processingError = error.localizedDescription
+                if let error = error as? FoundationModelErrors {
+                    self.processingError = error.errorDescription
+                } else {
+                    self.processingError = error.localizedDescription
+                }
             }
         }
         

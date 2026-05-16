@@ -271,17 +271,24 @@ struct AddBookManuallyView: View {
                                 isManuallyCreated: true,
                                 themes: self.tags.map{$0.rawValue})
         
-        if shouldGenerateUsingAI {
-            let recommendationService = RecommendationService()
-            newBook = try await recommendationService.generateBookDescriptionAndGenres(for: newBook)
-            
-        }
-        
         do {
+            if shouldGenerateUsingAI {
+                let recommendationService = RecommendationService()
+                newBook = try await recommendationService.generateBookDescriptionAndGenres(for: newBook)
+            }
+            
             try self.bookRepository.add(newBook)
             self.router.popScreen()
         } catch {
             print(error.localizedDescription)
+            self.errorOccured = true
+            if let error = error as? FoundationModelErrors {
+                self.errorMessage = error.errorDescription
+            } else if let error = error as? PersistenceError {
+                self.errorMessage = error.errrorDescription
+            } else {
+                self.errorMessage = error.localizedDescription
+            }
         }
     }
     
@@ -319,7 +326,12 @@ struct AddBookManuallyView: View {
                             }
                         }
                     } catch {
-                        self.errorMessage = "Cover recognition failed: \(error.localizedDescription)"
+                        if let error = error as? FoundationModelErrors {
+                            self.errorMessage = error.errorDescription
+                        } else {
+                            self.errorMessage = error.localizedDescription
+                        }
+                        
                         self.errorOccured = true
                     }
                 }

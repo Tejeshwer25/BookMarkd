@@ -5,6 +5,12 @@
 //  Created by Tejeshwer Singh on 08/03/26.
 //
 
+struct AlertInfoModel {
+    let title: String
+    let message: String
+    let isVisible: Bool = false
+}
+
 enum BookMarkdError: Error {
     case persistenceError
     case apiError(String)
@@ -56,6 +62,24 @@ enum PersistenceError: Error {
             return "Failed to save genres"
         case .userPreferenceNotFound:
             return "User preference not found"
+        }
+    }
+}
+
+enum FoundationModelErrors: Error {
+    case appleIntelligenceNotEnabled
+    case modelNotLoaded
+    case unavailable
+    
+    case unableToGenerateResponse
+    
+    var errorDescription: String {
+        switch self {
+        case .appleIntelligenceNotEnabled: return "Apple Intelligence needs to be enabled for this feature to work."
+        case .modelNotLoaded: return "AI model is not yet fully loaded. Please try again later."
+        case .unavailable: return "AI model is currently not supported on this device."
+            
+        case .unableToGenerateResponse: return "AI model was unable to generate any response for the given data."
         }
     }
 }
