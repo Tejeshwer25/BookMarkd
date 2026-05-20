@@ -29,7 +29,6 @@ struct DiscoverView: View {
                                              description: book.bookDescription,
                                              whyRecommend: book.whyRecommendation,
                                              addBookToWishlist: { authorName, bookTitle in
-                        print("\(authorName) \(bookTitle)")
                         self.viewModel.searchQuery = "\(authorName) \(bookTitle)"
                         self.router.pushScreen(.addBook(query: self.viewModel.searchQuery))
                     })

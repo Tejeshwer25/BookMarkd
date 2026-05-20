@@ -15,24 +15,25 @@ struct BookDetailView: View {
     var bookId: String
     @State var imageToShare: UIImage?
     
-    init(bookId: String, bookRepository: any BookRepository, bookService: any BookService) {
+    init(bookId: String,
+         bookRepository: any BookRepository,
+         bookService: any BookService) {
         self._viewModel = StateObject(wrappedValue: BookDetailViewModel(bookRepository: bookRepository,
                                                                         bookService: bookService))
         self.bookId = bookId
     }
     
     var body: some View {
+        let book = try? viewModel.fetchBookDataFromRepo(bookId)
+        
         ScrollView {
             VStack(alignment: .leading) {
                 bookInfoView
                 
                 if self.viewModel.book?.readState == .reading {
-                    let notesList = try? viewModel.bookRepository.book(id: bookId)?.quotes
-                    let readState = try? viewModel.bookRepository.book(id: bookId)?.readState
-                    
-                    NotesAndQuotesView(notesList: notesList ?? [],
+                    NotesAndQuotesView(notesList: book?.quotes ?? [],
                                        showAddNoteButton: true,
-                                       bookReadingStatus: readState) { quoteAction, quote in
+                                       bookReadingStatus: book?.readState) { quoteAction, quote in
                         self.viewModel.performQuoteAction(quoteAction, on: quote)
                     }
                 } else if self.viewModel.book?.readState == .wishlist {
@@ -47,22 +48,18 @@ struct BookDetailView: View {
                     }
                     .padding()
                 } else if self.viewModel.book?.readState == .read {
-                    let bookReview = try? self.viewModel.bookRepository.book(id: bookId)?.bookReview
-                    
                     VStack(alignment: .leading, spacing: 10) {
                         Text("Book Review")
                             .font(.title3)
                             .fontWeight(.bold)
                         
-                        Text(bookReview ?? "")
+                        Text(book?.bookReview ?? "")
                             .font(.callout)
                     }
                     .padding()
                     
-                    let notesList = try? viewModel.bookRepository.book(id: bookId)?.quotes ?? []
-                    if notesList?.isEmpty == false {
-                        let notesList = (try? viewModel.bookRepository.book(id: bookId)?.quotes) ?? []
-                        NotesAndQuotesView(notesList:  notesList,
+                    if book?.quotes.isEmpty == false {
+                        NotesAndQuotesView(notesList:  book?.quotes ?? [],
                                            showAddNoteButton: false,
                                            bookReadingStatus: try? viewModel.bookRepository.book(id: bookId)?.readState) { quoteAction, quote in
                             self.viewModel.performQuoteAction(quoteAction, on: quote)
@@ -74,19 +71,21 @@ struct BookDetailView: View {
         .navigationTitle("")
         .sheet(isPresented: $viewModel.showAddNoteSheet) {
             NavigationStack {
-                AddNoteView(quotesModel: .init(id: .init(),
+                AddNoteView(bookRepository: viewModel.bookRepository,
+                            router: router,
+                            quotesModel: .init(id: .init(),
                                                noteType: .quote,
                                                text: "",
                                                date: Date()),
-                            book: viewModel.book,
-                            bookRepository: viewModel.bookRepository, router: router)
+                            book: viewModel.book,)
             }
         }
         .sheet(item: $viewModel.noteToEdit) { quote in
             NavigationStack {
-                AddNoteView(quotesModel: quote,
-                            book: self.viewModel.book,
-                            bookRepository: viewModel.bookRepository, router: router)
+                AddNoteView(bookRepository: viewModel.bookRepository,
+                            router: router,
+                            quotesModel: quote,
+                            book: self.viewModel.book)
             }
         }
         .sheet(item: $viewModel.noteToShare) { quote in

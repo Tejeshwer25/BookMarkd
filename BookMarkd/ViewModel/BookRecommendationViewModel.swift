@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 
+@MainActor
 class BookRecommendationViewModel: ObservableObject {
     @Published var recommendedBooks: [RecommendedBooks] = []
     @Published var loadingBooks: Bool = false

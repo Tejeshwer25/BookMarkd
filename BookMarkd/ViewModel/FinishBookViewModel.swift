@@ -8,6 +8,7 @@
 import Combine
 import Foundation
 
+@MainActor
 class FinishBookViewModel: ObservableObject {
     @Published private(set) var book: BookModel?
     @Published var errorOccurred: Bool = false

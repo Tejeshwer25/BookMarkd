@@ -74,12 +74,3 @@ struct RecommendedBookComponent: View {
         }
     }
 }
-
-#Preview {
-    RecommendedBookComponent(bookTitle: "",
-                             author: "",
-                             description: "",
-                             whyRecommend: "") { authorName, bookTitle in
-        
-    }
-}

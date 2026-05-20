@@ -12,7 +12,8 @@ enum QuoteAction {
     case edit, share, delete, add
 }
 
-class BookDetailViewModel: ObservableObject {    
+@MainActor
+class BookDetailViewModel: ObservableObject {
     @Published var showAddNoteSheet: Bool = false
     @Published var book: BookModel?
     @Published var bookDetails: BookDetailDataModel? = nil
@@ -80,5 +81,9 @@ class BookDetailViewModel: ObservableObject {
         case .delete:
             ()
         }
+    }
+    
+    func fetchBookDataFromRepo(_ bookID: String) throws -> BookModel? {
+        return try bookRepository.book(id: bookID)
     }
 }

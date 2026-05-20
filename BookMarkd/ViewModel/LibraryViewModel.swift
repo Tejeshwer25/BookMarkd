@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 
+@MainActor
 class LibraryViewModel: ObservableObject {
     @Published var searchText: String = ""
     @Published var isSearching: Bool = false

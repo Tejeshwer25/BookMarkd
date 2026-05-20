@@ -62,9 +62,3 @@ struct BookWishlistView: View {
         }
     }
 }
-
-#Preview {
-    NavigationStack {
-        BookWishlistView()
-    }
-}

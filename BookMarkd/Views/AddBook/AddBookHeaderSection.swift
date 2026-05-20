@@ -105,8 +105,6 @@ struct AddBookHeaderSection: View {
         }
     }
     
-    /// <#Description#>
-    /// - Parameter image: <#image description#>
     private func handleCapturedImage(_ image: UIImage) async {
         await MainActor.run {
             isProcessingCapture = true

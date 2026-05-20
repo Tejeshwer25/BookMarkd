@@ -37,9 +37,3 @@ struct BeginSearchView: View {
         .padding()
     }
 }
-
-#Preview {
-    BeginSearchView(imageName: "book",
-                    headlineText: "Test",
-                    subheadlineText: "Test2")
-}

@@ -11,18 +11,23 @@ import Vision
 struct AddNoteView: View {
     @Environment(\.dismiss) var dismiss
     @Bindable var quotesModel: QuotesModel
-    
-    @State private var errorOccurred: Bool = false
-    @State private var errorMessage: String = ""
-    @State private var showCamera: Bool = false
-    @State private var isProcessingCapture: Bool = false
-    @State private var processingError: String? = nil
+    @StateObject private var viewModel: AddNoteViewModel
     
     let inEditMode: Bool = false
     let book: BookModel?
-    
     let bookRepository: BookRepository
     let router: Router
+    
+    init(bookRepository: any BookRepository,
+         router: Router,
+         quotesModel: QuotesModel,
+         book: BookModel? = nil) {
+        self._viewModel = StateObject(wrappedValue: AddNoteViewModel(bookRepository: bookRepository))
+        self.router = router
+        self.quotesModel = quotesModel
+        self.bookRepository = bookRepository
+        self.book = book
+    }
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -58,7 +63,7 @@ struct AddNoteView: View {
                 Spacer()
                 
                 Button {
-                    self.showCamera = true
+                    self.viewModel.showCamera = true
                 } label: {
                     Image(systemName: "camera.fill")
                 }
@@ -110,11 +115,11 @@ struct AddNoteView: View {
             }
             .padding()
         }
-        .alert("Error", isPresented: $errorOccurred, actions: {}, message: { Text(errorMessage) })
+        .alert("Error", isPresented: $viewModel.errorOccurred, actions: {}, message: { Text(self.viewModel.errorMessage) })
         .frame(maxWidth: .infinity)
         .navigationTitle("Add Note or Quote")
         .navigationBarTitleDisplayMode(.inline)
-        .sheet(isPresented: $showCamera) {
+        .sheet(isPresented: $viewModel.showCamera) {
             CameraCaptureView(
                 onImageCaptured: { image in
                     Task { await handleCapturedImage(image) }
@@ -151,14 +156,14 @@ struct AddNoteView: View {
                         try self.bookRepository.addQuote(self.quotesModel,
                                                          toBook: self.book?.id ?? "")
                     } catch {
-                        self.errorOccurred = true
+                        self.viewModel.errorOccurred = true
                         
                         guard let err = error as? PersistenceError else {
-                            self.errorMessage = error.localizedDescription
+                            self.viewModel.errorMessage = error.localizedDescription
                             return
                         }
                         
-                        self.errorMessage = err.errrorDescription ?? error.localizedDescription
+                        self.viewModel.errorMessage = err.errrorDescription ?? error.localizedDescription
                     }
                 }
             }
@@ -168,11 +173,9 @@ struct AddNoteView: View {
         }
     }
     
-    /// <#Description#>
-    /// - Parameter image: <#image description#>
     private func handleCapturedImage(_ image: UIImage) async {
         await MainActor.run {
-            isProcessingCapture = true
+            self.viewModel.isProcessingCapture = true
         }
         
         do {
@@ -181,12 +184,12 @@ struct AddNoteView: View {
         }
         catch {
             await MainActor.run {
-                processingError = error.localizedDescription
+                self.viewModel.processingError = error.localizedDescription
             }
         }
         
         await MainActor.run {
-            isProcessingCapture = false
+            self.viewModel.isProcessingCapture = false
         }
     }
 }

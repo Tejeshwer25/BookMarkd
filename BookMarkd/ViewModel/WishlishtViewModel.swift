@@ -7,4 +7,5 @@
 
 import Combine
 
+@MainActor
 class WishlishtViewModel: ObservableObject {}

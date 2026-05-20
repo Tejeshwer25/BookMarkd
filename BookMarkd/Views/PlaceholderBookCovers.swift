@@ -31,7 +31,3 @@ struct PlaceholderBookCoverView: View {
         .frame(width: width, height: height)
     }
 }
-
-#Preview {
-    PlaceholderBookCoverView(bookTitle: "A History of the Sikhs", width: 100, height: 125)
-}
