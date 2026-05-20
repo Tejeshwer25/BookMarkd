@@ -69,7 +69,7 @@ struct AddBookHeaderSection: View {
                                    buttonFillColor: Color.neutralButton,
                                    buttonTextColor: Color.accent,
                                    cornerRadius: 8) {
-                self.router.pushScreen(.addBookForm(bookImage: nil))
+                self.router.pushScreen(.addBookForm(imageURL: nil))
             }
         }
         .frame(maxWidth: .infinity)
@@ -77,9 +77,14 @@ struct AddBookHeaderSection: View {
         .onChange(of: selectedPhotoItem) { oldValue, newValue in
             guard let newValue else { return }
             Task { @MainActor in
-                if let data = try? await newValue.loadTransferable(type: Data.self),
-                   let uiImage = UIImage(data: data) {
-                    self.router.pushScreen(.addBookForm(bookImage: uiImage))
+                do {
+                    if let data = try await newValue.loadTransferable(type: Data.self),
+                       let uiImage = UIImage(data: data) {
+                        let url = try saveTempImage(uiImage)
+                        self.router.pushScreen(.addBookForm(imageURL: url))
+                    }
+                } catch {
+                    self.processingError = error.localizedDescription
                 }
             }
         }
@@ -117,8 +122,10 @@ struct AddBookHeaderSection: View {
             let recommendationService = RecommendationService()
             let extractedBook = try await recommendationService.getBookDetailsFromBookCover(for: fullText)
             
+            let url = try saveTempImage(image)
+            
             await MainActor.run {
-                self.router.pushScreen(.addBookForm(bookImage: image))
+                self.router.pushScreen(.addBookForm(imageURL: url))
                 NotificationCenter.default.post(name: Notification.Name("PrefillAddBookFields"), object: nil, userInfo: [
                     "title": extractedBook.title,
                     "author": extractedBook.authorName,
@@ -139,5 +146,18 @@ struct AddBookHeaderSection: View {
         await MainActor.run {
             isProcessingCapture = false
         }
+    }
+    
+    /// Method to save image in temporary directory
+    /// - Parameter image: image to be saved
+    /// - Returns: url where image is saved
+    private func saveTempImage(_ image: UIImage) throws -> URL {
+        guard let data = image.jpegData(compressionQuality: 1.0) else {
+            throw NSError(domain: "AddBookHeaderSection", code: 1, userInfo: [NSLocalizedDescriptionKey: "Unable to generate JPEG data from image"])
+        }
+        let cachesDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
+        let fileURL = cachesDirectory.appendingPathComponent(UUID().uuidString).appendingPathExtension("jpg")
+        try data.write(to: fileURL)
+        return fileURL
     }
 }

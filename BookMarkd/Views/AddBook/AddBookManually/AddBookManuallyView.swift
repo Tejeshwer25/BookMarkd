@@ -10,6 +10,7 @@ import PhotosUI
 import SwiftData
 import Vision
 import Foundation
+import UIKit
 
 @MainActor
 struct AddBookManuallyView: View {
@@ -19,12 +20,13 @@ struct AddBookManuallyView: View {
     @State private var coverImage: Image? = nil
     @StateObject private var viewModel: AddBookManuallyViewModel
     
-    init(bookRepository: any BookRepository, bookImage: UIImage? = nil) {
-        
-        if let bookImage {
-            self._coverImage = State(initialValue: Image(uiImage: bookImage))
+    init(bookRepository: any BookRepository, bookImageURL: URL? = nil) {
+        if let bookImageURL,
+           let data = try? Data(contentsOf: bookImageURL),
+           let uiImage = UIImage(data: data) {
+            self._coverImage = State(initialValue: Image(uiImage: uiImage))
             self._viewModel = StateObject(wrappedValue: AddBookManuallyViewModel(bookRepository: bookRepository,
-                                                                                 coverImage: bookImage.pngData()))
+                                                                                 coverImage: data))
         } else {
             self._coverImage = State(initialValue: nil)
             self._viewModel = StateObject(wrappedValue: AddBookManuallyViewModel(bookRepository: bookRepository,

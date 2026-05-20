@@ -58,9 +58,9 @@ struct NavigationStackContainer<Content: View>: View {
                     case .settings:
                         SettingsView()
                             .background(Color.neutral)
-                    case .addBookForm(let image):
+                    case .addBookForm(let imageURL):
                         AddBookManuallyView(bookRepository: bookRepository,
-                                            bookImage: image)
+                                            bookImageURL: imageURL)
                             .background(Color.neutral)
                     case .bookListScreen(let bookList):
                         BookListView(bookList: bookList)
@@ -76,3 +76,4 @@ struct NavigationStackContainer<Content: View>: View {
         return isHidden ? .hidden : .visible
     }
 }
+
