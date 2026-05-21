@@ -28,7 +28,11 @@ struct APIClient {
                 throw APIError.decoding
             }
         } catch {
-            throw APIError.transport
+            if let error = error as? APIError {
+                throw error
+            } else {
+                throw APIError.transport
+            }
         }
     }
     
@@ -41,7 +45,11 @@ struct APIClient {
             
             return data
         } catch {
-            throw APIError.transport
+            if let error = error as? APIError {
+                throw error
+            } else {
+                throw APIError.transport
+            }
         }
     }
 }
