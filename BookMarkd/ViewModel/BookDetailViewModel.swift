@@ -79,7 +79,20 @@ class BookDetailViewModel: ObservableObject {
         case .add:
             self.showAddNoteSheet.toggle()
         case .delete:
-            ()
+            guard let quote = note, let bookID = self.book?.id else {
+                self.alertMesssage = "Failed to delete note"
+                self.alertTitle = "Error"
+                self.shouldShowAlert = true
+                return
+            }
+            do {
+                try self.bookRepository.deleteQuote(quote, fromBook: bookID)
+            } catch {
+                self.alertMesssage = "Failed to delete note"
+                self.alertTitle = "Error"
+                self.shouldShowAlert = true
+                print(error)
+            }
         }
     }
     

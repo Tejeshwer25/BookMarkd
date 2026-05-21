@@ -18,7 +18,7 @@ struct NotesAndQuotesView: View {
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
-                Text("Notes & Quotes (\(currentNoteIndex) / \(self.notesList.count))")
+                Text("Notes & Quotes \( self.notesList.count > 0 ? "(\(currentNoteIndex) / \(self.notesList.count))" : "")")
                     .font(.title2)
                     .fontWeight(.bold)
                 
@@ -91,7 +91,7 @@ struct NotesAndQuotesView: View {
                                     }
                                     
                                     Button(role: .destructive, action: {
-                                        
+                                        self.quoteAction?(.delete, quote)
                                     }) {
                                         Label("Delete", systemImage: "trash")
                                     }

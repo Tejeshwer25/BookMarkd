@@ -94,6 +94,19 @@ final class SwiftDataBookRepository: BookRepository {
         }
     }
     
+    func deleteQuote(_ quote: QuotesModel, fromBook id: String) throws(PersistenceError) {
+        do {
+            let descriptor = FetchDescriptor<BookModel>(
+                predicate: #Predicate { $0.id == id }
+            )
+            guard let book = try context.fetch(descriptor).first else { return }
+            book.quotes.removeAll { $0.id == quote.id }
+            try context.save()
+        } catch {
+            throw .removeQuoteFailed
+        }
+    }
+    
     func addBookReview(_ review: String, for id: String) throws(PersistenceError) {
         do {
             let descriptor = FetchDescriptor<BookModel>(
