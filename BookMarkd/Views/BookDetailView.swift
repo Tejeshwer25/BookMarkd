@@ -181,17 +181,17 @@ struct BookDetailView: View {
             // Demo tags (replace with your actual tags source when available)
             let tags = self.viewModel.bookDetails?.genre?.sorted { $0.count < $1.count } ?? []
 
-            FlowLayout(items: tags, spacing: 10, rowSpacing: 8, maxRows: viewModel.showAllTags ? nil : 2) { tag in
+            FlowLayout(items: tags, spacing: 10, rowSpacing: 8, maxRows: viewModel.showAllTags ? nil : 2) { index, tag in
                 Text(tag)
                     .padding(.horizontal, 20)
                     .padding(.vertical, 7)
                     .background {
                         Capsule()
-                            .fill((Color.allAppColors.randomElement() ?? .secondaryBrand).opacity(0.15))
+                            .fill((Color.allAppColors[index % Color.allAppColors.count]).opacity(0.15))
                     }
                     .overlay {
                         Capsule()
-                            .stroke((Color.allAppColors.randomElement() ?? .secondaryBrand).opacity(0.5), lineWidth: 1)
+                            .stroke((Color.allAppColors[index % Color.allAppColors.count]).opacity(0.5), lineWidth: 1)
                     }
             }
 

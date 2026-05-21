@@ -12,10 +12,15 @@ struct FlowLayout<Data: RandomAccessCollection, Content: View>: View where Data.
     let spacing: CGFloat
     let rowSpacing: CGFloat
     let maxRows: Int? // when nil, show all rows
-    let content: (Data.Element) -> Content
+    let content: (Int, Data.Element) -> Content
     let alignment: HorizontalAlignment
 
-    init(items: Data, spacing: CGFloat = 8, rowSpacing: CGFloat = 8, maxRows: Int? = nil, alignment: HorizontalAlignment = .center, @ViewBuilder content: @escaping (Data.Element) -> Content) {
+    init(items: Data,
+         spacing: CGFloat = 8,
+         rowSpacing: CGFloat = 8,
+         maxRows: Int? = nil,
+         alignment: HorizontalAlignment = .center,
+         @ViewBuilder content: @escaping (Int, Data.Element) -> Content) {
         self.items = items
         self.spacing = spacing
         self.rowSpacing = rowSpacing
@@ -34,7 +39,7 @@ struct FlowLayout<Data: RandomAccessCollection, Content: View>: View where Data.
             ForEach(0..<(maxRows.map { min($0, rows.count) } ?? rows.count), id: \.self) { rowIndex in
                 HStack(alignment: .center, spacing: spacing) {
                     ForEach(rows[rowIndex], id: \.self) { item in
-                        content(item)
+                        content(rowIndex, item)
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .center)
