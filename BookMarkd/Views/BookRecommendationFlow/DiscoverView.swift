@@ -36,7 +36,10 @@ struct DiscoverView: View {
                 }
                 
                 Button {
-                    
+                    Task {
+                        await self.viewModel.generateBookRecommendations(booksInLibrary: self.booksRead,
+                                                                         preferences: self.preferences)
+                    }
                 } label: {
                     HStack {
                         Text("Regenerate")

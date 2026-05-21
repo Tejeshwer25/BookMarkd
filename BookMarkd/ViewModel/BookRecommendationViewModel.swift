@@ -36,6 +36,7 @@ class BookRecommendationViewModel: ObservableObject {
         do {
             let preferredGenres = preferences.first?.preferedGenres ?? []
             
+            self.recommendedBooks = []
             self.loadingBooks = true
             self.recommendedBooks = try await RecommendationService().generateRecommendations(from: booksInLibrary,
                                                                                               with: preferredGenres)
