@@ -5,13 +5,15 @@
 //  Created by Tejeshwer Singh on 08/03/26.
 //
 
+import Foundation
+
 struct AlertInfoModel {
     let title: String
     let message: String
     let isVisible: Bool = false
 }
 
-enum BookMarkdError: Error {
+enum BookMarkdError: LocalizedError {
     case persistenceError
     case apiError(String)
     
@@ -23,7 +25,7 @@ enum BookMarkdError: Error {
     }
 }
 
-enum APIError: Error {
+enum APIError: LocalizedError {
     case invalidStatusCode
     case decoding
     case transport
@@ -31,7 +33,7 @@ enum APIError: Error {
 }
 
 
-enum PersistenceError: Error {
+enum PersistenceError: LocalizedError {
     case addBookFailed
     case removeBookFailed
     case addQuoteFailed
@@ -42,7 +44,7 @@ enum PersistenceError: Error {
     case saveGenresFailed
     case userPreferenceNotFound
     
-    var errrorDescription: String? {
+    var errorDescription: String? {
         switch self {
         case .addBookFailed:
             return "Failed to add book"
@@ -66,7 +68,7 @@ enum PersistenceError: Error {
     }
 }
 
-enum FoundationModelErrors: Error {
+enum FoundationModelErrors: LocalizedError {
     case appleIntelligenceNotEnabled
     case modelNotLoaded
     case unavailable

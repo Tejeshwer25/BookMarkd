@@ -9,8 +9,8 @@ import SwiftUI
 
 enum SettingsOptionList: String, CaseIterable {
     case genrePreferences = "Genre preferences"
-    case appearance = "Appearance"
-    case about = "About"
+//    case appearance = "Appearance"
+//    case about = "About"
 }
 
 struct SettingsView: View {

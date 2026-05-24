@@ -59,7 +59,7 @@ class AddBookViewModel: ObservableObject {
                     return
                 }
                 
-                self.errorMessage = err.errrorDescription
+                self.errorMessage = err.errorDescription
             }
         } else {
             bookModel.readState = .wishlist
@@ -78,7 +78,7 @@ class AddBookViewModel: ObservableObject {
                     return
                 }
                 
-                self.errorMessage = err.errrorDescription
+                self.errorMessage = err.errorDescription
             }
         }
     }

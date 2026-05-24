@@ -18,14 +18,14 @@ actor CachedImageLoaderActor {
             return nil
         }
         
-        if let cached = await CachedImageLoaderActor.shared.image(for: url) {
+        if let cached = self.image(for: url) {
             return cached
         }
         
         do {
             let (data, _) = try await URLSession.shared.data(from: url)
             if let uiImage = UIImage(data: data) {
-                await CachedImageLoaderActor.shared.set(uiImage, for: url)
+                self.set(uiImage, for: url)
                 return uiImage
             }
         } catch {

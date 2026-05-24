@@ -14,7 +14,7 @@ final class BookModel {
     var title: String
     var authorName: [String]
     var readStateRaw: String
-    var readState: BookReadingState {
+    @Transient var readState: BookReadingState {
         get { BookReadingState(rawValue: readStateRaw) ?? .wishlist }
         set { readStateRaw = newValue.rawValue }
     }

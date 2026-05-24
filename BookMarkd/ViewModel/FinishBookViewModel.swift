@@ -61,7 +61,7 @@ class FinishBookViewModel: ObservableObject {
             return
         }
         
-        self.errorMessage = err.errrorDescription
+        self.errorMessage = err.errorDescription
     }
     
     func getNumberOfDaysTakenToComplete() -> Int {

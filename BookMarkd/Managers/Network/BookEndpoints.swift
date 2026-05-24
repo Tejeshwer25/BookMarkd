@@ -23,6 +23,7 @@ enum BookEndpoint {
             var items: [URLQueryItem] = []
             if query.isEmpty == false {
                 items.append(URLQueryItem(name: "q", value: query))
+                items.append(URLQueryItem(name: "limit", value: "25"))
             }
             components?.queryItems = items
             

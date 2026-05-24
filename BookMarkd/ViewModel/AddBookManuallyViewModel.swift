@@ -71,7 +71,7 @@ class AddBookManuallyViewModel: ObservableObject {
             if let error = error as? FoundationModelErrors {
                 self.errorMessage = error.errorDescription
             } else if let error = error as? PersistenceError {
-                self.errorMessage = error.errrorDescription
+                self.errorMessage = error.errorDescription
             } else {
                 self.errorMessage = error.localizedDescription
             }

@@ -163,7 +163,7 @@ struct AddNoteView: View {
                             return
                         }
                         
-                        self.viewModel.errorMessage = err.errrorDescription ?? error.localizedDescription
+                        self.viewModel.errorMessage = err.errorDescription ?? error.localizedDescription
                     }
                 }
             }

@@ -33,7 +33,7 @@ class LibraryViewModel: ObservableObject {
                 return
             }
             
-            self.errorMessage = err.errrorDescription
+            self.errorMessage = err.errorDescription
         }
     }
     

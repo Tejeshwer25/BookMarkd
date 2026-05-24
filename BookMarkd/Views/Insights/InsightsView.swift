@@ -9,29 +9,10 @@ import SwiftUI
 import Charts
 import SwiftData
 
-struct MonthlyHoursOfSunshine: Identifiable {
-    var id = UUID()
-    var date: Date
-    var hoursOfSunshine: Double
-
-
-    init(month: Int, hoursOfSunshine: Double) {
-        let calendar = Calendar.autoupdatingCurrent
-        self.date = calendar.date(from: DateComponents(year: 2020, month: month))!
-        self.hoursOfSunshine = hoursOfSunshine
-    }
-}
-
 struct InsightsView: View {
     @EnvironmentObject private var router: Router
     @Query private var books: [BookModel]
     @StateObject private var viewModel = InsightsViewModel()
-    
-    var data: [MonthlyHoursOfSunshine] = [
-        MonthlyHoursOfSunshine(month: 1, hoursOfSunshine: 74),
-        MonthlyHoursOfSunshine(month: 2, hoursOfSunshine: 99),
-        MonthlyHoursOfSunshine(month: 12, hoursOfSunshine: 62)
-    ]
     
     var body: some View {
         ScrollView {
