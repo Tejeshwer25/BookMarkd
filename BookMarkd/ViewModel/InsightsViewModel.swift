@@ -87,11 +87,8 @@ class InsightsViewModel: ObservableObject {
     func loadChartData(allBooks: [BookModel]) {
         let books = self.getTotalFinishedBooks(allBooks: allBooks)
         
-        Task {
-            let activity = await Task.detached(priority: .userInitiated) {
-                self.computeActivity(from: books)
-            }.value
-            
+        Task { @MainActor in
+            let activity = self.computeActivity(from: books)
             
             self.readingActivity = activity
                 .map { ReadingActivityLastSixMonths(bookCount: $0.value, date: $0.key) }
@@ -102,7 +99,7 @@ class InsightsViewModel: ObservableObject {
     /// Method to offload heavy computation for books read each month away from Main Actor
     /// - Parameter books: all finished books in user library
     /// - Returns: Books read on each date
-    private nonisolated func computeActivity(from books: [BookModel]) -> [Date: Int] {
+    private func computeActivity(from books: [BookModel]) -> [Date: Int] {
         let calendar = Calendar.current
         let now = Date()
         var monthBuckets: [Date: Int] = [:]

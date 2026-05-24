@@ -20,6 +20,15 @@ class AddBookViewModel: ObservableObject {
     @Published var errorMessage: String?
     @Published var viewToShow: ViewsAvailable = .beginSearch
     
+    // Add book header properties
+    @Published var showPhotoPicker: Bool = false
+    @Published var extractedTextFromCover: String = ""
+    @Published var showCamera: Bool = false
+    @Published var isProcessingCoverCapture: Bool = false
+    @Published var coverProcessingError: String = ""
+    @Published var showImageCropper: Bool = false
+    @Published var pendingCapturedImage: UIImage? = nil
+    
     let bookRepository: any BookRepository
     let bookService: any BookService
     
@@ -122,6 +131,34 @@ class AddBookViewModel: ObservableObject {
         } else {
             self.viewToShow = .beginSearch
         }
+    }
+}
+
+// MARK: Add book header section
+extension AddBookViewModel {
+    func handleCapturedImage(_ image: UIImage) async throws -> (imageURL: URL, extractedBook: BookModel) {
+        let cameraManager = CameraManager()
+        let fullText = try await cameraManager.handleCapturedImage(image)
+        
+        let recommendationService = RecommendationService()
+        let extractedBook = try await recommendationService.getBookDetailsFromBookCover(for: fullText)
+        
+        let url = try saveTempImage(image)
+        
+        return (url, extractedBook)
+    }
+    
+    /// Method to save image in temporary directory
+    /// - Parameter image: image to be saved
+    /// - Returns: url where image is saved
+    func saveTempImage(_ image: UIImage) throws -> URL {
+        guard let data = image.jpegData(compressionQuality: 1.0) else {
+            throw NSError(domain: "AddBookHeaderSection", code: 1, userInfo: [NSLocalizedDescriptionKey: "Unable to generate JPEG data from image"])
+        }
+        let cachesDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
+        let fileURL = cachesDirectory.appendingPathComponent(UUID().uuidString).appendingPathExtension("jpg")
+        try data.write(to: fileURL)
+        return fileURL
     }
 }
 

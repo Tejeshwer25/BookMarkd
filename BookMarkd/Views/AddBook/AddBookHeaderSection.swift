@@ -10,23 +10,15 @@ import PhotosUI
 import Vision
 
 struct AddBookHeaderSection: View {
-    @Binding var bookTitle: String
     @State private var selectedPhotoItem: PhotosPickerItem? = nil
-    @State private var showPhotoPicker: Bool = false
-    @State private var extractedText: String = ""
+    @ObservedObject var viewModel: AddBookViewModel
     let router: Router
-    
-    @State private var showCamera: Bool = false
-    @State private var isProcessingCapture: Bool = false
-    @State private var processingError: String? = nil
-    @State private var showCropper: Bool = false
-    @State private var pendingCapturedImage: UIImage? = nil
     
     var body: some View {
         HStack {
             Image(systemName: "magnifyingglass")
             
-            TextField("Search for your next adventure", text: $bookTitle)
+            TextField("Search for your next adventure", text: $viewModel.bookTitle)
                 .padding(.horizontal, 10)
         }
         .padding()
@@ -38,13 +30,13 @@ struct AddBookHeaderSection: View {
         HStack(alignment: .center, spacing: 10) {
             Menu {
                 Button(action: {
-                    showCamera = true
+                    viewModel.showCamera = true
                 }) {
                     Label("Capture Image", systemImage: "camera.fill")
                 }
                 
                 Button {
-                    showPhotoPicker = true
+                    viewModel.showPhotoPicker = true
                 } label: {
                     Label("Import from gallery", systemImage: "photo.fill")
                 }
@@ -73,56 +65,51 @@ struct AddBookHeaderSection: View {
             }
         }
         .frame(maxWidth: .infinity)
-        .photosPicker(isPresented: $showPhotoPicker, selection: $selectedPhotoItem)
+        .photosPicker(isPresented: $viewModel.showPhotoPicker,
+                      selection: $selectedPhotoItem)
         .onChange(of: selectedPhotoItem) { oldValue, newValue in
             guard let newValue else { return }
             Task { @MainActor in
                 do {
                     if let data = try await newValue.loadTransferable(type: Data.self),
                        let uiImage = UIImage(data: data) {
-                        let url = try saveTempImage(uiImage)
+                        let url = try viewModel.saveTempImage(uiImage)
                         self.router.pushScreen(.addBookForm(imageURL: url))
                     }
                 } catch {
-                    self.processingError = error.localizedDescription
+                    viewModel.coverProcessingError = error.localizedDescription
                 }
             }
         }
-        .sheet(isPresented: $showCamera) {
+        .sheet(isPresented: $viewModel.showCamera) {
             CameraCaptureView(
                 onImageCaptured: { image in
                     Task { await handleCapturedImage(image) }
                 }
             )
         }
-        .fullScreenCover(isPresented: $isProcessingCapture) {
+        .fullScreenCover(isPresented: $viewModel.isProcessingCoverCapture) {
             ZStack {
                 Color.black.opacity(0.5).ignoresSafeArea()
                 ProgressView("Analyzing cover…")
             }
         }
-        .alert("Error", isPresented: .constant(processingError != nil)) {
+        .alert("Error", isPresented: .constant(viewModel.coverProcessingError.isEmpty == false)) {
             Button("OK") {
-                processingError = nil
+                viewModel.coverProcessingError = ""
             }
         } message: {
-            Text(processingError ?? "")
+            Text(viewModel.coverProcessingError)
         }
     }
     
     private func handleCapturedImage(_ image: UIImage) async {
         await MainActor.run {
-            isProcessingCapture = true
+            viewModel.isProcessingCoverCapture = true
         }
         
         do {
-            let cameraManager = CameraManager()
-            let fullText = try await cameraManager.handleCapturedImage(image)
-            
-            let recommendationService = RecommendationService()
-            let extractedBook = try await recommendationService.getBookDetailsFromBookCover(for: fullText)
-            
-            let url = try saveTempImage(image)
+            let (url, extractedBook) = try await viewModel.handleCapturedImage(image)
             
             await MainActor.run {
                 self.router.pushScreen(.addBookForm(imageURL: url))
@@ -136,28 +123,15 @@ struct AddBookHeaderSection: View {
         } catch {
             await MainActor.run {
                 if let error = error as? FoundationModelErrors {
-                    self.processingError = error.errorDescription
+                    viewModel.coverProcessingError = error.errorDescription
                 } else {
-                    self.processingError = error.localizedDescription
+                    viewModel.coverProcessingError = error.localizedDescription
                 }
             }
         }
         
         await MainActor.run {
-            isProcessingCapture = false
+            viewModel.isProcessingCoverCapture = false
         }
-    }
-    
-    /// Method to save image in temporary directory
-    /// - Parameter image: image to be saved
-    /// - Returns: url where image is saved
-    private func saveTempImage(_ image: UIImage) throws -> URL {
-        guard let data = image.jpegData(compressionQuality: 1.0) else {
-            throw NSError(domain: "AddBookHeaderSection", code: 1, userInfo: [NSLocalizedDescriptionKey: "Unable to generate JPEG data from image"])
-        }
-        let cachesDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
-        let fileURL = cachesDirectory.appendingPathComponent(UUID().uuidString).appendingPathExtension("jpg")
-        try data.write(to: fileURL)
-        return fileURL
     }
 }
