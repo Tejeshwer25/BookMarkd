@@ -13,11 +13,8 @@ struct LibraryView: View {
     @EnvironmentObject private var router: Router
     @StateObject private var viewModel: LibraryViewModel
     
-    let bookRepository: any BookRepository
-    
     init(bookRepository: any BookRepository) {
         self._viewModel = StateObject(wrappedValue: LibraryViewModel(bookRepository: bookRepository))
-        self.bookRepository = bookRepository
     }
     
     var body: some View {

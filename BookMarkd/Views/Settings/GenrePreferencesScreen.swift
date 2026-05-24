@@ -80,17 +80,10 @@ enum BookGenre: String, CaseIterable, Identifiable {
 }
 
 struct GenrePreferencesScreen: View {
-    @State private var searchedGenre: String = ""
-    @State private var selectedGenres: [BookGenre] = []
+    @StateObject private var viewModel: GenrePreferenceViewModel
     
-    let preferenceRepository: any UserPreferenceRepository
-    
-    var allBookGenres: [BookGenre] {
-        if searchedGenre.isEmpty {
-            return BookGenre.allCases
-        } else {
-            return BookGenre.allCases.filter { $0.rawValue.contains(searchedGenre) }
-        }
+    init(preferenceRepository: any UserPreferenceRepository) {
+        self._viewModel = StateObject(wrappedValue: GenrePreferenceViewModel(preferenceRepository: preferenceRepository))
     }
     
     let columns = [
@@ -111,7 +104,7 @@ struct GenrePreferencesScreen: View {
             
             HStack {
                 Image(systemName: "magnifyingglass")
-                TextField("Search for your genre...", text: $searchedGenre)
+                TextField("Search for your genre...", text: $viewModel.searchedGenre)
             }
             .fontDesign(.serif)
             .padding()
@@ -123,9 +116,11 @@ struct GenrePreferencesScreen: View {
             
             ScrollView {
                 LazyVGrid(columns: columns, spacing: 15) {
-                    ForEach(self.allBookGenres) { genre in
+                    ForEach(self.viewModel.genres) { genre in
                         Button {
-                            self.toggleGenreSelection(genre: genre)
+                            withAnimation {
+                                self.viewModel.toggleGenreSelection(genre: genre)
+                            }
                         } label: {
                             VStack(alignment: .center, spacing: 15) {
                                 Image(systemName: genre.icon)
@@ -141,7 +136,7 @@ struct GenrePreferencesScreen: View {
                             .padding()
                             .overlay {
                                 RoundedRectangle(cornerRadius: 10)
-                                    .stroke(self.isGenreSelected(genre: genre) ? Color.secondaryBrand : .clear,
+                                    .stroke(self.viewModel.isGenreSelected(genre: genre) ? Color.secondaryBrand : .clear,
                                             lineWidth: 1)
                                     .fill(Color.secondaryBrand.opacity(0.1))
                             }
@@ -156,7 +151,7 @@ struct GenrePreferencesScreen: View {
             
             Button {
                 do {
-                    try self.preferenceRepository.saveGenres(self.selectedGenres.map { $0.rawValue })
+                    try self.viewModel.preferenceRepository.saveGenres(self.viewModel.selectedGenres.map { $0.rawValue })
                     HapticManager.shared.trigger(.success)
                 } catch {
                     
@@ -172,17 +167,16 @@ struct GenrePreferencesScreen: View {
                             .fill(Color.accent)
                     }
             }
-            .opacity(self.shouldEnableSaveButton() ? 1 : 0.3)
-            .disabled(!self.shouldEnableSaveButton())
+            .opacity(self.viewModel.shouldEnableSaveButton() ? 1 : 0.3)
+            .disabled(!self.viewModel.shouldEnableSaveButton())
             
             Spacer()
         }
         .padding()
         .frame(maxWidth: .infinity)
         .navigationTitle("Genre Preferences")
-//        .navigationBarTitleDisplayMode(.inline)
         .onAppear {
-            let selectedGenres = try? self.preferenceRepository.loadOrCreate().preferedGenres.map { BookGenre(rawValue: $0) }
+            let selectedGenres = try? self.viewModel.preferenceRepository.loadOrCreate().preferedGenres.map { BookGenre(rawValue: $0) }
             var genres: [BookGenre] = []
             for genre in selectedGenres ?? [] {
                 if let genre {
@@ -190,38 +184,7 @@ struct GenrePreferencesScreen: View {
                 }
             }
             
-            self.selectedGenres = genres
+            self.viewModel.selectedGenres = genres
         }
-    }
-    
-    func isGenreSelected(genre: BookGenre) -> Bool {
-        return selectedGenres.contains(genre)
-    }
-    
-    func toggleGenreSelection(genre: BookGenre) {
-        if selectedGenres.contains(genre) {
-            withAnimation {
-                selectedGenres.removeAll(where: { $0 == genre })
-            }
-        } else {
-            withAnimation {
-                selectedGenres.append(genre)
-            }
-        }
-    }
-    
-    func shouldEnableSaveButton() -> Bool {
-        // If no genre is selected return false
-        if selectedGenres.isEmpty { return false }
-        
-        let currentlySavedGenres = try? self.preferenceRepository.loadOrCreate().preferedGenres.sorted()
-        let selectedGenresSorted = self.selectedGenres.map({ $0.rawValue }).sorted()
-        
-        // If saved genres matches the currently selected genres return false
-        if currentlySavedGenres == selectedGenresSorted {
-            return false
-        }
-        
-        return true
     }
 }

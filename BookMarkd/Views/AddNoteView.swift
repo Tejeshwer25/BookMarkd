@@ -15,7 +15,6 @@ struct AddNoteView: View {
     
     let inEditMode: Bool = false
     let book: BookModel?
-    let bookRepository: BookRepository
     let router: Router
     
     init(bookRepository: any BookRepository,
@@ -25,7 +24,6 @@ struct AddNoteView: View {
         self._viewModel = StateObject(wrappedValue: AddNoteViewModel(bookRepository: bookRepository))
         self.router = router
         self.quotesModel = quotesModel
-        self.bookRepository = bookRepository
         self.book = book
     }
     
@@ -153,7 +151,7 @@ struct AddNoteView: View {
                 HapticManager.shared.trigger(.success)
                 withAnimation {
                     do {
-                        try self.bookRepository.addQuote(self.quotesModel,
+                        try self.viewModel.bookRepository.addQuote(self.quotesModel,
                                                          toBook: self.book?.id ?? "")
                     } catch {
                         self.viewModel.errorOccurred = true

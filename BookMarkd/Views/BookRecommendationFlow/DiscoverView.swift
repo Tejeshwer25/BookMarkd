@@ -12,10 +12,7 @@ struct DiscoverView: View {
     @EnvironmentObject private var router: Router
     @Query private var booksRead: [BookModel]
     @Query private var preferences: [UserPreferenceModel]
-    
     @StateObject private var viewModel = BookRecommendationViewModel()
-    
-    let bookRepository: any BookRepository
     
     var body: some View {
         ScrollView {

@@ -36,7 +36,7 @@ struct ContentView: View {
                     bookRepository: bookRepository,
                     bookService: bookService,
                     preferenceRepository: preferenceRepository) {
-                        DiscoverView(bookRepository: bookRepository)
+                        DiscoverView()
                 }
             }
             
