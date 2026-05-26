@@ -24,16 +24,14 @@ struct BookDetailView: View {
     }
     
     var body: some View {
-        let book = try? viewModel.fetchBookDataFromRepo(bookId)
-        
         ScrollView {
             VStack(alignment: .leading) {
                 bookInfoView
                 
                 if self.viewModel.book?.readState == .reading {
-                    NotesAndQuotesView(notesList: book?.quotes ?? [],
+                    NotesAndQuotesView(notesList: self.viewModel.book?.quotes ?? [],
                                        showAddNoteButton: true,
-                                       bookReadingStatus: book?.readState) { quoteAction, quote in
+                                       bookReadingStatus: self.viewModel.book?.readState) { quoteAction, quote in
                         self.viewModel.performQuoteAction(quoteAction, on: quote)
                     }
                 } else if self.viewModel.book?.readState == .wishlist {
@@ -53,13 +51,13 @@ struct BookDetailView: View {
                             .font(.title3)
                             .fontWeight(.bold)
                         
-                        Text(book?.bookReview ?? "")
+                        Text(self.viewModel.book?.bookReview ?? "")
                             .font(.callout)
                     }
                     .padding()
                     
-                    if book?.quotes.isEmpty == false {
-                        NotesAndQuotesView(notesList:  book?.quotes ?? [],
+                    if self.viewModel.book?.quotes.isEmpty == false {
+                        NotesAndQuotesView(notesList:  self.viewModel.book?.quotes ?? [],
                                            showAddNoteButton: false,
                                            bookReadingStatus: try? viewModel.fetchBookDataFromRepo(bookId)?.readState) { quoteAction, quote in
                             self.viewModel.performQuoteAction(quoteAction, on: quote)
