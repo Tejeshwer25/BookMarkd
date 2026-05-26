@@ -120,7 +120,9 @@ struct AddNoteView: View {
         .sheet(isPresented: $viewModel.showCamera) {
             CameraCaptureView(
                 onImageCaptured: { image in
-                    Task { await handleCapturedImage(image) }
+                    Task {
+                        self.quotesModel.text = await self.viewModel.handleCapturedImage(image)
+                    }
                 }
             )
         }
@@ -150,44 +152,12 @@ struct AddNoteView: View {
             if !self.inEditMode {
                 HapticManager.shared.trigger(.success)
                 withAnimation {
-                    do {
-                        try self.viewModel.bookRepository.addQuote(self.quotesModel,
-                                                         toBook: self.book?.id ?? "")
-                    } catch {
-                        self.viewModel.errorOccurred = true
-                        
-                        guard let err = error as? PersistenceError else {
-                            self.viewModel.errorMessage = error.localizedDescription
-                            return
-                        }
-                        
-                        self.viewModel.errorMessage = err.errorDescription ?? error.localizedDescription
-                    }
+                    self.viewModel.addQuoteToBook(quote: quotesModel, book: book)
                 }
             }
             dismiss()
         } label: {
             Text(self.inEditMode ? "Edit" : "Save")
-        }
-    }
-    
-    private func handleCapturedImage(_ image: UIImage) async {
-        await MainActor.run {
-            self.viewModel.isProcessingCapture = true
-        }
-        
-        do {
-            let cameraManager = CameraManager()
-            self.quotesModel.text = try await cameraManager.handleCapturedImage(image)
-        }
-        catch {
-            await MainActor.run {
-                self.viewModel.processingError = error.localizedDescription
-            }
-        }
-        
-        await MainActor.run {
-            self.viewModel.isProcessingCapture = false
         }
     }
 }

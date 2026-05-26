@@ -16,7 +16,7 @@ class LibraryViewModel: ObservableObject {
     @Published var errorOccurred: Bool = false
     @Published var errorMessage: String?
     
-    let bookRepository: any BookRepository
+    private let bookRepository: any BookRepository
     
     init(bookRepository: any BookRepository) {
         self.bookRepository = bookRepository

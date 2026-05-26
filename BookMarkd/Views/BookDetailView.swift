@@ -61,7 +61,7 @@ struct BookDetailView: View {
                     if book?.quotes.isEmpty == false {
                         NotesAndQuotesView(notesList:  book?.quotes ?? [],
                                            showAddNoteButton: false,
-                                           bookReadingStatus: try? viewModel.bookRepository.book(id: bookId)?.readState) { quoteAction, quote in
+                                           bookReadingStatus: try? viewModel.fetchBookDataFromRepo(bookId)?.readState) { quoteAction, quote in
                             self.viewModel.performQuoteAction(quoteAction, on: quote)
                         }
                     }
@@ -94,7 +94,7 @@ struct BookDetailView: View {
             }
         }
         .onAppear {
-            self.viewModel.book = try? viewModel.bookRepository.book(id: bookId)
+            self.viewModel.book = try? viewModel.fetchBookDataFromRepo(bookId)
             if self.viewModel.book?.readState == .unread || self.viewModel.book?.readState == .wishlist {
                 withAnimation {
                     self.viewModel.isPageLoading = true
@@ -140,7 +140,7 @@ struct BookDetailView: View {
                     }
                 } else if self.viewModel.book?.readState == .wishlist {
                     Button("Start Reading") {
-                        try? self.viewModel.bookRepository.updateReadState(.reading, for: bookId)
+                        try? self.viewModel.updateBookReadState(bookID: bookId)
                         self.router.popScreen()
                     }
                     .foregroundStyle(.black)
@@ -248,22 +248,6 @@ struct BookDetailView: View {
             .padding(.vertical, 20)
             .scrollIndicators(.hidden)
         }
-    }
-    
-    func shareImage(_ image: UIImage) {
-        let controller = UIActivityViewController(
-            activityItems: [image],
-            applicationActivities: nil
-        )
-
-        UIApplication.shared
-            .connectedScenes
-            .compactMap { $0 as? UIWindowScene }
-            .first?
-            .windows
-            .first?
-            .rootViewController?
-            .present(controller, animated: true)
     }
 }
 

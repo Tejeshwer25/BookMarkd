@@ -26,7 +26,7 @@ class AddBookManuallyViewModel: ObservableObject {
     @Published var errorMessage: String? = nil
     @Published var extractedBook: BookModel? = nil
     
-    let bookRepository: any BookRepository
+    private let bookRepository: any BookRepository
     
     init(bookRepository: any BookRepository,
          coverImage: Data? = nil) {

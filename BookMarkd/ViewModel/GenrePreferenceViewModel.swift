@@ -11,7 +11,7 @@ import Combine
 class GenrePreferenceViewModel: ObservableObject {
     @Published var searchedGenre: String = ""
     @Published var selectedGenres: [BookGenre] = []
-    let preferenceRepository: any UserPreferenceRepository
+    private let preferenceRepository: any UserPreferenceRepository
     
     var genres: [BookGenre] {
         if searchedGenre.isEmpty {
@@ -50,5 +50,22 @@ class GenrePreferenceViewModel: ObservableObject {
         }
         
         return true
+    }
+    
+    func saveGenresToStorage() throws {
+        try self.preferenceRepository.saveGenres(self.selectedGenres.map { $0.rawValue })
+        HapticManager.shared.trigger(.success)
+    }
+    
+    func loadGenresFromStore() throws {
+        let selectedGenres = try self.preferenceRepository.loadOrCreate().preferedGenres.map { BookGenre(rawValue: $0) }
+        var genres: [BookGenre] = []
+        for genre in selectedGenres {
+            if let genre {
+                genres.append(genre)
+            }
+        }
+        
+        self.selectedGenres = genres
     }
 }

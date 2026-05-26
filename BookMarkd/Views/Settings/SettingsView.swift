@@ -42,7 +42,6 @@ struct SettingsView: View {
             withAnimation {
                 self.router.pushScreen(.genrePreferenceScreen)
             }
-        default: break
         }
     }
 }

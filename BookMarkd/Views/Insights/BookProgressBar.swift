@@ -29,11 +29,3 @@ struct BookProgressBar: View {
         .fontDesign(.serif)
     }
 }
-
-#Preview {
-    BookProgressBar(
-        genreName: "Science Fiction",
-        numberOfBooks: 10,
-        totalBooks: 15
-    )
-}

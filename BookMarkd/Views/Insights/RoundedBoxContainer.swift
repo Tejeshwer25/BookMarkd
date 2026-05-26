@@ -53,7 +53,3 @@ struct RoundedBoxContainer: View {
         }
     }
 }
-
-#Preview {
-    RoundedBoxContainer(icon: "calendar", title: "Books Finished", value: "4")
-}

@@ -151,8 +151,7 @@ struct GenrePreferencesScreen: View {
             
             Button {
                 do {
-                    try self.viewModel.preferenceRepository.saveGenres(self.viewModel.selectedGenres.map { $0.rawValue })
-                    HapticManager.shared.trigger(.success)
+                    try self.viewModel.saveGenresToStorage()
                 } catch {
                     
                 }
@@ -176,15 +175,9 @@ struct GenrePreferencesScreen: View {
         .frame(maxWidth: .infinity)
         .navigationTitle("Genre Preferences")
         .onAppear {
-            let selectedGenres = try? self.viewModel.preferenceRepository.loadOrCreate().preferedGenres.map { BookGenre(rawValue: $0) }
-            var genres: [BookGenre] = []
-            for genre in selectedGenres ?? [] {
-                if let genre {
-                    genres.append(genre)
-                }
-            }
-            
-            self.viewModel.selectedGenres = genres
+            do {
+                try self.viewModel.loadGenresFromStore()
+            } catch { }
         }
     }
 }

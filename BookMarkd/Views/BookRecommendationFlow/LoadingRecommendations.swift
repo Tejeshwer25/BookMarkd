@@ -63,7 +63,3 @@ struct LoadingRecommendations: View {
         }
     }
 }
-
-#Preview {
-    LoadingRecommendations()
-}

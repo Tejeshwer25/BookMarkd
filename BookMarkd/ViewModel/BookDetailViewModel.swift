@@ -26,7 +26,7 @@ class BookDetailViewModel: ObservableObject {
     @Published var noteToShare: QuotesModel? = nil
     
     let bookRepository: any BookRepository
-    let bookService: any BookService
+    private let bookService: any BookService
     
     init(bookRepository: any BookRepository, bookService: any BookService) {
         self.bookRepository = bookRepository
@@ -98,5 +98,9 @@ class BookDetailViewModel: ObservableObject {
     
     func fetchBookDataFromRepo(_ bookID: String) throws -> BookModel? {
         return try bookRepository.book(id: bookID)
+    }
+    
+    func updateBookReadState(bookID: String) throws {
+        try self.bookRepository.updateReadState(.reading, for: bookID)
     }
 }

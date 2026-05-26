@@ -29,7 +29,3 @@ struct RecommendedBooksView: View {
         }
     }
 }
-
-#Preview {
-    RecommendedBooksView()
-}

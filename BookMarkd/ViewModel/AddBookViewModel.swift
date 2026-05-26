@@ -29,8 +29,8 @@ class AddBookViewModel: ObservableObject {
     @Published var showImageCropper: Bool = false
     @Published var pendingCapturedImage: UIImage? = nil
     
-    let bookRepository: any BookRepository
-    let bookService: any BookService
+    private let bookRepository: any BookRepository
+    private let bookService: any BookService
     
     init(bookRepository: BookRepository,
          bookService: BookService,
