@@ -64,6 +64,7 @@ struct AddNoteView: View {
                     self.viewModel.showCamera = true
                 } label: {
                     Image(systemName: "camera.fill")
+                        .accessibilityLabel("Capture note from camera")
                 }
             }
             .padding()

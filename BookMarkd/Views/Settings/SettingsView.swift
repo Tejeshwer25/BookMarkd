@@ -26,6 +26,7 @@ struct SettingsView: View {
                         Text(setting.rawValue)
                         Spacer()
                         Image(systemName: "chevron.right")
+                            .accessibilityLabel("Go to \(setting.rawValue)")
                     }
                 }
                 .buttonStyle(.plain)

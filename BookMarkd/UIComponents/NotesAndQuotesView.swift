@@ -32,6 +32,7 @@ struct NotesAndQuotesView: View {
                             .resizable()
                             .frame(width: 30, height: 30)
                             .foregroundStyle(.white)
+                            .accessibilityLabel("Add Note")
                     }
                 }
             }
@@ -61,6 +62,7 @@ struct NotesAndQuotesView: View {
                                         Image(systemName: "square.and.arrow.up")
                                             .resizable()
                                             .frame(width: 15, height: 20)
+                                            .accessibilityLabel("Share Note")
                                     }
                                     .buttonStyle(.plain)
                                 }
@@ -127,10 +129,4 @@ struct NotesAndQuotesView: View {
         }
         .padding()
     }
-}
-
-#Preview {
-    NotesAndQuotesView(notesList: [
-        .init(id: .init(), noteType: .reflection, text: "hfuiwhf hfuwe uih uuew u", date: .init())
-    ], showAddNoteButton: false, bookReadingStatus: .reading)
 }

@@ -21,6 +21,7 @@ struct CameraCaptureView: View {
                     Image(systemName: "xmark")
                         .frame(width: 80, height: 80)
                         .glassEffect()
+                        .accessibilityLabel("Close camera")
                 }
                 
                 Spacer()
@@ -35,6 +36,7 @@ struct CameraCaptureView: View {
                             Circle()
                                 .stroke(.black, lineWidth: 2)
                         }
+                        .accessibilityLabel("Capture image")
                 }
             }
             .padding(.vertical)

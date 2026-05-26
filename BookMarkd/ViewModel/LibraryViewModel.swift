@@ -81,6 +81,18 @@ class LibraryViewModel: ObservableObject {
         let day = Calendar.current.component(.day, from: finishedAt)
         return "\(strmonth) \(day)"
     }
+    
+    func getBooksFinishedThisYear(bookList: [BookModel]) -> Int {
+        let finishedBooksThisYear = bookList.filter { book in
+            guard let finishedDate = book.finishedAt else { return false }
+            let calendar = Calendar.current
+            let currentYear = calendar.component(.year, from: Date())
+            let bookYear = calendar.component(.year, from: finishedDate)
+            return currentYear == bookYear
+        }
+        
+        return finishedBooksThisYear.count
+    }
 }
 
 extension LibraryViewModel {

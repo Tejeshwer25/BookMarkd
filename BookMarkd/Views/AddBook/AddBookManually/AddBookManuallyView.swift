@@ -169,6 +169,7 @@ struct AddBookManuallyView: View {
                             self.viewModel.showAddGenresSheet.toggle()
                         } label: {
                             Image(systemName: "plus")
+                                .accessibilityLabel("Add Genres")
                         }
                     }
                 }

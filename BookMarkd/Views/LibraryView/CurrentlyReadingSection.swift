@@ -39,6 +39,7 @@ struct CurrentlyReadingSection: View {
                                     Text(book.authorName.joined(separator: ", "))
                                         .padding(.bottom, 5)
                                 }
+                                .accessibilityLabel("\(book.title) card")
                             }
                             .buttonStyle(.plain)
                             .frame(width: 260)

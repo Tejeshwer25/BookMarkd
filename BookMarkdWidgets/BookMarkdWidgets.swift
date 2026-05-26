@@ -151,9 +151,3 @@ struct BookMarkdWidgets: Widget {
         }
     }
 }
-
-#Preview(as: .systemSmall) {
-    BookMarkdWidgets()
-} timeline: {
-    SimpleEntry(date: .now, quote: "Test quote")
-}

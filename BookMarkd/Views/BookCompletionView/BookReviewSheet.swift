@@ -34,6 +34,7 @@ struct BookReviewSheet: View {
                     }
                 } label: {
                     Image(systemName: "checkmark")
+                        .accessibilityLabel("Save review")
                 }
             }
         }

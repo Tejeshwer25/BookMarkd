@@ -93,6 +93,7 @@ struct InsightsView: View {
                     self.router.pushScreen(.settings)
                 } label: {
                     Image(systemName: "gear")
+                        .accessibilityLabel("Settings")
                 }
             }
         }

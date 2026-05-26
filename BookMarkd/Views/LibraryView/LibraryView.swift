@@ -22,6 +22,8 @@ struct LibraryView: View {
         let currentlyReadingBookList = self.viewModel.getBookListFor(readingState: .reading, from: books)
         let finishedBooksList = self.viewModel.getBookListFor(readingState: .read, from: self.books)
         let wishlistedBooks = self.viewModel.getBookListFor(readingState: .wishlist, from: self.books)
+        let finishedBooksThisYear = self.viewModel.getBooksFinishedThisYear(bookList: finishedBooksList)
+        
         
         if viewToBeShown == .noBooksPresent {
             self.noBookView
@@ -29,7 +31,7 @@ struct LibraryView: View {
             ScrollView {
                 VStack(alignment: .leading) {
                     HStack {
-                        Text("\(self.books.count) books | \(finishedBooksList.count) finished this year")
+                        Text("\(self.books.count) books | \(finishedBooksThisYear) finished this year")
                     }
                     .fontDesign(.serif)
                     .padding(.horizontal)
@@ -73,6 +75,7 @@ struct LibraryView: View {
                         self.router.pushScreen(.addBookScreen)
                     } label: {
                         Image(systemName: "plus")
+                            .accessibilityLabel("Add book")
                     }
                 }
             }

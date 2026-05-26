@@ -21,7 +21,6 @@ class AddBookManuallyViewModel: ObservableObject {
     @Published var shouldGenerateUsingAI: Bool = false
     @Published var coverImageData: Data? = nil
     @Published var showAddGenresSheet: Bool = false
-    @Published var extractedText: String = ""
     @Published var errorOccured: Bool = false
     @Published var errorMessage: String? = nil
     

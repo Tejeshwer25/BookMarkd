@@ -39,6 +39,7 @@ struct AddBookSearchResults: View {
                             .resizable()
                             .frame(width: 20, height: 25)
                             .contentTransition(.symbolEffect(.automatic))
+                            .accessibilityLabel("Add to wishlist")
                     }
                     .buttonStyle(.plain)
                 }

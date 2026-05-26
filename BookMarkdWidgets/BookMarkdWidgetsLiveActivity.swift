@@ -71,10 +71,3 @@ extension BookMarkdWidgetsAttributes.ContentState {
          BookMarkdWidgetsAttributes.ContentState(emoji: "🤩")
      }
 }
-
-#Preview("Notification", as: .content, using: BookMarkdWidgetsAttributes.preview) {
-   BookMarkdWidgetsLiveActivity()
-} contentStates: {
-    BookMarkdWidgetsAttributes.ContentState.smiley
-    BookMarkdWidgetsAttributes.ContentState.starEyes
-}

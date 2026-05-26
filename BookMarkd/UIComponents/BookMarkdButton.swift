@@ -72,12 +72,3 @@ struct RoundedRectangleButton: View {
         }
     }
 }
-
-#Preview {
-    RoundedRectangleButton(buttonText: "hi",
-                           imageName: "book",
-                           buttonFillColor: .red,
-                           buttonTextColor: .green) {
-        
-    }
-}

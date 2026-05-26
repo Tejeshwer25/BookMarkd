@@ -37,6 +37,7 @@ struct RecommendedBookComponent: View {
                         .resizable()
                         .frame(width: 30, height: 30)
                         .foregroundStyle(Color.accent)
+                        .accessibilityLabel("Add to wishlist")
                 }
                 .buttonStyle(.plain)
             }
