@@ -24,14 +24,19 @@ class AddBookManuallyViewModel: ObservableObject {
     @Published var extractedText: String = ""
     @Published var errorOccured: Bool = false
     @Published var errorMessage: String? = nil
-    @Published var extractedBook: BookModel? = nil
     
     private let bookRepository: any BookRepository
     
     init(bookRepository: any BookRepository,
-         coverImage: Data? = nil) {
+         bookToAdd: BookModel? = nil) {
         self.bookRepository = bookRepository
-        self.coverImageData = coverImage
+        
+        if let bookToAdd {
+            self.bookTitle = bookToAdd.title
+            self.authorName = bookToAdd.authorName.first ?? ""
+            self.bookDescription = bookToAdd.bookDescription ?? ""
+            self.tags = bookToAdd.themes?.compactMap { BookGenre(rawValue: $0) } ?? []
+        }
     }
     
     
@@ -75,57 +80,6 @@ class AddBookManuallyViewModel: ObservableObject {
             } else {
                 self.errorMessage = error.localizedDescription
             }
-        }
-    }
-    
-    /// Method to extract text from imported image
-    /// - Parameter image: imported image
-    func extractText(from image: UIImage) throws {
-        guard let cgImage = image.cgImage else { return }
-        
-        // Set up the request for text recognition
-        let request = VNRecognizeTextRequest { request, error in
-            if let error = error {
-                self.errorMessage = "Cover recognition failed: \(error.localizedDescription)"
-                self.errorOccured = true
-                return
-            }
-            
-            // Process the results from the Vision request
-            if let observations = request.results as? [VNRecognizedTextObservation] {
-                // Extract the top-most recognized text
-                var fullText = ""
-                for observation in observations {
-                    guard let topCandidate = observation.topCandidates(1).first else { continue }
-                    fullText += topCandidate.string + "\n"
-                }
-                
-                Task {
-                    do {
-                        let extractedBook = try await RecommendationService().getBookDetailsFromBookCover(for: fullText)
-                        self.extractedBook = extractedBook
-                    } catch {
-                        if let error = error as? FoundationModelErrors {
-                            self.errorMessage = error.errorDescription
-                        } else {
-                            self.errorMessage = error.localizedDescription
-                        }
-                        self.errorOccured = true
-                        throw error
-                    }
-                }
-                
-            }
-        }
-        
-        // Perform the text recognition
-        let requestHandler = VNImageRequestHandler(cgImage: cgImage, options: [:])
-        do {
-            try requestHandler.perform([request])
-        } catch {
-            self.errorMessage = "Cover recognition failed: \(error.localizedDescription)"
-            self.errorOccured = true
-            throw error
         }
     }
 }

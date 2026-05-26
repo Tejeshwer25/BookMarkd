@@ -19,7 +19,7 @@ enum NavigationRoutes: Hashable {
     case genrePreferenceScreen
     case addBook(query: String)
     case settings
-    case addBookForm(imageURL: URL?)
+    case addBookForm(book: BookModel?)
     case bookListScreen(bookList: [BookModel])
 }
 

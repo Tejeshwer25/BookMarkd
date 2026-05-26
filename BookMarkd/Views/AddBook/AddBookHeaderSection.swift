@@ -61,7 +61,7 @@ struct AddBookHeaderSection: View {
                                    buttonFillColor: Color.neutralButton,
                                    buttonTextColor: Color.accent,
                                    cornerRadius: 8) {
-                self.router.pushScreen(.addBookForm(imageURL: nil))
+                self.router.pushScreen(.addBookForm(book: nil))
             }
         }
         .frame(maxWidth: .infinity)
@@ -73,8 +73,7 @@ struct AddBookHeaderSection: View {
                 do {
                     if let data = try await newValue.loadTransferable(type: Data.self),
                        let uiImage = UIImage(data: data) {
-                        let url = try viewModel.saveTempImage(uiImage)
-                        self.router.pushScreen(.addBookForm(imageURL: url))
+                        await self.handleCapturedImage(uiImage)
                     }
                 } catch {
                     viewModel.coverProcessingError = error.localizedDescription
@@ -110,15 +109,10 @@ struct AddBookHeaderSection: View {
         
         do {
             let (url, extractedBook) = try await viewModel.handleCapturedImage(image)
+            extractedBook.coverImageURL = url.absoluteString
             
             await MainActor.run {
-                self.router.pushScreen(.addBookForm(imageURL: url))
-                NotificationCenter.default.post(name: Notification.Name("PrefillAddBookFields"), object: nil, userInfo: [
-                    "title": extractedBook.title,
-                    "author": extractedBook.authorName,
-                    "description": extractedBook.bookDescription ?? "",
-                    "themes": extractedBook.themes ?? []
-                ])
+                self.router.pushScreen(.addBookForm(book: extractedBook))
             }
         } catch {
             await MainActor.run {

@@ -20,18 +20,16 @@ struct AddBookManuallyView: View {
     @State private var coverImage: Image? = nil
     @StateObject private var viewModel: AddBookManuallyViewModel
     
-    init(bookRepository: any BookRepository, bookImageURL: URL? = nil) {
-        if let bookImageURL,
-           let data = try? Data(contentsOf: bookImageURL),
+    init(bookRepository: any BookRepository, bookToAdd: BookModel? = nil) {
+        if let imageURLString = bookToAdd?.coverImageURL,
+           let imageURL = URL(string: imageURLString),
+           let data = try? Data(contentsOf: imageURL),
            let uiImage = UIImage(data: data) {
-            self._coverImage = State(initialValue: Image(uiImage: uiImage))
-            self._viewModel = StateObject(wrappedValue: AddBookManuallyViewModel(bookRepository: bookRepository,
-                                                                                 coverImage: data))
-        } else {
-            self._coverImage = State(initialValue: nil)
-            self._viewModel = StateObject(wrappedValue: AddBookManuallyViewModel(bookRepository: bookRepository,
-                                                                                 coverImage: nil))
+            self.coverImage = Image(uiImage: uiImage)
         }
+        
+        self._viewModel = StateObject(wrappedValue: AddBookManuallyViewModel(bookRepository: bookRepository,
+                                                                             bookToAdd: bookToAdd))
     }
     
     var body: some View {
@@ -152,41 +150,8 @@ struct AddBookManuallyView: View {
                 .presentationDetents([.medium])
             }
         }
-        .onAppear {
-            if let coverImage {
-                do {
-                    try self.viewModel.extractText(from: coverImage.renderAsImage())
-                } catch {
-                    print(error.localizedDescription)
-                }
-            }
-        }
         .alert("Error", isPresented: $viewModel.errorOccured) {} message: {
             Text(self.viewModel.errorMessage ?? "")
-        }
-        .onReceive(NotificationCenter.default.publisher(for: Notification.Name("PrefillAddBookFields"))) { output in
-            if let info = output.userInfo as? [String: Any] {
-                let title = info["title"] as? String
-                let author = info["author"] as? String
-                let description = info["description"] as? String
-                let themes = info["themes"] as? [String]
-                withAnimation {
-                    if let title { self.viewModel.bookTitle = title }
-                    if let author { self.viewModel.authorName = author }
-                    if let description { self.viewModel.bookDescription = description }
-                    if let themes { self.viewModel.tags = themes.compactMap { BookGenre(rawValue: $0) } }
-                }
-            }
-        }
-        .onChange(of: self.viewModel.extractedBook) { _, extractedBook in
-            guard let extractedBook else { return }
-            
-            withAnimation {
-                self.viewModel.bookTitle = extractedBook.title
-                self.viewModel.authorName = extractedBook.authorName.first ?? ""
-                self.viewModel.bookDescription = extractedBook.bookDescription ?? ""
-                self.viewModel.tags = (extractedBook.themes?.map { BookGenre(rawValue: $0) } as? [BookGenre]) ?? []
-            }
         }
     }
     
