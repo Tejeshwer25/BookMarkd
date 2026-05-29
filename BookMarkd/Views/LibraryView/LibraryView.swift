@@ -24,7 +24,6 @@ struct LibraryView: View {
         let wishlistedBooks = self.viewModel.getBookListFor(readingState: .wishlist, from: self.books)
         let finishedBooksThisYear = self.viewModel.getBooksFinishedThisYear(bookList: finishedBooksList)
         
-        
         if viewToBeShown == .noBooksPresent {
             self.noBookView
         } else {
@@ -33,9 +32,10 @@ struct LibraryView: View {
                     HStack {
                         Text("\(self.books.count) books | \(finishedBooksThisYear) finished this year")
                     }
-                    .fontDesign(.serif)
                     .padding(.horizontal)
                     .padding(.bottom, 12)
+                    .font(EditorialSans.label)
+                    .foregroundStyle(Color.secondaryText)
                     
                     VStack {}
                         .frame(height: 1)
@@ -49,11 +49,13 @@ struct LibraryView: View {
                     }
                                             .padding()
                     
-                    FinishedBooksSection(viewModel: self.viewModel,
-                                         finishedBookList: finishedBooksList,
-                                         onBookComponentTap: { self.router.pushScreen(.bookDetails(id: $0))},
-                                         viewAllFinishedBooks: { self.router.pushScreen(.bookListScreen(bookList: finishedBooksList)) })
-                    .padding()
+                    if finishedBooksList.count > 0 {
+                        FinishedBooksSection(viewModel: self.viewModel,
+                                             finishedBookList: finishedBooksList,
+                                             onBookComponentTap: { self.router.pushScreen(.bookDetails(id: $0))},
+                                             viewAllFinishedBooks: { self.router.pushScreen(.bookListScreen(bookList: finishedBooksList)) })
+                        .padding()
+                    }
                     
                     WishlistSection(viewModel: self.viewModel,
                                     wishlishtedBooks: wishlistedBooks,
@@ -110,7 +112,7 @@ struct LibraryView: View {
                 .padding()
                 .background {
                     RoundedRectangle(cornerRadius: 8)
-                        .foregroundStyle(Color.accent)
+                        .foregroundStyle(Color.PRIMARY_BRAND)
                 }
             }
             .padding()

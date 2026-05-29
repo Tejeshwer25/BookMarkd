@@ -20,7 +20,7 @@ struct RoundedBoxContainer: View {
                 Image(systemName: icon)
                     .resizable()
                     .frame(width: 18, height: 20)
-                    .foregroundStyle(Color.accent)
+                    .foregroundStyle(Color.PRIMARY_BRAND)
                 
                 Spacer()
                 

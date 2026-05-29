@@ -189,8 +189,8 @@ struct AddBookManuallyView: View {
                                     buttonText: item.rawValue,
                                     imageName: nil,
                                     buttonFillColor: .primaryBrand,
-                                    buttonTextColor: .neutral,
-                                    buttonBorderColor: .neutral,
+                                    buttonTextColor: .SURFACE,
+                                    buttonBorderColor: .SURFACE,
                                     buttonPaddingHorizontal: 8,
                                     buttonPaddingVertical: 8
                                 ) {

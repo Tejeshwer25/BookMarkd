@@ -56,7 +56,7 @@ struct BookMarkdWidgetsEntryView : View {
                         .resizable()
                         .frame(width: 27, height: 20)
                         .opacity(0.25)
-                        .foregroundStyle(.accent)
+                        .foregroundStyle(Color.PRIMARY_BRAND)
                     Spacer()
                 }
                 
@@ -72,7 +72,7 @@ struct BookMarkdWidgetsEntryView : View {
                         .resizable()
                         .frame(width: 27, height: 20)
                         .opacity(0.25)
-                        .foregroundStyle(.accent)
+                        .foregroundStyle(Color.PRIMARY_BRAND)
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .init(horizontal: .leading, vertical: .top))
@@ -83,7 +83,7 @@ struct BookMarkdWidgetsEntryView : View {
                         .resizable()
                         .frame(width: 27, height: 20)
                         .opacity(0.25)
-                        .foregroundStyle(.accent)
+                        .foregroundStyle(Color.PRIMARY_BRAND)
                     Spacer()
                 }
                 
@@ -100,7 +100,7 @@ struct BookMarkdWidgetsEntryView : View {
                     Text("\(book.title) by \(book.authorName.joined(separator: ", "))")
                         .font(.caption)
                         .fontDesign(.serif)
-                        .foregroundStyle(.accent)
+                        .foregroundStyle(Color.PRIMARY_BRAND)
                 }
                 Spacer()
                 
@@ -110,7 +110,7 @@ struct BookMarkdWidgetsEntryView : View {
                         .resizable()
                         .frame(width: 27, height: 20)
                         .opacity(0.25)
-                        .foregroundStyle(.accent)
+                        .foregroundStyle(Color.PRIMARY_BRAND)
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .init(horizontal: .leading, vertical: .top))

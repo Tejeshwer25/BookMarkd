@@ -42,12 +42,12 @@ struct DiscoverView: View {
                         Text("Regenerate")
                         Image(systemName: "arrow.clockwise")
                     }
-                    .foregroundStyle(.neutralButton)
+                    .foregroundStyle(Color.neutralButton)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical)
                     .background {
                         RoundedRectangle(cornerRadius: 5)
-                            .fill(.accent)
+                            .fill(Color.PRIMARY_BRAND)
                     }
                 }
                 .padding(.vertical)

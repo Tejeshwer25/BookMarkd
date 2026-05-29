@@ -16,7 +16,7 @@ struct RecommendedBooksView: View {
                 .padding()
                 .overlay {
                     Circle()
-                        .stroke(.secondaryBrand)
+                        .stroke(Color.secondaryBrand)
                 }
             
             Text("Discovery Complete")

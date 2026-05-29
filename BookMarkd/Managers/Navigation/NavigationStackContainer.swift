@@ -21,7 +21,7 @@ struct NavigationStackContainer<Content: View>: View {
         NavigationStack(path: $router.currentScreen) {
             content()
                 .frame(maxHeight: .infinity)
-                .background(Color.neutral)
+                .background(Color.SURFACE)
                 .toolbarVisibility(self.shouldHideTabbar(), for: .tabBar)
                 .navigationDestination(for: NavigationRoutes.self) { route in
                     switch route {
@@ -29,39 +29,39 @@ struct NavigationStackContainer<Content: View>: View {
                         BookDetailView(bookId: id,
                                        bookRepository: bookRepository,
                                        bookService: bookService)
-                        .background(Color.neutral)
+                        .background(Color.SURFACE)
                     case .bookDetails(let id):
                         BookDetailView(bookId: id,
                                        bookRepository: bookRepository,
                                        bookService: bookService)
                         .navigationTransition(.zoom(sourceID: id, in: namespace))
-                        .background(Color.neutral)
+                        .background(Color.SURFACE)
                     case .searchResults(query: _):
                         AddBookView(query: .constant(""), bookRepository: bookRepository, bookService: bookService)
                     case .bookFinishScreen(let id):
                         FinishBookView(bookID: id,
                                        bookRepository: bookRepository)
-                        .background(Color.neutral)
+                        .background(Color.SURFACE)
                     case .addBookScreen:
                         AddBookView(query: .constant(""),
                                     bookRepository: bookRepository, bookService: bookService)
-                        .background(Color.neutral)
+                        .background(Color.SURFACE)
                     case .bookWishlistScreen:
                         BookWishlistView()
-                            .background(Color.neutral)
+                            .background(Color.SURFACE)
                     case .genrePreferenceScreen:
                         GenrePreferencesScreen(preferenceRepository: preferenceRepository)
-                            .background(Color.neutral)
+                            .background(Color.SURFACE)
                     case .addBook(let query):
                         AddBookView(query: .constant(query), bookRepository: bookRepository, bookService: bookService)
-                            .background(Color.neutral)
+                            .background(Color.SURFACE)
                     case .settings:
                         SettingsView()
-                            .background(Color.neutral)
+                            .background(Color.SURFACE)
                     case .addBookForm(let book):
                         AddBookManuallyView(bookRepository: bookRepository,
                                             bookToAdd: book)
-                            .background(Color.neutral)
+                            .background(Color.SURFACE)
                     case .bookListScreen(let bookList):
                         BookListView(bookList: bookList)
                     }

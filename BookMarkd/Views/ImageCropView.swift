@@ -20,7 +20,7 @@ struct ImageCropView: View {
     var body: some View {
         GeometryReader { geo in
             ZStack {
-                Color.black.ignoresSafeArea()
+                Color.SURFACE.ignoresSafeArea()
 
                 // Crop box
                 let cropRect = cropFrame(in: geo.size, aspectRatio: aspectRatio)
@@ -34,7 +34,7 @@ struct ImageCropView: View {
 
                 // Dimmed overlay except crop area
                 Rectangle()
-                    .fill(Color.black.opacity(0.5))
+                    .fill(Color.SURFACE.opacity(0.5))
                     .mask(
                         CropMask(cropRect: cropRect)
                             .fill(style: FillStyle(eoFill: true))

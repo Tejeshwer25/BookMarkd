@@ -134,7 +134,7 @@ struct BookDetailView: View {
                     .padding()
                     .background {
                         Capsule()
-                            .foregroundStyle(.accent)
+                            .foregroundStyle(Color.PRIMARY_BRAND)
                     }
                 } else if self.viewModel.book?.readState == .wishlist {
                     Button("Start Reading") {
@@ -146,7 +146,7 @@ struct BookDetailView: View {
                     .padding()
                     .background {
                         Capsule()
-                            .foregroundStyle(.accent)
+                            .foregroundStyle(Color.PRIMARY_BRAND)
                     }
                     .padding(.top)
                 } else if self.viewModel.book?.readState == .read {
@@ -156,7 +156,7 @@ struct BookDetailView: View {
                                 Image(systemName: "star.fill")
                                     .resizable()
                                     .frame(width: 25, height: 25)
-                                    .foregroundStyle(.secondaryBrand)
+                                    .foregroundStyle(Color.secondaryBrand)
                             } else {
                                 Image(systemName: "star")
                                     .resizable()
@@ -203,12 +203,12 @@ struct BookDetailView: View {
                     }
                 }
                 .font(.callout)
-                .foregroundStyle(.primary)
+                .foregroundStyle(Color.ON_SURFACE)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical)
                 .background {
                     RoundedRectangle(cornerRadius: 10)
-                        .foregroundStyle(.neutralButton.opacity(0.15))
+                        .foregroundStyle(Color.neutralButton.opacity(0.15))
                 }
             }
         }

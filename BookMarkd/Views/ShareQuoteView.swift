@@ -144,7 +144,7 @@ struct ShareableCardView: View {
                         .multilineTextAlignment(.center)
                     
                     VStack {
-                        Color.black.opacity(0.5)
+                        Color.SURFACE.opacity(0.5)
                             .frame(height: 0.34)
                             .padding(.horizontal)
                         

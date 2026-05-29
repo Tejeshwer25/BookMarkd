@@ -19,6 +19,8 @@ struct WishlistSection: View {
         VStack(alignment: .leading) {
             HStack {
                 Text("Wishlist")
+                    .font(EditorialSerif.displayMedium)
+                    .foregroundStyle(Color.ON_SURFACE)
                 
                 Spacer()
                 
@@ -37,13 +39,12 @@ struct WishlistSection: View {
             if self.wishlishtedBooks.isEmpty {
                 self.emptyFinishedBooksView
             } else {
-                self.finishedBookView
+                self.wishlistedBooksView
             }
         }
-        .fontDesign(.serif)
     }
     
-    var finishedBookView: some View {
+    var wishlistedBooksView: some View {
         VStack(alignment: .leading) {
             ScrollView(.horizontal) {
                 HStack(alignment: .top, spacing: 25) {
@@ -55,13 +56,17 @@ struct WishlistSection: View {
                                 BookImage(bookImageURL: book.coverImageURL ?? "",
                                           bookImageData: book.coverImageData,
                                           bookTitle: book.title,
-                                          imageFrame: (103, 137))
+                                          imageFrame: (125, 175))
                                 
                                 VStack(alignment: .leading) {
                                     Text(book.title)
-                                        .font(.headline)
+                                        .font(EditorialSerif.headlineMedium)
+                                        .foregroundStyle(Color.ON_SURFACE)
+                                        .lineLimit(2)
                                     
                                     Text(book.authorName.joined(separator: ", "))
+                                        .font(EditorialSans.label)
+                                        .foregroundStyle(Color.SECONDARY_TEXT)
                                 }
                             }
                             .frame(width: 125)

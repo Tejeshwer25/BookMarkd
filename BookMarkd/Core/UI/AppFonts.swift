@@ -8,11 +8,13 @@
 import SwiftUI
 
 enum EditorialSerif {
-    static let displayLarge = Font.custom("Newsreader-SemiBold", size: 34, relativeTo: .largeTitle)
-    static let displayMedium = Font.custom("Newsreader-SemiBold", size: 28, relativeTo: .title)
-    static let headlineLarge = Font.custom("Newsreader-SemiBold", size: 22, relativeTo: .title2)
-    static let headlineMedium = Font.custom("Newsreader-Regular", size: 18, relativeTo: .title3)
-    static let quote = Font.custom("Newsreader-Regular", size: 20, relativeTo: .title3)
+    static let displayLarge = Font.custom("Newsreader9pt-SemiBold", size: 34, relativeTo: .largeTitle)
+    static let displayMedium = Font.custom("Newsreader9pt-SemiBold", size: 28, relativeTo: .title)
+    static let headlineLarge = Font.custom("Newsreader9pt-SemiBold", size: 22, relativeTo: .title2)
+    static let headlineMedium = Font.custom("Newsreader9pt-Regular", size: 18, relativeTo: .title3)
+    static let quote = Font.custom("Newsreader9pt-Regular", size: 20, relativeTo: .title3)
+    static let displayHero   = Font.custom("Newsreader9pt-SemiBold", size: 56)
+    static let emptyState    = Font.custom("Newsreader9pt-Regular",  size: 24, relativeTo: .title2)
 }
 
 enum EditorialSans {

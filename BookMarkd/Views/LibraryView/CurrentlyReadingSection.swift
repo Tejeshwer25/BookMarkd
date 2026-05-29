@@ -16,6 +16,8 @@ struct CurrentlyReadingSection: View {
         VStack(alignment: .leading) {
             Text("Currently Reading")
                 .padding(.bottom, 16)
+                .font(EditorialSerif.displayMedium)
+                .foregroundStyle(Color.ON_SURFACE)
             
             if currentlyReadingBookList.isEmpty {
                 emptyCurrentlyReadingView
@@ -34,10 +36,13 @@ struct CurrentlyReadingSection: View {
                                         .padding(.bottom, 12)
                                     
                                     Text(book.title)
-                                        .font(.title3)
+                                        .font(EditorialSerif.headlineLarge)
+                                        .foregroundStyle(Color.ON_SURFACE)
                                     
                                     Text(book.authorName.joined(separator: ", "))
                                         .padding(.bottom, 5)
+                                        .font(EditorialSans.label)
+                                        .foregroundStyle(Color.SECONDARY_TEXT)
                                 }
                                 .accessibilityLabel("\(book.title) card")
                             }
@@ -49,7 +54,6 @@ struct CurrentlyReadingSection: View {
             }
         }
         .frame(maxWidth: .infinity)
-        .fontDesign(.serif)
     }
     
     var emptyCurrentlyReadingView: some View {

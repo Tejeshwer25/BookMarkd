@@ -22,7 +22,7 @@ struct RadioButton: View {
         } label: {
             Text(self.noteType.text)
                 .font(.callout)
-                .foregroundStyle(isSelected ? .neutralButton : .primaryBrand)
+                .foregroundStyle(isSelected ? Color.neutralButton : .primaryBrand)
                 .padding(.vertical, 5)
                 .padding(.horizontal, 10)
                 .background {

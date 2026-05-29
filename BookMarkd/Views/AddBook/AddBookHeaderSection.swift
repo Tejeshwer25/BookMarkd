@@ -47,7 +47,7 @@ struct AddBookHeaderSection: View {
                 }
                 .font(.Editorial.button)
                 .frame(maxWidth: .infinity)
-                .foregroundStyle(Color.accent)
+                .foregroundStyle(Color.PRIMARY_BRAND)
                 .padding(.horizontal, 18)
                 .padding(.vertical, 18)
                 .background {
@@ -59,7 +59,7 @@ struct AddBookHeaderSection: View {
             RoundedRectangleButton(buttonText: "Edit Manually",
                                    imageName: "rectangle.and.pencil.and.ellipsis",
                                    buttonFillColor: Color.neutralButton,
-                                   buttonTextColor: Color.accent,
+                                   buttonTextColor: Color.PRIMARY_BRAND,
                                    cornerRadius: 8) {
                 self.router.pushScreen(.addBookForm(book: nil))
             }
@@ -89,7 +89,7 @@ struct AddBookHeaderSection: View {
         }
         .fullScreenCover(isPresented: $viewModel.isProcessingCoverCapture) {
             ZStack {
-                Color.black.opacity(0.5).ignoresSafeArea()
+                Color.SURFACE_LOW.opacity(0.5).ignoresSafeArea()
                 ProgressView("Analyzing cover…")
             }
         }

@@ -27,7 +27,7 @@ struct BookMarkdWidgetsLiveActivity: Widget {
                 Text("Hello \(context.state.emoji)")
             }
             .activityBackgroundTint(Color.cyan)
-            .activitySystemActionForegroundColor(Color.black)
+            .activitySystemActionForegroundColor(Color.SURFACE)
 
         } dynamicIsland: { context in
             DynamicIsland {

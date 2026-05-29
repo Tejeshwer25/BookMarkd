@@ -63,6 +63,7 @@
 		A4A5EF9F2F9FD274006EF198 /* Exceptions for "BookMarkd" folder in "BookMarkdWidgetsExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Core/UI/AppColors.swift,
 				Models/DataObjects/BookModel.swift,
 				Models/DataObjects/QuotesModel.swift,
 			);

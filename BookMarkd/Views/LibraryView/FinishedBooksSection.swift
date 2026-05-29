@@ -33,11 +33,7 @@ struct FinishedBooksSection: View {
             }
             .padding(.bottom, 16)
             
-            if self.finishedBookList.isEmpty {
-                self.emptyFinishedBooksView
-            } else {
-                self.finishedBookView
-            }
+            self.finishedBookView
         }
         .fontDesign(.serif)
     }
@@ -89,27 +85,5 @@ struct FinishedBooksSection: View {
             }
         }
         .fontDesign(.serif)
-    }
-    
-    var emptyFinishedBooksView: some View {
-        VStack(alignment: .center, spacing: 5) {
-            Image(systemName: "checkmark.circle")
-                .resizable()
-                .frame(width: 36, height: 36)
-                .padding(.bottom, 10)
-            
-            Text("No finished books yet.")
-                .font(.headline)
-            
-            Text("Complete a book to see it here.")
-        }
-        .fontDesign(.serif)
-        .frame(maxWidth: .infinity)
-        .padding()
-        .background {
-            RoundedRectangle(cornerRadius: 20)
-                .stroke(Color.white.opacity(0.2), lineWidth: 1)
-                .fill(Color.neutralButton.opacity(0.1))
-        }
     }
 }

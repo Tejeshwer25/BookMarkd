@@ -21,9 +21,9 @@ struct AddGenresView: View {
                     RoundedRectangleButton(
                         buttonText: item.rawValue,
                         imageName: nil,
-                        buttonFillColor: genresSelected.contains(item) ? .primaryBrand : .neutral,
-                        buttonTextColor: genresSelected.contains(item) ? .neutral : .primaryBrand,
-                        buttonBorderColor: genresSelected.contains(item) ? .neutral : .primaryBrand,
+                        buttonFillColor: genresSelected.contains(item) ? .primaryBrand : .SURFACE,
+                        buttonTextColor: genresSelected.contains(item) ? .SURFACE : .primaryBrand,
+                        buttonBorderColor: genresSelected.contains(item) ? .SURFACE : .primaryBrand,
                         buttonPaddingHorizontal: 8,
                         buttonPaddingVertical: 8
                     ) {

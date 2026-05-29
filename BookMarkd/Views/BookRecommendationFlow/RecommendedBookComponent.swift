@@ -36,7 +36,7 @@ struct RecommendedBookComponent: View {
                     Image(systemName: "plus.circle.fill")
                         .resizable()
                         .frame(width: 30, height: 30)
-                        .foregroundStyle(Color.accent)
+                        .foregroundStyle(Color.PRIMARY_BRAND)
                         .accessibilityLabel("Add to wishlist")
                 }
                 .buttonStyle(.plain)
@@ -66,12 +66,12 @@ struct RecommendedBookComponent: View {
                 Spacer()
             }
             .frame(maxWidth: .infinity)
-            .background(.secondaryBrand.opacity(0.1))
+            .background(Color.secondaryBrand.opacity(0.1))
         }
         .padding()
         .overlay {
             RoundedRectangle(cornerRadius: 10)
-                .stroke(.secondaryBrand.opacity(0.3))
+                .stroke(Color.secondaryBrand.opacity(0.3))
         }
     }
 }

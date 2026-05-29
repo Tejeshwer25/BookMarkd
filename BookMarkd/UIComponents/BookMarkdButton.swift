@@ -15,8 +15,8 @@ struct RoundedRectangleButton: View {
     let buttonText: String
     let imageName: String?
     var imagePlacement: ImagePlacementInButton = .left
-    var buttonFillColor: Color = Color.accentColor
-    var buttonTextColor: Color = Color.neutral
+    var buttonFillColor: Color = Color.PRIMARY_BRAND
+    var buttonTextColor: Color = Color.SURFACE
     var buttonBorderColor: Color? = nil
     var cornerRadius: CGFloat = 5
     var buttonPaddingHorizontal: CGFloat = 18
@@ -26,8 +26,8 @@ struct RoundedRectangleButton: View {
     init(buttonText: String,
          imageName: String?,
          imagePlacement: ImagePlacementInButton = .left,
-         buttonFillColor: Color = .accentColor,
-         buttonTextColor: Color = .neutral,
+         buttonFillColor: Color = Color.PRIMARY_BRAND,
+         buttonTextColor: Color = Color.SURFACE,
          buttonBorderColor: Color? = nil,
          cornerRadius: CGFloat = 5,
          buttonPaddingHorizontal: CGFloat = 18,

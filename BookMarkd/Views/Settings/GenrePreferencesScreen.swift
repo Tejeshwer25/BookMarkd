@@ -163,7 +163,7 @@ struct GenrePreferencesScreen: View {
                     .padding()
                     .background {
                         RoundedRectangle(cornerRadius: 8)
-                            .fill(Color.accent)
+                            .fill(Color.PRIMARY_BRAND)
                     }
             }
             .opacity(self.viewModel.shouldEnableSaveButton() ? 1 : 0.3)
