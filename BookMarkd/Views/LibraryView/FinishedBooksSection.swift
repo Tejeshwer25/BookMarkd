@@ -35,7 +35,6 @@ struct FinishedBooksSection: View {
             
             self.finishedBookView
         }
-        .fontDesign(.serif)
     }
     
     var finishedBookView: some View {

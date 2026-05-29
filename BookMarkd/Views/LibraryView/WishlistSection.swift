@@ -77,7 +77,6 @@ struct WishlistSection: View {
             }
             .scrollIndicators(.hidden)
         }
-        .fontDesign(.serif)
     }
     
     var emptyFinishedBooksView: some View {

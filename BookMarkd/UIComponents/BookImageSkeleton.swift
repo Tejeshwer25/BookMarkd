@@ -23,15 +23,18 @@ struct BookImage: View {
     var imageFrame: (width: CGFloat, height: CGFloat) = (100, 150)
     let bookTitle: String
     @State private var image: UIImage?
+    let onImageFetch: ((UIImage?) -> Void)?
     
     init(bookImageURL: String? = nil,
          bookImageData: Data? = nil,
          bookTitle: String,
-         imageFrame: (width: CGFloat, height: CGFloat)) {
+         imageFrame: (width: CGFloat, height: CGFloat),
+         onImageFetch: ((UIImage?) -> Void)? = nil) {
         self.bookImageURL = bookImageURL
         self.bookImageData = bookImageData
         self.imageFrame = imageFrame
         self.bookTitle = bookTitle
+        self.onImageFetch = onImageFetch
     }
     
     var body: some View {
@@ -47,7 +50,7 @@ struct BookImage: View {
             }
         }
         .onChange(of: bookImageURL, initial: true) { oldValue, newValue in
-            Task {
+            Task { @MainActor in
                 if let bookImageURL, !bookImageURL.isEmpty {
                     image = await CachedImageLoaderActor.shared.load(from: URL(string: bookImageURL))
                 } else if let bookImageData {
@@ -60,10 +63,12 @@ struct BookImage: View {
                     
                     self.image = newImage
                 }
+                
+                self.onImageFetch?(self.image)
             }
         }
         .onChange(of: bookImageData) { oldValue, newValue in
-            Task {
+            Task { @MainActor in
                 if let bookImageURL, !bookImageURL.isEmpty {
                     image = await CachedImageLoaderActor.shared.load(from: URL(string: bookImageURL))
                 } else if let bookImageData {
@@ -76,6 +81,7 @@ struct BookImage: View {
                     
                     self.image = newImage
                 }
+                self.onImageFetch?(self.image)
             }
         }
     }
