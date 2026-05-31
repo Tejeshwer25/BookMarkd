@@ -38,7 +38,7 @@ final class BookModel {
          authorName: [String],
          readState: BookReadingState,
          coverImageURL: String? = nil,
-         rating: Int? = nil,
+         rating: Int? = 0,
          bookDescription: String? = nil,
          coverImageData: Data? = nil,
          isManuallyCreated: Bool = false,

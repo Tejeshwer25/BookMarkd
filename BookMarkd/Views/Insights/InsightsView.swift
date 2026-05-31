@@ -18,12 +18,10 @@ struct InsightsView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 5) {
                 Text("Your reading patterns and progress")
-                    .font(.title)
-                    .fontWeight(.bold)
+                    .font(EditorialSerif.displayMedium)
                 
                 Text("Based on your activity over the last 30 days.")
-                    .font(.callout)
-                    .fontWeight(.light)
+                    .metadataStyle()
                 
                 VStack(alignment: .center, spacing: 12) {
                     HStack {
@@ -31,34 +29,38 @@ struct InsightsView: View {
                                             icon: "calendar",
                                             title: "Books Finished",
                                             value: "\(self.viewModel.getBooksFinishedThisMonth(allBooks: books))",
-                                            tagText: "Monthly")
+                                            tagText: "Monthly",
+                                            iconColor: Color.PRIMARY_BRAND)
                         Spacer()
                         RoundedBoxContainer(icon: "book.pages",
                                             title: "Total Finished",
-                                            value: "\(self.viewModel.getTotalFinishedBooks(allBooks: books).count)")
+                                            value: "\(self.viewModel.getTotalFinishedBooks(allBooks: books).count)",
+                                            iconColor: Color.PRIMARY_BRAND)
                     }
                     
                     HStack {
                         RoundedBoxContainer(icon: "star",
                                             title: "Avg Rating",
-                                            value: String(format: "%.2f", self.viewModel.getAverageRatingGivenToBooksByUser(allBooks: books)))
+                                            value: String(format: "%.2f", self.viewModel.getAverageRatingGivenToBooksByUser(allBooks: books)),
+                                            iconColor: Color.TERTIARY_BRAND)
                         Spacer()
                         RoundedBoxContainer(icon: "quote.opening",
                                             title: "Quotes Saved",
-                                            value: "\(self.viewModel.getQuotesSavedByUser(allBooks: books))")
+                                            value: "\(self.viewModel.getQuotesSavedByUser(allBooks: books))",
+                                            iconColor: Color.TERTIARY_BRAND)
                     }
                 }
                 .padding(.top, 24)
                 
                 VStack(alignment: .leading, spacing: 12) {
                     HStack {
-                        Text("Reading Acitvity")
-                            .font(.headline)
+                        Text("Reading Activity")
+                            .sectionTitleStyle()
                         
                         Spacer()
                         
                         Text("Last 6 Months")
-                            .font(.caption)
+                            .font(EditorialSans.caption)
                     }
                     
                     Chart(self.viewModel.readingActivity) {
@@ -73,16 +75,13 @@ struct InsightsView: View {
                     .padding()
                     .background {
                         RoundedRectangle(cornerRadius: 12)
-                            .stroke(Color.white.opacity(0.2), lineWidth: 1)
-                            .fill(Color.neutralButton.opacity(0.1))
+                            .fill(Color.SURFACE_LOW)
                     }
                 }
-                .fontDesign(.serif)
                 .padding(.top, 32)
             }
             .padding()
             .frame(maxWidth: .infinity)
-            .fontDesign(.serif)
             .onAppear {
                 self.viewModel.loadChartData(allBooks: self.books)
             }

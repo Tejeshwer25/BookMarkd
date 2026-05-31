@@ -94,13 +94,10 @@ struct GenrePreferencesScreen: View {
     var body: some View {
         VStack(alignment: .leading) {
             Text("Refine Your Collection")
-                .font(.title)
-                .fontWeight(.bold)
-                .fontDesign(.serif)
+                .font(EditorialSerif.displayMedium)
+            
             Text("Choose the literary worlds you wish to inhabit. \nYour library will evolve to reflect your tastes.")
-                .font(.callout)
-                .fontDesign(.serif)
-                .italic()
+                .bodyStyle()
             
             HStack {
                 Image(systemName: "magnifyingglass")
@@ -128,8 +125,7 @@ struct GenrePreferencesScreen: View {
                                     .frame(width: 50, height: 50)
                                 
                                 Text(genre.rawValue)
-                                    .font(.headline)
-                                    .fontDesign(.serif)
+                                    .font(EditorialSerif.headlineMedium)
                                     .multilineTextAlignment(.center)
                             }
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -157,8 +153,7 @@ struct GenrePreferencesScreen: View {
                 }
             } label: {
                 Text("Save Changes")
-                    .font(.headline)
-                    .foregroundStyle(.black)
+                    .primaryButtonLabelStyle()
                     .frame(maxWidth: .infinity)
                     .padding()
                     .background {
@@ -166,7 +161,7 @@ struct GenrePreferencesScreen: View {
                             .fill(Color.PRIMARY_BRAND)
                     }
             }
-            .opacity(self.viewModel.shouldEnableSaveButton() ? 1 : 0.3)
+            .opacity(self.viewModel.shouldEnableSaveButton() ? 1 : 0.5)
             .disabled(!self.viewModel.shouldEnableSaveButton())
             
             Spacer()

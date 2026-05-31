@@ -19,8 +19,7 @@ struct NotesAndQuotesView: View {
         VStack(alignment: .leading) {
             HStack {
                 Text("Notes & Quotes \( self.notesList.count > 0 ? "(\(currentNoteIndex) / \(self.notesList.count))" : "")")
-                    .font(.title2)
-                    .fontWeight(.bold)
+                    .sectionTitleStyle()
                 
                 Spacer()
                 
@@ -45,14 +44,13 @@ struct NotesAndQuotesView: View {
                             VStack(alignment: .leading) {
                                 HStack {
                                     Text(quote.noteType.rawValue.capitalized)
+                                        .metadataStyle()
                                         .padding(.horizontal, 10)
                                         .padding(.vertical, 7)
                                         .background {
                                             Capsule()
                                                 .stroke(quote.noteType.fillColor)
                                         }
-                                        .foregroundStyle(quote.noteType.fillColor)
-                                        .font(.caption)
                                     
                                     Spacer()
                                     
@@ -63,21 +61,19 @@ struct NotesAndQuotesView: View {
                                             .resizable()
                                             .frame(width: 15, height: 20)
                                             .accessibilityLabel("Share Note")
+                                            .foregroundStyle(Color.SECONDARY_TEXT)
                                     }
                                     .buttonStyle(.plain)
                                 }
                                 
                                 ScrollView {
                                     Text(quote.text)
-                                        .padding(.top, 7)
+                                        .padding(.top)
                                 }
                             }
                             .frame(width: 300, height: 350, alignment: .leading)
                             .padding()
-                            .background {
-                                RoundedRectangle(cornerRadius: 10)
-                                    .foregroundStyle(.gray.opacity(0.2))
-                            }
+                            .quoteBlockStyle()
                             .contextMenu {
                                 Button(action: {
                                     self.quoteAction?(.share, quote)

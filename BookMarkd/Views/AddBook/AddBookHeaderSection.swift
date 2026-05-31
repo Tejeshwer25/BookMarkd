@@ -33,17 +33,20 @@ struct AddBookHeaderSection: View {
                     viewModel.showCamera = true
                 }) {
                     Label("Capture Image", systemImage: "camera.fill")
+                        .font(EditorialSans.bodyMedium)
                 }
                 
                 Button {
                     viewModel.showPhotoPicker = true
                 } label: {
                     Label("Import from gallery", systemImage: "photo.fill")
+                        .font(EditorialSans.bodyMedium)
                 }
             } label: {
                 HStack(alignment: .center, spacing: 5) {
                     Image(systemName: "camera.fill")
                     Text("Scan Cover")
+                        .font(EditorialSans.button)
                 }
                 .font(.Editorial.button)
                 .frame(maxWidth: .infinity)

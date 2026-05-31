@@ -24,6 +24,7 @@ struct SettingsView: View {
                 } label: {
                     HStack {
                         Text(setting.rawValue)
+                            .bodyStyle()
                         Spacer()
                         Image(systemName: "chevron.right")
                             .accessibilityLabel("Go to \(setting.rawValue)")

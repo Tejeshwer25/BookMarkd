@@ -112,7 +112,7 @@ struct AddBookManuallyView: View {
                     
                     HStack {
                         Text("Generate optional fields using AI?")
-                            .font(.Editorial.button)
+                            .font(.Editorial.body)
                             .foregroundStyle(Color.primaryBrand)
                         
                         Spacer()
@@ -214,14 +214,18 @@ struct AddBookManuallyView: View {
                     .overlay {
                         if self.viewModel.bookDescription.isEmpty {
                             Text("Add Book Description")
+                                .font(EditorialSans.bodyMedium)
                                 .foregroundStyle(.accent.opacity(0.3))
                                 .position(x: 90, y: 20)
                         }
                     }
+                    .clipped()
                     .overlay {
                         RoundedRectangle(cornerRadius: 8)
                             .stroke(Color.accentColor.opacity(0.2), lineWidth: 1)
+                            .clipped()
                     }
+                    .clipped()
             }
             .padding(.top)
         }

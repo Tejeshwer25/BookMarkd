@@ -19,13 +19,10 @@ struct RecommendedBookComponent: View {
             HStack {
                 VStack(alignment: .leading) {
                     Text(bookTitle)
-                        .fontDesign(.serif)
-                        .font(.title2)
+                        .font(EditorialSerif.displayMedium)
                     
                     Text(author)
-                        .font(.callout)
-                        .fontDesign(.serif)
-                        .italic()
+                        .bodyStyle()
                 }
                 
                 Spacer()
@@ -44,8 +41,7 @@ struct RecommendedBookComponent: View {
             .padding(.bottom)
             
             Text(description)
-                .fontDesign(.serif)
-                .font(.subheadline)
+                .metadataStyle()
             
             HStack(alignment: .top) {
                 Color.secondaryBrand
@@ -55,12 +51,12 @@ struct RecommendedBookComponent: View {
                     HStack(spacing: 10) {
                         Image(systemName: "eyes")
                         Text("Why we recommend this")
+                            .font(EditorialSerif.headlineMedium)
                     }
                     
                     Text(whyRecommend)
+                        .metadataStyle()
                 }
-                .font(.caption)
-                .fontDesign(.serif)
                 .padding()
                 
                 Spacer()
@@ -69,9 +65,9 @@ struct RecommendedBookComponent: View {
             .background(Color.secondaryBrand.opacity(0.1))
         }
         .padding()
-        .overlay {
+        .background {
             RoundedRectangle(cornerRadius: 10)
-                .stroke(Color.secondaryBrand.opacity(0.3))
+                .fill(Color.SURFACE_LOW)
         }
     }
 }

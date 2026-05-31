@@ -32,10 +32,10 @@ struct AddNoteView: View {
             VStack(alignment: .leading) {
                 VStack(alignment: .leading) {
                     Text(book?.title ?? "")
-                        .font(.title3)
-                        .fontWeight(.bold)
+                        .sectionTitleStyle()
                     
                     Text(book?.authorName.joined(separator: ", ") ?? "")
+                        .bodyStyle()
                 }
                 .padding()
             }
@@ -76,6 +76,8 @@ struct AddNoteView: View {
                         VStack {
                             HStack {
                                 Text("Enter a meaningful quote")
+                                    .font(EditorialSans.bodyMedium)
+                                
                                 Spacer()
                             }
                             Spacer()
@@ -88,6 +90,7 @@ struct AddNoteView: View {
             
             HStack {
                 Text("Page Number (optional)")
+                    .metadataStyle()
                 
                 Spacer()
                     .frame(maxWidth: .infinity)

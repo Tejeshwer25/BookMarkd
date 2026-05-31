@@ -13,6 +13,7 @@ struct RoundedBoxContainer: View {
     let title: String
     let value: String
     var tagText: String = ""
+    let iconColor: Color
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -20,14 +21,13 @@ struct RoundedBoxContainer: View {
                 Image(systemName: icon)
                     .resizable()
                     .frame(width: 18, height: 20)
-                    .foregroundStyle(Color.PRIMARY_BRAND)
+                    .foregroundStyle(iconColor)
                 
                 Spacer()
                 
                 if shouldShowTag {
                     Text(tagText)
-                        .font(.caption)
-                        .fontWeight(.bold)
+                        .font(EditorialSans.caption)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 2)
                         .background {
@@ -38,13 +38,11 @@ struct RoundedBoxContainer: View {
             }
             
             Text(title)
-                .font(.headline)
+                .metadataStyle()
             
             Text(value)
-                .font(.title2)
-                .fontWeight(.bold)
+                .quoteStyle()
         }
-        .fontDesign(.serif)
         .padding(21)
         .background {
             RoundedRectangle(cornerRadius: 12)

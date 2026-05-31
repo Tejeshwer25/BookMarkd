@@ -48,11 +48,10 @@ struct BookDetailView: View {
                 } else if self.viewModel.book?.readState == .read {
                     VStack(alignment: .leading, spacing: 10) {
                         Text("Book Review")
-                            .font(.title3)
-                            .fontWeight(.bold)
+                            .sectionTitleStyle()
                         
                         Text(self.viewModel.book?.bookReview ?? "")
-                            .font(.callout)
+                            .bodyStyle()
                     }
                     .padding()
                     
@@ -119,17 +118,20 @@ struct BookDetailView: View {
             
             VStack(alignment: .leading, spacing: 10) {
                 Text(self.viewModel.book?.title ?? "")
-                    .font(.title)
-                    .fontWeight(.heavy)
+                    .bookTitleStyle()
                 
                 Text(self.viewModel.book?.authorName.first ?? "")
+                    .metadataStyle()
                 
                 if self.viewModel.book?.readState == .reading {
-                    Button("Mark as Finished") {
+                    Button {
                         HapticManager.shared.trigger(.impactMedium)
                         self.router.pushScreen(.bookFinishScreen(id: self.bookId))
+                    } label: {
+                        Text("Mark as Finished")
+                            .font(EditorialSans.button)
+                            .foregroundStyle(Color.SURFACE)
                     }
-                    .foregroundStyle(.black)
                     .frame(maxWidth: .infinity)
                     .padding()
                     .background {
@@ -137,11 +139,13 @@ struct BookDetailView: View {
                             .foregroundStyle(Color.PRIMARY_BRAND)
                     }
                 } else if self.viewModel.book?.readState == .wishlist {
-                    Button("Start Reading") {
+                    Button {
                         try? self.viewModel.updateBookReadState(bookID: bookId)
                         self.router.popScreen()
+                    } label: {
+                        Text("Start Reading")
+                            .primaryButtonLabelStyle()
                     }
-                    .foregroundStyle(.black)
                     .frame(maxWidth: .infinity)
                     .padding()
                     .background {
@@ -173,8 +177,7 @@ struct BookDetailView: View {
     var tagsView: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text("Tags")
-                .font(.title3)
-                .fontWeight(.bold)
+                .sectionTitleStyle()
 
             // Demo tags (replace with your actual tags source when available)
             let tags = self.viewModel.bookDetails?.genre?.sorted { $0.count < $1.count } ?? []
@@ -186,10 +189,6 @@ struct BookDetailView: View {
                     .background {
                         Capsule()
                             .fill((Color.allAppColors[index % Color.allAppColors.count]).opacity(0.15))
-                    }
-                    .overlay {
-                        Capsule()
-                            .stroke((Color.allAppColors[index % Color.allAppColors.count]).opacity(0.5), lineWidth: 1)
                     }
             }
 
@@ -217,8 +216,7 @@ struct BookDetailView: View {
     var bookDescriptionView: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text("Description")
-                .font(.title3)
-                .fontWeight(.bold)
+                .sectionTitleStyle()
             
             Text(self.viewModel.bookDetails?.description ?? "")
                 .font(.callout)
@@ -228,8 +226,7 @@ struct BookDetailView: View {
     var bookCharactersView: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text("Characters")
-                .font(.title3)
-                .fontWeight(.bold)
+                .sectionTitleStyle()
             
             ScrollView(.horizontal) {
                 HStack(spacing: 25) {

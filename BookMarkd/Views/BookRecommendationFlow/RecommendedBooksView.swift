@@ -9,7 +9,7 @@ import SwiftUI
 
 struct RecommendedBooksView: View {
     var body: some View {
-        VStack(spacing: 15) {
+        VStack(spacing: 10) {
             Image(systemName: "moon.stars.fill")
                 .resizable()
                 .frame(width: 50, height: 50)
@@ -20,12 +20,11 @@ struct RecommendedBooksView: View {
                 }
             
             Text("Discovery Complete")
-                .font(.title)
-                .fontDesign(.serif)
+                .bookTitleStyle()
             
             Text("We handpicked these literary treasures based on your reading habits.")
                 .multilineTextAlignment(.center)
-                .fontDesign(.serif)
+                .bodyStyle()
         }
     }
 }

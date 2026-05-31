@@ -42,7 +42,8 @@ struct DiscoverView: View {
                         Text("Regenerate")
                         Image(systemName: "arrow.clockwise")
                     }
-                    .foregroundStyle(Color.neutralButton)
+                    .primaryButtonLabelStyle()
+                    .fontWeight(.bold)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical)
                     .background {

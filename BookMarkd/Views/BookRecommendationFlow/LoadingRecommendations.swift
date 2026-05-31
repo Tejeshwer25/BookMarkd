@@ -11,13 +11,13 @@ struct LoadingRecommendations: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text("Finding your next read...")
-                .font(.title)
-                .fontDesign(.serif)
+                .bookTitleStyle()
                 .italic()
             
             Text("Searching through thousands of shelves across digital expanse.")
-                .fontDesign(.serif)
+                .metadataStyle()
                 .padding(.bottom, 25)
+                .lineLimit(2)
             
             ForEach(0..<3) { _ in
                 HStack(alignment: .top, spacing: 15) {

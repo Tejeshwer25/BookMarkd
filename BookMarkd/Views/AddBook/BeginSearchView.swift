@@ -20,15 +20,13 @@ struct BeginSearchView: View {
                 .padding()
             
             Text(headlineText)
-                .font(.title2)
-                .fontDesign(.serif)
+                .font(EditorialSerif.displayMedium)
                 .multilineTextAlignment(.center)
                 .padding(.bottom, 5)
                 .lineLimit(2)
             
             Text(subheadlineText)
-                .font(.subheadline)
-                .fontDesign(.serif)
+                .bodyStyle()
                 .multilineTextAlignment(.center)
                 .italic()
         }

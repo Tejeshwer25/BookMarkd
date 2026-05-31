@@ -21,12 +21,11 @@ struct AddBookSearchResults: View {
                     
                     VStack(alignment: .leading, spacing: 5) {
                         Text(book.title)
-                            .font(.title3)
-                            .fontDesign(.serif)
+                            .font(EditorialSerif.displayMedium)
                         
                         Text(book.authorName.joined(separator: ", "))
-                            .fontDesign(.serif)
-                            .font(.callout)
+                            .font(EditorialSans.bodyMedium)
+                            .foregroundStyle(Color.SURFACE_LOW)
                     }
                     
                     Spacer()
