@@ -66,13 +66,21 @@ struct CurrentlyReadingSection: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            Text("Currently Reading")
-                .padding(.bottom, 16)
-                .font(EditorialSerif.displayMedium)
-                .foregroundStyle(Color.ON_SURFACE)
+            SectionHeaderComponent(headerTitle: "Currently Reading")
             
             if currentlyReadingBookList.isEmpty {
-                emptyCurrentlyReadingView
+                EmptyStateView(imageName: "book.pages.fill",
+                               imageSize: (width: 33, height: 36),
+                               titleText: "No books in progress",
+                               subtitleText: "Start reading something from your wishlist")
+                .frame(maxWidth: .infinity)
+                .padding()
+                .background {
+                    RoundedRectangle(cornerRadius: 20)
+                        .stroke(Color.ghostBorder, lineWidth: 1)
+                        .fill(Color.SURFACE_LOW)
+                }
+                .padding(.bottom, 20)
             } else {
                 ScrollView(.horizontal) {
                     HStack(alignment: .top, spacing: 20) {
@@ -117,32 +125,5 @@ struct CurrentlyReadingSection: View {
             }
         }
         .frame(maxWidth: .infinity)
-    }
-    
-    var emptyCurrentlyReadingView: some View {
-        VStack(alignment: .center, spacing: 5) {
-            Image(systemName: "book.pages.fill")
-                .resizable()
-                .frame(width: 33, height: 36)
-                .padding(.bottom, 10).foregroundStyle(Color.PRIMARY_BRAND)
-                
-            Text("No books in progress")
-                .font(EditorialSerif.emptyState)
-                .foregroundStyle(Color.ON_SURFACE)
-                .multilineTextAlignment(.center)
-            
-            Text("Start reading something from your wishlist")
-                .font(EditorialSans.bodyMedium)
-                .foregroundStyle(Color.ON_SURFACE)
-                .multilineTextAlignment(.center)
-        }
-        .frame(maxWidth: .infinity)
-        .padding()
-        .background {
-            RoundedRectangle(cornerRadius: 20)
-                .stroke(Color.ghostBorder, lineWidth: 1)
-                .fill(Color.SURFACE_LOW)
-        }
-        .padding(.bottom, 20)
     }
 }

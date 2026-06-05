@@ -67,26 +67,10 @@ struct DiscoverView: View {
         .overlay {
             if self.booksRead.isEmpty,
                self.viewModel.shouldShowNoResultsLabel() {
-                VStack(alignment: .center) {
-                    Spacer()
-                    
-                    Image(systemName: "moon.stars.fill")
-                        .resizable()
-                        .frame(width: 75, height: 75)
-                        .padding()
-                    
-                    Text("No recommendation available")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .multilineTextAlignment(.center)
-                    
-                    Text("Try again later after choosing your genre or starting a new book")
-                        .multilineTextAlignment(.center)
-                        .padding(.top, 1)
-                    
-                    Spacer()
-                    Spacer()
-                }
+                EmptyStateView(imageName: "moon.stars.fill",
+                               imageSize: (width: 75, height: 75),
+                               titleText: "No recommendation available",
+                               subtitleText: "Try again later after choosing your genre or starting a new book")
                 .padding(.horizontal)
             }
         }

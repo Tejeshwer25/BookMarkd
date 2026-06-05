@@ -53,12 +53,8 @@ struct InsightsView: View {
                 .padding(.top, 24)
                 
                 VStack(alignment: .leading, spacing: 12) {
-                    HStack {
-                        Text("Reading Activity")
-                            .sectionTitleStyle()
-                        
-                        Spacer()
-                        
+                    SectionHeaderComponent(headerTitle: "Reading Activity",
+                                           textFont: EditorialSerif.headlineLarge) {
                         Text("Last 6 Months")
                             .font(EditorialSans.caption)
                     }

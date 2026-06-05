@@ -23,33 +23,33 @@ struct LoadingRecommendations: View {
                 HStack(alignment: .top, spacing: 15) {
                     RoundedRectangle(cornerRadius: 8)
                         .frame(width: 100, height: 150)
-                        .foregroundStyle(LinearGradient(colors: [.indigo.opacity(0.15), .brown.opacity(0.15)],
+                        .foregroundStyle(LinearGradient(colors: [Color.SURFACE_LOW, Color.SURFACE_LOWEST],
                                                         startPoint: .leading,
                                                         endPoint: .trailing))
                     
                     VStack(alignment: .leading) {
                         RoundedRectangle(cornerRadius: 8)
                             .frame(width: 200, height: 25)
-                            .foregroundStyle(LinearGradient(colors: [.indigo.opacity(0.15), .brown.opacity(0.15)],
+                            .foregroundStyle(LinearGradient(colors: [Color.SURFACE_LOW, Color.SURFACE_LOWEST],
                                                             startPoint: .leading,
                                                             endPoint: .trailing))
                         
                         RoundedRectangle(cornerRadius: 8)
                             .frame(maxWidth: 150, maxHeight: 25)
-                            .foregroundStyle(LinearGradient(colors: [.indigo.opacity(0.15), .brown.opacity(0.15)],
+                            .foregroundStyle(LinearGradient(colors: [Color.SURFACE_LOW, Color.SURFACE_LOWEST],
                                                             startPoint: .leading,
                                                             endPoint: .trailing))
                         
                         HStack(spacing: 10) {
                             Capsule()
                                 .frame(maxWidth: 75, maxHeight: 25)
-                                .foregroundStyle(LinearGradient(colors: [.indigo.opacity(0.15), .brown.opacity(0.15)],
+                                .foregroundStyle(LinearGradient(colors: [Color.SURFACE_LOW, Color.SURFACE_LOWEST],
                                                                 startPoint: .leading,
                                                                 endPoint: .trailing))
                             
                             Capsule()
                                 .frame(maxWidth: 75, maxHeight: 25)
-                                .foregroundStyle(LinearGradient(colors: [.indigo.opacity(0.15), .brown.opacity(0.15)],
+                                .foregroundStyle(LinearGradient(colors: [Color.SURFACE_LOW, Color.SURFACE_LOWEST],
                                                                 startPoint: .leading,
                                                                 endPoint: .trailing))
                         }

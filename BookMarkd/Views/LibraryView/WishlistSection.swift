@@ -17,13 +17,7 @@ struct WishlistSection: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            HStack {
-                Text("Wishlist")
-                    .font(EditorialSerif.displayMedium)
-                    .foregroundStyle(Color.ON_SURFACE)
-                
-                Spacer()
-                
+            SectionHeaderComponent(headerTitle: "Wishlist") {
                 if self.wishlishtedBooks.count > 5 {
                     Button {
                         self.viewAllFinishedBooks()
@@ -35,9 +29,36 @@ struct WishlistSection: View {
                     .buttonStyle(.plain)
                 }
             }
+            .padding(.bottom, 16)
             
             if self.wishlishtedBooks.isEmpty {
-                self.emptyFinishedBooksView
+                EmptyStateView(imageName: "bookmark.circle",
+                               imageSize: (width: 36, height: 36),
+                               titleText: "Your wishlist section is empty") {
+                    Button {
+                        self.router.pushScreen(.addBookScreen)
+                    } label: {
+                        Text("Discover Books")
+                            .foregroundStyle(Color.secondaryBrand)
+                            .padding(.horizontal, 30)
+                            .padding(.vertical, 10)
+                            .background {
+                                Capsule()
+                                    .stroke(Color.secondaryBrand, lineWidth: 1)
+                                    .fill(Color.neutralButton.opacity(0.2))
+                            }
+                    }
+                    .padding(.top)
+                    .buttonStyle(.plain)
+                }
+                .fontDesign(.serif)
+                .frame(maxWidth: .infinity)
+                .padding()
+                .background {
+                    RoundedRectangle(cornerRadius: 20)
+                        .stroke(Color.white.opacity(0.2), lineWidth: 1)
+                        .fill(Color.neutralButton.opacity(0.1))
+                }
             } else {
                 self.wishlistedBooksView
             }
@@ -81,39 +102,7 @@ struct WishlistSection: View {
     
     var emptyFinishedBooksView: some View {
         VStack(alignment: .center, spacing: 5) {
-            Image(systemName: "bookmark.circle")
-                .resizable()
-                .frame(width: 36, height: 36)
-                .padding(.bottom, 10)
-            
-            Text("Your wishlist section is empty")
-                .font(.headline)
-            
-            Text("Save books you want to read later")
-            
-            Button {
-                self.router.pushScreen(.addBookScreen)
-            } label: {
-                Text("Discover Books")
-                    .foregroundStyle(Color.secondaryBrand)
-                    .padding(.horizontal, 30)
-                    .padding(.vertical, 10)
-                    .background {
-                        Capsule()
-                            .stroke(Color.secondaryBrand, lineWidth: 1)
-                            .fill(Color.neutralButton.opacity(0.2))
-                    }
-            }
-            .padding(.top)
-            .buttonStyle(.plain)
         }
-        .fontDesign(.serif)
-        .frame(maxWidth: .infinity)
-        .padding()
-        .background {
-            RoundedRectangle(cornerRadius: 20)
-                .stroke(Color.white.opacity(0.2), lineWidth: 1)
-                .fill(Color.neutralButton.opacity(0.1))
-        }
+        
     }
 }

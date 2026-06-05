@@ -15,11 +15,7 @@ struct FinishedBooksSection: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            HStack {
-                Text("Recent Finish")
-                
-                Spacer()
-                
+            SectionHeaderComponent(headerTitle: "Recent Finish") {
                 if self.finishedBookList.count > 5 {
                     Button {
                         self.viewAllFinishedBooks()

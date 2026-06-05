@@ -17,12 +17,8 @@ struct NotesAndQuotesView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            HStack {
-                Text("Notes & Quotes \( self.notesList.count > 0 ? "(\(currentNoteIndex) / \(self.notesList.count))" : "")")
-                    .sectionTitleStyle()
-                
-                Spacer()
-                
+            SectionHeaderComponent(headerTitle: "Notes & Quotes \( self.notesList.count > 0 ? "(\(currentNoteIndex) / \(self.notesList.count))" : "")",
+                                   textFont: EditorialSerif.headlineLarge) {
                 if showAddNoteButton {
                     Button {
                         self.quoteAction?(.add, nil)
@@ -111,14 +107,9 @@ struct NotesAndQuotesView: View {
                     }
                 }
             } else {
-                VStack {
-                    Image(systemName: "note.text")
-                        .resizable()
-                        .frame(width: 75, height: 75)
-                    Text("No notes/quotes added for this book yet.")
-                        .padding(.top, 25)
-                        .multilineTextAlignment(.center)
-                }
+                EmptyStateView(imageName: "note.text",
+                               imageSize: (width: 75, height: 75),
+                               titleText: "No notes/quotes added for this book yet.")
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .padding(.top, 100)
             }
