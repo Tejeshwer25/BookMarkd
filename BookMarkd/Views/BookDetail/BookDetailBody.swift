@@ -21,7 +21,7 @@ struct BookDetailBody: View {
                 }
             } else if self.viewModel.book?.readState == .wishlist {
                 VStack(alignment: .leading, spacing: 25) {
-                    if let bookDescription = self.viewModel.book?.bookDescription {
+                    if let bookDescription = self.viewModel.bookDetails?.description {
                         BookDescriptionView(description: bookDescription)
                     }
                     

@@ -58,6 +58,7 @@ class BookDetailViewModel: ObservableObject {
             do {
                 let book = try await self.bookService.getBookDetails(bookID)
                 self.bookDetails = book
+                print(book)
                 withAnimation {
                     self.isPageLoading = false
                 }
