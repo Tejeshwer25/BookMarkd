@@ -43,20 +43,16 @@ struct FinishedBooksSection: View {
                         BookImage(bookImageURL: book.coverImageURL,
                                   bookImageData: book.coverImageData,
                                   bookTitle: book.title,
-                                  imageFrame: (75, 100))
+                                  imageFrame: (100, 150))
                         
                         VStack(alignment: .leading) {
                             Text(book.title)
                                 .font(.headline)
+                                .lineLimit(3)
                             
                             Text(book.authorName.joined(separator: ", "))
                             
-                            HStack {
-                                Image(systemName: "star.fill")
-                                    .foregroundColor(Color.ratingsStar)
-                                
-                                Text("\(book.rating ?? 0)")
-                            }
+                            StarRatingView(rating: book.rating ?? 0, starSize: 15)
                         }
                         
                         Spacer(minLength: 25)

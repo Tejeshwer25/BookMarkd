@@ -154,20 +154,7 @@ struct BookDetailView: View {
                     }
                     .padding(.top)
                 } else if self.viewModel.book?.readState == .read {
-                    HStack {
-                        ForEach(1..<6) { index in
-                            if (self.viewModel.book?.rating ?? 0) >= index {
-                                Image(systemName: "star.fill")
-                                    .resizable()
-                                    .frame(width: 25, height: 25)
-                                    .foregroundStyle(Color.secondaryBrand)
-                            } else {
-                                Image(systemName: "star")
-                                    .resizable()
-                                    .frame(width: 25, height: 25)
-                            }
-                        }
-                    }
+                    StarRatingView(rating: self.viewModel.book?.rating ?? 0)
                 }
             }
         }
