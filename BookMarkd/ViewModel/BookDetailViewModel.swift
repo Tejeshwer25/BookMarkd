@@ -12,6 +12,12 @@ enum QuoteAction {
     case edit, share, delete, add
 }
 
+enum AlertButtons: String {
+    case ok = "Ok"
+    case cancel = "Cancel"
+    case delete = "Delete"
+}
+
 @MainActor
 class BookDetailViewModel: ObservableObject {
     @Published var showAddNoteSheet: Bool = false
@@ -22,6 +28,7 @@ class BookDetailViewModel: ObservableObject {
     @Published var alertTitle: String = ""
     @Published var alertMesssage: String = ""
     @Published var shouldShowAlert: Bool = false
+    @Published var alertButtons: [AlertButtons] = []
     @Published var noteToEdit: QuotesModel? = nil
     @Published var noteToShare: QuotesModel? = nil
     
@@ -102,5 +109,28 @@ class BookDetailViewModel: ObservableObject {
     
     func updateBookReadState(bookID: String) throws {
         try self.bookRepository.updateReadState(.reading, for: bookID)
+    }
+    
+    func removeBookFromWishlist(bookID: String) throws {
+        self.book = nil
+        try self.bookRepository.remove(id: bookID)
+        self.shouldShowAlert.toggle()
+    }
+    
+    func handleAlertAction(actionType: AlertButtons) {
+        switch actionType {
+        case .ok, .cancel:
+            self.shouldShowAlert = false
+        case .delete:
+            try? self.removeBookFromWishlist(bookID: self.book?.id ?? "")
+        }
+    }
+    
+    func handleTapOnRemoveMenuButton() {
+        let bookName = self.book?.title ?? ""
+        alertTitle = "Remove from wishlist?"
+        alertMesssage = "Are you sure you want to remove \(bookName) from wishlist?"
+        alertButtons = [.cancel, .delete]
+        shouldShowAlert = true
     }
 }

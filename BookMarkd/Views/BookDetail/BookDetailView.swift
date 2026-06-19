@@ -26,46 +26,34 @@ struct BookDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
-                bookInfoView
-                
-                if self.viewModel.book?.readState == .reading {
-                    NotesAndQuotesView(notesList: self.viewModel.book?.quotes ?? [],
-                                       showAddNoteButton: true,
-                                       bookReadingStatus: self.viewModel.book?.readState) { quoteAction, quote in
-                        self.viewModel.performQuoteAction(quoteAction, on: quote)
-                    }
-                } else if self.viewModel.book?.readState == .wishlist {
-                    VStack(alignment: .leading, spacing: 25) {
-                        bookDescriptionView
-                        
-                        if self.viewModel.bookDetails?.characters?.isEmpty == false {
-                            bookCharactersView
-                        }
-                        
-                        tagsView
-                    }
-                    .padding()
-                } else if self.viewModel.book?.readState == .read {
-                    VStack(alignment: .leading, spacing: 10) {
-                        Text("Book Review")
-                            .sectionTitleStyle()
-                        
-                        Text(self.viewModel.book?.bookReview ?? "")
-                            .bodyStyle()
-                    }
-                    .padding()
-                    
-                    if self.viewModel.book?.quotes.isEmpty == false {
-                        NotesAndQuotesView(notesList:  self.viewModel.book?.quotes ?? [],
-                                           showAddNoteButton: false,
-                                           bookReadingStatus: try? viewModel.fetchBookDataFromRepo(bookId)?.readState) { quoteAction, quote in
-                            self.viewModel.performQuoteAction(quoteAction, on: quote)
-                        }
+                BookHeaderView(book: viewModel.book) { action in
+                    switch action {
+                    case .markAsFinished:
+                        self.router.pushScreen(.bookFinishScreen(id: self.bookId))
+                    case .startReading:
+                        try? self.viewModel.updateBookReadState(bookID: bookId)
+                        self.router.popScreen()
                     }
                 }
+                
+                BookDetailBody(viewModel: self.viewModel,
+                               bookId: self.bookId)
             }
         }
         .navigationTitle("")
+        .toolbar(content: {
+            ToolbarItem(placement: .topBarTrailing) {
+                Menu {
+                    Button(role: .destructive) {
+                        self.viewModel.handleTapOnRemoveMenuButton()
+                    } label: {
+                        Label("Remove from wishlist", systemImage: "trash")
+                    }
+                } label: {
+                    Image(systemName: "ellipsis")
+                }
+            }
+        })
         .sheet(isPresented: $viewModel.showAddNoteSheet) {
             NavigationStack {
                 AddNoteView(bookRepository: viewModel.bookRepository,
@@ -101,64 +89,27 @@ struct BookDetailView: View {
         }
         .overlay {
             if self.viewModel.isPageLoading {
-                ProgressView()
-            }
-        }
-        .alert(self.viewModel.alertTitle, isPresented: $viewModel.shouldShowAlert) {} message: {
-            Text(self.viewModel.alertMesssage)
-        }
-    }
-    
-    var bookInfoView: some View {
-        HStack(alignment: .top, spacing: 25) {
-            BookImage(bookImageURL: self.viewModel.book?.coverImageURL,
-                      bookImageData: self.viewModel.book?.coverImageData,
-                      bookTitle: self.viewModel.book?.title ?? "",
-                      imageFrame: (width: 150, height: 200))
-            
-            VStack(alignment: .leading, spacing: 10) {
-                Text(self.viewModel.book?.title ?? "")
-                    .bookTitleStyle()
-                
-                Text(self.viewModel.book?.authorName.first ?? "")
-                    .metadataStyle()
-                
-                if self.viewModel.book?.readState == .reading {
-                    Button {
-                        HapticManager.shared.trigger(.impactMedium)
-                        self.router.pushScreen(.bookFinishScreen(id: self.bookId))
-                    } label: {
-                        Text("Mark as Finished")
-                            .font(EditorialSans.button)
-                            .foregroundStyle(Color.SURFACE)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background {
-                        Capsule()
-                            .foregroundStyle(Color.PRIMARY_BRAND)
-                    }
-                } else if self.viewModel.book?.readState == .wishlist {
-                    Button {
-                        try? self.viewModel.updateBookReadState(bookID: bookId)
-                        self.router.popScreen()
-                    } label: {
-                        Text("Start Reading")
-                            .primaryButtonLabelStyle()
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background {
-                        Capsule()
-                            .foregroundStyle(Color.PRIMARY_BRAND)
-                    }
-                    .padding(.top)
-                } else if self.viewModel.book?.readState == .read {
-                    StarRatingView(rating: self.viewModel.book?.rating ?? 0)
+                ZStack {
+                    Color.SURFACE_LOWEST.opacity(0.5).ignoresSafeArea()
+                    ProgressView()
                 }
             }
         }
-        .padding()
+        .alert(self.viewModel.alertTitle, isPresented: $viewModel.shouldShowAlert) {
+            // Alert Actions
+            ForEach(viewModel.alertButtons, id: \.self) { button in
+                Button(role: button == .delete ? .destructive : .cancel) {
+                    viewModel.handleAlertAction(actionType: button)
+                    if button == .delete {
+                        self.router.popScreen()
+                    }
+                } label: {
+                    Text(button.rawValue)
+                }
+            }
+        } message: {
+            Text(self.viewModel.alertMesssage)
+        }
     }
     
     var tagsView: some View {
