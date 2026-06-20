@@ -45,23 +45,31 @@ struct FinishedBooksSection: View {
                                   bookTitle: book.title,
                                   imageFrame: (100, 150))
                         
-                        VStack(alignment: .leading) {
+                        VStack(alignment: .leading, spacing: 5) {
                             Text(book.title)
-                                .font(.headline)
-                                .lineLimit(3)
+                                .font(EditorialSerif.quote)
+                                .foregroundStyle(Color.ON_SURFACE)
+                                .lineLimit(4)
                             
                             Text(book.authorName.joined(separator: ", "))
+                                .font(EditorialSans.label)
+                                .foregroundStyle(Color.SECONDARY_TEXT)
+                                .padding(.bottom, 5)
                             
                             StarRatingView(rating: book.rating ?? 0, starSize: 15)
                         }
                         
                         Spacer(minLength: 25)
                         
-                        VStack {
+                        VStack(spacing: 5) {
                             Text("FINISHED")
-                                .fontWeight(.bold)
+                                .font(EditorialSans.label)
+                                .foregroundStyle(Color.SECONDARY_TEXT)
                             
                             Text(self.viewModel.getFinishedBookDate(book: book))
+                                .font(EditorialSerif.headlineMedium)
+                                .foregroundStyle(Color.ON_SURFACE)
+                                .fontWeight(.bold)
                         }
                         .font(.caption)
                     }
@@ -75,6 +83,5 @@ struct FinishedBooksSection: View {
                 .buttonStyle(.plain)
             }
         }
-        .fontDesign(.serif)
     }
 }

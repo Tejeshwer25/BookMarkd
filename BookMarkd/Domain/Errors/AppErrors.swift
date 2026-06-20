@@ -10,7 +10,25 @@ import Foundation
 struct AlertInfoModel {
     let title: String
     let message: String
-    let isVisible: Bool = false
+    var isVisible: Bool = false
+    var actions: [AlertActionInfo] = []
+}
+
+struct AlertActionInfo: Identifiable, Hashable {
+    let id: AlertAction
+    let title: String
+    let role: AlertActionRole?
+}
+
+enum AlertAction: Hashable {
+    case ok
+    case cancel
+    case delete
+}
+
+enum AlertActionRole {
+    case cancel
+    case destructive
 }
 
 enum BookMarkdError: LocalizedError {

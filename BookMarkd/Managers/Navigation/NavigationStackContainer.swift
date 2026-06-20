@@ -63,7 +63,8 @@ struct NavigationStackContainer<Content: View>: View {
                                             bookToAdd: book)
                             .background(Color.SURFACE)
                     case .bookListScreen(let bookList):
-                        BookListView(bookList: bookList)
+                        BookListView(bookRepository: bookRepository, bookList: bookList)
+                            .background(Color.SURFACE)
                     }
                 }
         }
