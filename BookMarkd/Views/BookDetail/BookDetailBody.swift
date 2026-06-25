@@ -16,7 +16,8 @@ struct BookDetailBody: View {
             if self.viewModel.book?.readState == .reading {
                 NotesAndQuotesView(notesList: self.viewModel.book?.quotes ?? [],
                                    showAddNoteButton: true,
-                                   bookReadingStatus: self.viewModel.book?.readState) { quoteAction, quote in
+                                   bookReadingStatus: self.viewModel.book?.readState,
+                                   book: self.viewModel.book) { quoteAction, quote in
                     self.viewModel.performQuoteAction(quoteAction, on: quote)
                 }
             } else if self.viewModel.book?.readState == .wishlist {
@@ -48,7 +49,8 @@ struct BookDetailBody: View {
                 if self.viewModel.book?.quotes.isEmpty == false {
                     NotesAndQuotesView(notesList:  self.viewModel.book?.quotes ?? [],
                                        showAddNoteButton: false,
-                                       bookReadingStatus: try? viewModel.fetchBookDataFromRepo(bookId)?.readState) { quoteAction, quote in
+                                       bookReadingStatus: try? viewModel.fetchBookDataFromRepo(bookId)?.readState,
+                                       book: self.viewModel.book) { quoteAction, quote in
                         self.viewModel.performQuoteAction(quoteAction, on: quote)
                     }
                 }

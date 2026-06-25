@@ -11,16 +11,17 @@ import UIKit
 
 enum NavigationRoutes: Hashable {
     case bookDetails(id: String)
-    case authorDetails(id: String)
+//    case authorDetails(id: String)
     case searchResults(query: String)
     case bookFinishScreen(id: String)
     case addBookScreen
-    case bookWishlistScreen
+//    case bookWishlistScreen
     case genrePreferenceScreen
     case addBook(query: String)
     case settings
     case addBookForm(book: BookModel?)
     case bookListScreen(bookList: [BookModel])
+    case addNotes(quoteModel: QuotesModel?, inEditMode: AddNotesMode?, book: BookModel?)
 }
 
 final class Router: ObservableObject {

@@ -25,11 +25,6 @@ struct NavigationStackContainer<Content: View>: View {
                 .toolbarVisibility(self.shouldHideTabbar(), for: .tabBar)
                 .navigationDestination(for: NavigationRoutes.self) { route in
                     switch route {
-                    case .authorDetails(let id):
-                        BookDetailView(bookId: id,
-                                       bookRepository: bookRepository,
-                                       bookService: bookService)
-                        .background(Color.SURFACE)
                     case .bookDetails(let id):
                         BookDetailView(bookId: id,
                                        bookRepository: bookRepository,
@@ -46,9 +41,6 @@ struct NavigationStackContainer<Content: View>: View {
                         AddBookView(query: .constant(""),
                                     bookRepository: bookRepository, bookService: bookService)
                         .background(Color.SURFACE)
-                    case .bookWishlistScreen:
-                        BookWishlistView()
-                            .background(Color.SURFACE)
                     case .genrePreferenceScreen:
                         GenrePreferencesScreen(preferenceRepository: preferenceRepository)
                             .background(Color.SURFACE)
@@ -61,10 +53,22 @@ struct NavigationStackContainer<Content: View>: View {
                     case .addBookForm(let book):
                         AddBookManuallyView(bookRepository: bookRepository,
                                             bookToAdd: book)
-                            .background(Color.SURFACE)
+                        .background(Color.SURFACE)
                     case .bookListScreen(let bookList):
                         BookListView(bookRepository: bookRepository, bookList: bookList)
                             .background(Color.SURFACE)
+                    case .addNotes(let quote, let inEditMode, let book):
+                        let finalQuote = quote ?? .init(id: .init(),
+                                                        noteType: .quote,
+                                                        text: "",
+                                                        date: .init())
+                        AddNoteView(bookRepository: bookRepository,
+                                    router: router,
+                                    quotesModel: finalQuote,
+                                    book: book,
+                                    inEditMode: inEditMode)
+                            .background(Color.SURFACE)
+                            .navigationTransition(.zoom(sourceID: finalQuote.id, in: namespace))
                     }
                 }
         }

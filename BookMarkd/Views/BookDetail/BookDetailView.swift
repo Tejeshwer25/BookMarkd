@@ -54,25 +54,6 @@ struct BookDetailView: View {
                 }
             }
         })
-        .sheet(isPresented: $viewModel.showAddNoteSheet) {
-            NavigationStack {
-                AddNoteView(bookRepository: viewModel.bookRepository,
-                            router: router,
-                            quotesModel: .init(id: .init(),
-                                               noteType: .quote,
-                                               text: "",
-                                               date: Date()),
-                            book: viewModel.book,)
-            }
-        }
-        .sheet(item: $viewModel.noteToEdit) { quote in
-            NavigationStack {
-                AddNoteView(bookRepository: viewModel.bookRepository,
-                            router: router,
-                            quotesModel: quote,
-                            book: self.viewModel.book)
-            }
-        }
         .sheet(item: $viewModel.noteToShare) { quote in
             NavigationStack {
                 ShareQuoteView(book: viewModel.book, quote: quote)

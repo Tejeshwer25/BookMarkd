@@ -9,6 +9,10 @@ import Combine
 import Foundation
 import UIKit
 
+enum AddNotesMode {
+    case create, edit, delete
+}
+
 @MainActor
 class AddNoteViewModel: ObservableObject {
     @Published var errorOccurred: Bool = false

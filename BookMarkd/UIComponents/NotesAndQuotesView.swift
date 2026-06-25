@@ -8,9 +8,12 @@
 import SwiftUI
 
 struct NotesAndQuotesView: View {
+    @EnvironmentObject private var router: Router
+    
     let notesList: [QuotesModel]
     let showAddNoteButton: Bool
     let bookReadingStatus: BookReadingState?
+    let book: BookModel?
     var quoteAction: ((QuoteAction, QuotesModel?) -> Void)? = nil
     @State private var currentNoteIndex: Int = 1
     @State private var currentQuoteId: QuotesModel.ID?
@@ -21,7 +24,7 @@ struct NotesAndQuotesView: View {
                                    textFont: EditorialSerif.headlineLarge) {
                 if showAddNoteButton {
                     Button {
-                        self.quoteAction?(.add, nil)
+                        self.router.pushScreen(.addNotes(quoteModel: nil, inEditMode: .create, book: book))
                     } label: {
                         Image(systemName: "plus.circle.fill")
                             .resizable()
@@ -62,10 +65,12 @@ struct NotesAndQuotesView: View {
                                     .buttonStyle(.plain)
                                 }
                                 
-                                ScrollView {
-                                    Text(quote.text)
-                                        .padding(.top)
-                                }
+                                Text(quote.text)
+                                    .frame(maxHeight: .infinity, alignment: .top)
+                                    .padding(.top)
+                                    .onTapGesture {
+                                        self.router.pushScreen(.addNotes(quoteModel: quote, inEditMode: nil, book: book))
+                                    }
                             }
                             .frame(width: 300, height: 350, alignment: .leading)
                             .padding()
@@ -79,7 +84,7 @@ struct NotesAndQuotesView: View {
                                 
                                 if bookReadingStatus == .reading {
                                     Button(action: {
-                                        self.quoteAction?(.edit, quote)
+                                        self.router.pushScreen(.addNotes(quoteModel: quote, inEditMode: .edit, book: book))
                                     }) {
                                         Label("Edit", systemImage: "pencil")
                                     }

@@ -9,7 +9,7 @@ import Combine
 import SwiftUI
 
 enum QuoteAction {
-    case edit, share, delete, add
+    case share, delete
 }
 
 enum AlertButtons: String {
@@ -20,7 +20,6 @@ enum AlertButtons: String {
 
 @MainActor
 class BookDetailViewModel: ObservableObject {
-    @Published var showAddNoteSheet: Bool = false
     @Published var book: BookModel?
     @Published var bookDetails: BookDetailDataModel? = nil
     @Published var isPageLoading: Bool = false
@@ -29,7 +28,6 @@ class BookDetailViewModel: ObservableObject {
     @Published var alertMesssage: String = ""
     @Published var shouldShowAlert: Bool = false
     @Published var alertButtons: [AlertButtons] = []
-    @Published var noteToEdit: QuotesModel? = nil
     @Published var noteToShare: QuotesModel? = nil
     
     let bookRepository: any BookRepository
@@ -80,12 +78,8 @@ class BookDetailViewModel: ObservableObject {
     
     func performQuoteAction(_ action: QuoteAction, on note: QuotesModel?) {
         switch action {
-        case .edit:
-            self.noteToEdit = note
         case .share:
             self.noteToShare = note
-        case .add:
-            self.showAddNoteSheet.toggle()
         case .delete:
             guard let quote = note, let bookID = self.book?.id else {
                 self.alertMesssage = "Failed to delete note"
